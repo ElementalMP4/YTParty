@@ -1,0 +1,37 @@
+<html>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<head>
+    <title>{ YTParty } - Watch YouTube with friends!</title>
+    <link rel="stylesheet" type="text/css" href="/primarystyle.css">
+    <link href="/favicon.png" rel="icon" type="image/png">
+    <h1 class="centre-align header header-main">{ YTParty }</h1>
+</head>
+
+<body>
+    <hr><br>
+    <div class="menu centre-align">
+        <h3 class="centre-align header header-sub">Change your settings!</h3>
+        <br>
+        <input type="color" value="#ff0000" id="name-colour-picker">
+        <p>Choose a custom name colour from the selector above!</p>
+        <button class="button hover-animation" onclick="updateColour()">Change my colour!</button>
+        <p id="colour-message"></p>
+        <br>
+        <input type="text" placeholder="nickname" id="nickname-entry">
+        <br>
+        <button class="button hover-animation" onclick="updateNickname()">Change my nickname!</button>
+        <p id="nickname-message"></p>
+        <br>
+        <input type="password" placeholder="Password" autocomplete="off" id="password-entry">
+        <br />
+        <input type="password" placeholder="Re-type password" autocomplete="off" id="password-match-entry">
+        <br>
+        <button class="button hover-animation" onclick="updatePassword()">Change my password!</button>
+        <p id="password-message"></p>
+    </div>
+</body>
+
+<script src="/settings.js"></script>
+
+</html>

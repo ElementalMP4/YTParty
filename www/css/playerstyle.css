@@ -1,0 +1,110 @@
+@keyframes slide-up {
+    0% {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+input[type=text] {
+    color: white;
+    background-color: #292929;
+    border: none;
+    border-bottom: 2px solid grey;
+    outline: none;
+    width: 100%;
+}
+
+input[type=text]:focus {
+    border-bottom: 2px solid rgb(143, 39, 39)
+}
+
+body {
+    background-color: black;
+}
+
+.div-float-left {
+    float: left;
+}
+
+.chat {
+    height: 100%;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    overflow: auto;
+    display: flex;
+    flex-direction: column-reverse;
+    width: 20%;
+    background-color: #1a1a1a;
+    overflow-wrap: break-word;
+    position: relative;
+}
+
+.chat-message {
+    background-color: #212121;
+    border-radius: 5px;
+    animation: slide-up 0.4s ease;
+    padding: 3px;
+}
+
+.chat-message:hover {
+    background-color: #292929;
+}
+
+p {
+    color: white;
+    font-family: Helvetica;
+    font-size: 14px;
+    display: inline;
+}
+
+p.msg-nickname {
+    font-size: 16px;
+    font-weight: bold;
+}
+
+ ::-webkit-scrollbar {
+    width: 5px;
+}
+
+ ::-webkit-scrollbar-thumb {
+    background: #ab1400;
+    border-radius: 10px;
+}
+
+ ::-webkit-scrollbar-thumb:hover {
+    background: red;
+}
+
+p.system-message {
+    color: grey;
+    font-style: italic;
+}
+
+p.italic {
+    font-style: italic;
+}
+
+p.bold {
+    font-weight: bold;
+}
+
+p.underline {
+    text-decoration: underline;
+}
+
+p.strikethrough {
+    text-decoration: line-through;
+}
+
+p.cursive {
+    font-family: 'Lobster Two', cursive;
+    font-size: 20nopx;
+}
+
+p.big {
+    font-size: 35px;
+}
