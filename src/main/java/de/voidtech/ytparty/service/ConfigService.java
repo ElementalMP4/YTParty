@@ -67,9 +67,4 @@ public class ConfigService {
 		String port = config.getProperty("http.port");
 		return port != null ? port : "6969";
 	}
-	
-	public String getWebsocketPort() {
-		String port = config.getProperty("websocket.port");
-		return port != null ? port : "6970";
-	}
 }

@@ -11,12 +11,16 @@ import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.AbstractWebSocketHandler;
 
 import main.java.de.voidtech.ytparty.service.MessageHandler;
+import main.java.de.voidtech.ytparty.service.PartyService;
 
 @Component
 public class GatewayHandler extends AbstractWebSocketHandler {
 	
 	@Autowired
 	private MessageHandler messageHandler;
+	
+	@Autowired
+	private PartyService partyService;
 	
 	List<WebSocketSession> sessions = new ArrayList<WebSocketSession>();
 
@@ -32,7 +36,7 @@ public class GatewayHandler extends AbstractWebSocketHandler {
 	
 	@Override
 	public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception{
-	    sessions.remove(session);
+		partyService.removeSessionFromParty(session);
+		sessions.remove(session);
 	}
-
 }

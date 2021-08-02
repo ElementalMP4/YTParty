@@ -1,5 +1,6 @@
 package main.java.de.voidtech.ytparty.service;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
+import org.springframework.web.socket.WebSocketSession;
 
 import main.java.de.voidtech.ytparty.entities.Party;
 
@@ -18,13 +20,13 @@ import main.java.de.voidtech.ytparty.entities.Party;
 public class PartyService {
 	
 	private static final List<String> LEXICON = Arrays.asList("ABCDEFGHIJKLMNOPQRSTUVWXYZ12345674890".split(""));
-	private HashMap<String, Party> playerRooms = new HashMap<String, Party>();  
+	private HashMap<String, Party> parties = new HashMap<String, Party>();  
 	
 	@Autowired
 	private SessionFactory sessionFactory;
 	
 	@EventListener(ApplicationReadyEvent.class)
-	public void cleanDatabase() {
+	private void cleanDatabase() {
 		try(Session session = sessionFactory.openSession())	{
 			session.getTransaction().begin();
 			session.createQuery("DELETE FROM Messages")
@@ -41,15 +43,24 @@ public class PartyService {
 	}
 	
 	public synchronized Party getParty(String partyID) {
-		return playerRooms.get(partyID);
+		return parties.get(partyID);
 	}
 	
 	public synchronized void saveParty(Party party) {
-		if (party.getAllSessions().size() == 0) deleteParty(party.getPartyID());
-		else playerRooms.put(party.getPartyID(), party);
+		parties.put(party.getPartyID(), party);
 	}
 	
 	public synchronized void deleteParty(String partyID) {
-		playerRooms.remove(partyID);
+		parties.remove(partyID);
+	}
+	
+	public synchronized void removeSessionFromParty(WebSocketSession session) {
+		List<String> invalidParties = new ArrayList<String>();
+		for (String key : parties.keySet()) { 
+			Party party = parties.get(key);
+			party.checkRemoveSession(session);
+			if (party.getAllSessions().isEmpty() && party.hasBeenVisited()) invalidParties.add(key);
+		}
+		if (!invalidParties.isEmpty()) for (String key : invalidParties) parties.remove(key);
 	}
 }

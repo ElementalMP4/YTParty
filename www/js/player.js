@@ -33,5 +33,6 @@ Gateway.onopen = function() {
         window.location.href = "http://" + location.host + "/login.html";
     } else {
         console.log("Ready");
+        Gateway.send(JSON.stringify({ "type": "party-joinparty", "data": { "token": TOKEN, "roomID": selfURL.searchParams.get("roomID") } }));
     }
 }

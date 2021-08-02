@@ -8,9 +8,11 @@ import javax.persistence.Id;
 import javax.persistence.Index;
 import javax.persistence.Table;
 
+import org.json.JSONObject;
+
 @Entity(name = "Messages")
 @Table(name = "Messages", indexes = @Index(columnList = "partyID", name = "index_message"))
-public class Message {
+public class ChatMessage {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
@@ -31,11 +33,10 @@ public class Message {
 	private String messageModifiers;
 	
 	@Deprecated
-	//ONLY FOR HIBERNATE, DO NOT USE
-	Message() {
+	ChatMessage() {
 	}
 	
-	public Message(String partyID, String author, String colour, String content, String messageModifiers)
+	public ChatMessage(String partyID, String author, String colour, String content, String messageModifiers)
 	{
 	  this.partyID = partyID;
 	  this.author = author;
@@ -82,5 +83,16 @@ public class Message {
 	
 	public void setMessageModifiers(String newModifiers) {
 		this.messageModifiers = newModifiers;
+	}
+	
+	public String convertToJSON() {
+		JSONObject messageJsonObject = new JSONObject();
+		messageJsonObject.put("type", "party-chatmessage");
+		messageJsonObject.put("data", new JSONObject()
+				.put("author", this.author)
+				.put("colour", this.colour)
+				.put("content", this.content)
+				.put("modifiers", this.messageModifiers));
+		return messageJsonObject.toString();
 	}
 }

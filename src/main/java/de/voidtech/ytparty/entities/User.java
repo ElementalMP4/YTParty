@@ -73,4 +73,8 @@ public class User {
 	public void setHexColour(String newHexColour) {
 		this.hexColour = newHexColour;
 	}
+	
+	public String getEffectiveName() {
+		return this.nickname == null ? this.username : this.nickname;
+	}
 }

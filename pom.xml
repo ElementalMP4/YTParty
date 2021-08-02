@@ -111,5 +111,10 @@
     		<artifactId>commons-io</artifactId>
     		<version>2.6</version>
 		</dependency>
+		<dependency>
+    		<groupId>com.opensymphony</groupId>
+    		<artifactId>xwork</artifactId>
+    		<version>2.1.2</version>
+		</dependency>
 	</dependencies>
 </project>

@@ -1,13 +1,14 @@
 package main.java.de.voidtech.ytparty.entities;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-import org.json.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.json.JSONException;
+import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
-
-import main.java.de.voidtech.ytparty.service.GatewayResponseService;
 
 public class Party {
 	
@@ -19,8 +20,9 @@ public class Party {
 	
 	private List<WebSocketSession> sessions;
 	
-	@Autowired
-	private GatewayResponseService responder;
+	private boolean hasBeenVisited;
+	
+	private static final Logger LOGGER = Logger.getLogger(Party.class.getName());
 	
 	public Party(String partyID, String ownerName, String videoID)
 	{
@@ -47,6 +49,7 @@ public class Party {
 	}
 	
 	public void addToSessions(WebSocketSession session) {
+		if (!hasBeenVisited) hasBeenVisited = true;
 		this.sessions.add(session);
 	}
 	
@@ -54,24 +57,31 @@ public class Party {
 		this.sessions.remove(session);
 	}
 	
-	public void setPartyID(String partyID) {
-		this.partyID = partyID;
-	}
-	
-	public void setPartyOwner(String ownerName) {
-		this.ownerName = ownerName;
-	}
-	
-	public void setVideoID(String newVideoID) {
-		this.currentVideoID = newVideoID;
-	}
-	
-	public void broadcastMessage(JSONObject message) {
+	public void broadcastMessage(ChatMessage message) {
 		List<WebSocketSession> invalidSessions = new ArrayList<WebSocketSession>();
 		for (WebSocketSession session : sessions) {
-			if (session.isOpen()) responder.sendSuccess(session, message.toString(), "party");
+			if (session.isOpen()) sendChatMessage(message, session);
 			else invalidSessions.add(session);
 		}
 		if (!invalidSessions.isEmpty()) for (WebSocketSession session : invalidSessions) sessions.remove(session);
+	}
+
+	public void checkRemoveSession(WebSocketSession session) {
+		if (sessions.contains(session)) { 
+			sessions.remove(session);
+			broadcastMessage(new ChatMessage(this.partyID, "System", "#ff0000", "Someone has left the party!", "system"));
+		}
+	}
+	
+	public boolean hasBeenVisited() {
+		return this.hasBeenVisited;
+	}
+	
+	public void sendChatMessage(ChatMessage message, WebSocketSession session) {
+		try {
+			session.sendMessage(new TextMessage(message.convertToJSON()));
+		} catch (JSONException | IOException e) {
+			LOGGER.log(Level.SEVERE, "Error during Gateway Execution: " + e.getMessage());
+		}
 	}
 }
