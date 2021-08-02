@@ -1,5 +1,7 @@
 # YouTubeParty
 
+Watch YouTube with friends!
+
 config.properties example:
 
 ```
