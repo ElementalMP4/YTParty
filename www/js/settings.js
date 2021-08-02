@@ -1,4 +1,4 @@
-const GatewayServerURL = "ws://" + location.host + "/gateway";
+const GatewayServerURL = (location.protocol == "https:" ? "wss://" : "ws://") + location.host + "/gateway";
 var Gateway = new WebSocket(GatewayServerURL);
 
 Gateway.onopen = function() {
