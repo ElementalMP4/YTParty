@@ -57,19 +57,10 @@ public class Party {
 		this.sessions.remove(session);
 	}
 	
-	public void broadcastChatMessage(ChatMessage message) {
-		List<WebSocketSession> invalidSessions = new ArrayList<WebSocketSession>();
-		for (WebSocketSession session : sessions) {
-			if (session.isOpen()) sendChatMessage(message, session);
-			else invalidSessions.add(session);
-		}
-		if (!invalidSessions.isEmpty()) for (WebSocketSession session : invalidSessions) sessions.remove(session);
-	}
-
 	public void checkRemoveSession(WebSocketSession session) {
 		if (sessions.contains(session)) { 
 			sessions.remove(session);
-			broadcastChatMessage(new ChatMessage(this.partyID, "System", "#ff0000", "Someone has left the party!", "system"));
+			broadcastMessage(new ChatMessage(this.partyID, "System", "#ff0000", "Someone has left the party!", "system").convertToJSON());
 		}
 	}
 	
@@ -77,9 +68,18 @@ public class Party {
 		return this.hasBeenVisited;
 	}
 	
-	public void sendChatMessage(ChatMessage message, WebSocketSession session) {
+	public void broadcastMessage(String message) {
+		List<WebSocketSession> invalidSessions = new ArrayList<WebSocketSession>();
+		for (WebSocketSession session : sessions) {
+			if (session.isOpen()) sendMessage(message, session);
+			else invalidSessions.add(session);
+		}
+		if (!invalidSessions.isEmpty()) for (WebSocketSession session : invalidSessions) sessions.remove(session);
+	}
+	
+	public void sendMessage(String message, WebSocketSession session) {
 		try {
-			session.sendMessage(new TextMessage(message.convertToJSON()));
+			session.sendMessage(new TextMessage(message));
 		} catch (JSONException | IOException e) {
 			LOGGER.log(Level.SEVERE, "Error during Gateway Execution: " + e.getMessage());
 		}
