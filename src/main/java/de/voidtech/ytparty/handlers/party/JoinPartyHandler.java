@@ -42,7 +42,7 @@ public class JoinPartyHandler extends AbstractHandler{
 				ChatMessage joinMessage = new ChatMessage(roomID, "System", "#ff0000",
 						userService.getUser(username).getEffectiveName() + " has joined the party!", "system");
 				party.addToSessions(session);
-				party.broadcastMessage(joinMessage.convertToJSON());
+				party.broadcastChatMessage(joinMessage);
 			}
 		}
 	}
