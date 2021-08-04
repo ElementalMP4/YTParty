@@ -10,7 +10,7 @@ import main.java.de.voidtech.ytparty.service.GatewayResponseService;
 import main.java.de.voidtech.ytparty.service.PartyService;
 import main.java.de.voidtech.ytparty.service.UserTokenService;
 
-public class GetPartyHandler extends AbstractHandler {
+public class GetVideoHandler extends AbstractHandler {
 	
 	@Autowired
 	private GatewayResponseService responder;
