@@ -38,7 +38,7 @@ public class JoinPartyHandler extends AbstractHandler{
 			Party party = partyService.getParty(roomID);
 			if (party == null) responder.sendError(session, "An invalid room ID was provided", this.getHandlerType());
 			else {
-				responder.sendSuccess(session, "Joined Party", this.getHandlerType());
+				responder.sendSuccess(session, new JSONObject().put("video", party.getVideoID()).toString(), this.getHandlerType());
 				ChatMessage joinMessage = new ChatMessage(roomID, "System", "#ff0000",
 						userService.getUser(username).getEffectiveName() + " has joined the party!", "system");
 				party.addToSessions(session);
