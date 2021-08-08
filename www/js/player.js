@@ -5,17 +5,41 @@ var USER_PROPERTIES;
 var TOKEN;
 var PLAYER;
 var CURRENT_VIDEO_ID;
+var ROOM_ID;
+
+var LAST_RECEIVED_MESSAGE;
+var LAST_SENT_MESSAGE;
 
 var PLAYER_READY = false;
+
+function showTypingMessage() {
+    document.getElementById("typing-message").style.display = "block";
+}
+
+function hideTypingMessage() {
+    document.getElementById("typing-message").style.display = "none";
+}
+
+function sendGatewayMessage(message) {
+    if (message.type == LAST_SENT_MESSAGE) return;
+    LAST_SENT_MESSAGE = message.type;
+    Gateway.send(JSON.stringify(message));
+}
+
+function sendPlayingMessage() {
+    let time = Math.floor(PLAYER.getCurrentTime());
+    sendGatewayMessage({ "type": "party-playvideo", "data": { "token": TOKEN, "roomID": ROOM_ID, "timestamp": time } });
+}
+
+function sendPausedMessage() {
+    sendGatewayMessage({ "type": "party-pausevideo", "data": { "token": TOKEN, "roomID": ROOM_ID } });
+}
 
 function onYouTubeIframeAPIReady() {
     PLAYER = new YT.Player('player', {
         height: '100%',
         width: '80%',
         videoId: CURRENT_VIDEO_ID,
-        playerVars: {
-            'playsinline': 1
-        },
         events: {
             'onReady': onPlayerReady,
             'onStateChange': onPlayerStateChange
@@ -27,8 +51,17 @@ function onPlayerReady() {
     PLAYER_READY = true;
 }
 
-function onPlayerStateChange() {
+function onPlayerStateChange(event) {
+    let playerState = event.data;
 
+    switch (playerState) {
+        case 1:
+            sendPlayingMessage();
+            break;
+        case 2:
+            sendPausedMessage();
+            break;
+    }
 }
 
 function loadVideo(youTubeVideoID) {
@@ -36,8 +69,34 @@ function loadVideo(youTubeVideoID) {
     if (PLAYER_READY) PLAYER.loadVideoById(youTubeVideoID, 0);
 }
 
-function handleChatMessage() {
+function startVideo(data) {
+    PLAYER.seekTo(data.time, true);
+    PLAYER.playVideo();
+}
 
+function pauseVideo() {
+    PLAYER.pauseVideo();
+}
+
+function handleChatMessage(data) {
+    console.log(data);
+
+}
+
+function handleSystemMessage(data) {
+    if (data.type == LAST_RECEIVED_MESSAGE || data.type == LAST_SENT_MESSAGE) return;
+    LAST_RECEIVED_MESSAGE = data.type;
+
+    console.log(data);
+
+    switch (data.type) {
+        case "playvideo":
+            startVideo(data);
+            break;
+        case "pausevideo":
+            pauseVideo();
+            break;
+    }
 }
 
 Gateway.onopen = function() {
@@ -50,13 +109,15 @@ Gateway.onclose = function() {
 
 Gateway.onmessage = function(message) {
     const response = JSON.parse(message.data);
-    console.log(response);
 
     if (response.origin == "party-joinparty") loadVideo(JSON.parse(response.response).video);
 
     switch (response.type) {
         case "party-chatmessage":
             handleChatMessage(response.data);
+            break;
+        case "party-systemmessage":
+            handleSystemMessage(response.data);
             break;
     }
 }
@@ -71,13 +132,16 @@ function getToken() {
 }
 
 Gateway.onopen = function() {
+    hideTypingMessage();
     const selfURL = new URL(location.href);
     TOKEN = getToken();
+
     if (!selfURL.searchParams.get("roomID")) {
         window.location.href = "http://" + location.host + "/login.html";
     } else {
+        ROOM_ID = selfURL.searchParams.get("roomID");
         console.log("Ready");
-        Gateway.send(JSON.stringify({ "type": "party-joinparty", "data": { "token": TOKEN, "roomID": selfURL.searchParams.get("roomID") } }));
+        sendGatewayMessage({ "type": "party-joinparty", "data": { "token": TOKEN, "roomID": ROOM_ID } });
     }
 }
 
