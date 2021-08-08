@@ -1,5 +1,4 @@
 <html>
-<meta name="viewport" content="width=device-width, initial-scale=1">
 
 <head>
     <title>{ YTParty }</title>
@@ -8,22 +7,20 @@
     <link href="https://fonts.googleapis.com/css2?family=Lobster+Two&display=swap" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="/playerstyle.css">
     <link href="/favicon.png" rel="icon" type="image/png">
-    <meta property="og:title" content="YTParty" />
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://ytparty.voidtech.de/" />
+    <meta property="og:site_name" content="YTParty">
+    <meta property="og:url" content="https://ytparty.voidtech.de/">
+    <meta property="og:description" content="Watch YouTube with friends!">
     <meta property="og:image" content="https://ytparty.voidtech.de/favicon.png" />
+    <meta property="og:type" content="website">
     <meta name="theme-color" content="#FF0000">
 </head>
 
 <body>
-
-    <div id="player" class="div-left"></div>
-    <div>
-        <div id="chat" class="div-left chat" width=100px height=720px>
-            <input type="text" id="chat-input" placeholder="Enter a message">
-        </div>
+    <div id="player" class="div-float-left"></div>
+    <div id="chat" class="div-float-left chat" width=100px height=720px>
+        <input type="text" id="chat-input" placeholder="Enter a message">
     </div>
-    </div>
+    <p id="typing-message" class="typing-message">People are typing...</p>
 
 </body>
 

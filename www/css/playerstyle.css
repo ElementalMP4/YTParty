@@ -24,20 +24,27 @@ input[type=text]:focus {
 
 body {
     background-color: black;
+    overflow: hidden;
+    scrollbar-width: none;
 }
 
 .div-float-left {
     float: left;
+    padding: 3px;
+}
+
+div {
+    padding: 0px;
 }
 
 .chat {
-    height: 100%;
+    height: 95%;
     overflow-y: scroll;
     overflow-x: hidden;
     overflow: auto;
     display: flex;
     flex-direction: column-reverse;
-    width: 20%;
+    width: 19%;
     background-color: #1a1a1a;
     overflow-wrap: break-word;
     position: relative;
@@ -77,6 +84,12 @@ p.msg-nickname {
 
  ::-webkit-scrollbar-thumb:hover {
     background: red;
+}
+
+p.typing-message {
+    padding: 0%;
+    color: grey;
+    font-style: italic;
 }
 
 p.system-message {
