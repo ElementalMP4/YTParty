@@ -37,7 +37,6 @@ public class VideoPauseHandler extends AbstractHandler {
 			if (party == null) responder.sendError(session, "An invalid room ID was provided", this.getHandlerType());
 			else {
 				ChatMessage joinMessage = new ChatMessage(roomID, "System", "#ff0000", "Video paused", "system");
-				party.addToSessions(session);
 				responder.sendChatMessage(party, joinMessage);
 				responder.sendSystemMessage(party, new SystemMessage("pausevideo", new JSONObject()));
 			}

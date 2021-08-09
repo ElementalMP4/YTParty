@@ -79,15 +79,12 @@ function pauseVideo() {
 }
 
 function handleChatMessage(data) {
-    console.log(data);
 
 }
 
 function handleSystemMessage(data) {
     if (data.type == LAST_RECEIVED_MESSAGE || data.type == LAST_SENT_MESSAGE) return;
     LAST_RECEIVED_MESSAGE = data.type;
-
-    console.log(data);
 
     switch (data.type) {
         case "playvideo":
@@ -109,6 +106,7 @@ Gateway.onclose = function() {
 
 Gateway.onmessage = function(message) {
     const response = JSON.parse(message.data);
+    console.log(response);
 
     if (response.origin == "party-joinparty") loadVideo(JSON.parse(response.response).video);
 

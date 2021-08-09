@@ -38,7 +38,6 @@ public class VideoPlayHandler extends AbstractHandler {
 			if (party == null) responder.sendError(session, "An invalid room ID was provided", this.getHandlerType());
 			else {
 				ChatMessage joinMessage = new ChatMessage(roomID, "System", "#ff0000", "Video playing at " + getTimestampFromSeconds(timestamp), "system");
-				party.addToSessions(session);
 				responder.sendChatMessage(party, joinMessage);
 				responder.sendSystemMessage(party, new SystemMessage("playvideo", new JSONObject().put("time", timestamp)));
 			}

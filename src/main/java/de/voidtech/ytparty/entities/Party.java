@@ -71,7 +71,9 @@ public class Party {
 	public void broadcastMessage(String message) {
 		List<WebSocketSession> invalidSessions = new ArrayList<WebSocketSession>();
 		for (WebSocketSession session : sessions) {
-			if (session.isOpen()) sendMessage(message, session);
+			if (session.isOpen()) {
+				sendMessage(message, session);
+			}
 			else invalidSessions.add(session);
 		}
 		if (!invalidSessions.isEmpty()) for (WebSocketSession session : invalidSessions) sessions.remove(session);
