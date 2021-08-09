@@ -27,7 +27,7 @@ function sendGatewayMessage(message) {
 }
 
 function sendPlayingMessage() {
-    let time = Math.floor(PLAYER.getCurrentTime());
+    let time = PLAYER.getCurrentTime();
     sendGatewayMessage({ "type": "party-playvideo", "data": { "token": TOKEN, "roomID": ROOM_ID, "timestamp": time } });
 }
 
@@ -88,7 +88,7 @@ function handleSystemMessage(data) {
 
     switch (data.type) {
         case "playvideo":
-            startVideo(data);
+            startVideo(data.data);
             break;
         case "pausevideo":
             pauseVideo();
