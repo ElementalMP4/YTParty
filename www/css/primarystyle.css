@@ -55,6 +55,9 @@ button:hover {
 a {
     text-decoration: none;
     margin: auto;
+}
+
+a.link {
     padding: 5px;
 }
 
@@ -108,6 +111,12 @@ input[type=color] {
 .header-main {
     font-size: 40px;
     color: #ab1400;
+    transition-duration: 0.2s;
+}
+
+.header-main:hover {
+    font-size: 40px;
+    color: #da1a01;
 }
 
 .switch {
