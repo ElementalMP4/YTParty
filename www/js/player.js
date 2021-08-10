@@ -28,6 +28,23 @@ function sendGatewayMessage(message) {
     Gateway.send(JSON.stringify(message));
 }
 
+function addChatMessage(data) {
+    let author = data.author;
+    let colour = data.colour;
+    let content = data.content;
+    let modifiers = data.modifiers !== "" ? `class="${data.modifiers}"` : "";
+
+    let newMessage = `<div class="chat-message">`;
+    if (LAST_MESSAGE_AUTHOR !== author) newMessage += `<p class="msg-nickname" style="color:${colour}">${author}</p><br>`;
+    newMessage += `<p ${modifiers}>${content}</p></div>`;
+    if (LAST_MESSAGE_AUTHOR !== author) newMessage += "<br>";
+
+    LAST_MESSAGE_AUTHOR = author;
+
+    $("#chat-history").prepend(newMessage);
+    $('#chat-history').scrollTop($('#chat-history')[0].scrollHeight);
+}
+
 function sendPlayingMessage() {
     let time = PLAYER.getCurrentTime();
     sendGatewayMessage({ "type": "party-playvideo", "data": { "token": TOKEN, "roomID": ROOM_ID, "timestamp": time } });
@@ -55,7 +72,7 @@ function onPlayerReady() {
 
 function onPlayerStateChange(event) {
     let playerState = event.data;
-
+    console.log(event);
     switch (playerState) {
         case 1:
             sendPlayingMessage();
@@ -81,20 +98,7 @@ function pauseVideo() {
 }
 
 function handleChatMessage(data) {
-    let author = data.author;
-    let colour = data.colour;
-    let content = data.content;
-    let modifiers = data.modifiers !== "" ? `class="${data.modifiers}"` : "";
-
-    let newMessage = `<div class="chat-message">`;
-    if (LAST_MESSAGE_AUTHOR !== author) newMessage += `<p class="msg-nickname" style="color:${colour}">${author}</p><br>`;
-    newMessage += `<p ${modifiers}>${content}</p></div>`;
-    if (LAST_MESSAGE_AUTHOR !== author) newMessage += "<br>";
-
-    LAST_MESSAGE_AUTHOR = author;
-
-    $("#chat-history").prepend(newMessage);
-    $('#chat-history').scrollTop($('#chat-history')[0].scrollHeight);
+    addChatMessage(data);
 }
 
 function handleSystemMessage(data) {
@@ -107,6 +111,9 @@ function handleSystemMessage(data) {
             break;
         case "pausevideo":
             pauseVideo();
+            break;
+        case "changevideo":
+            loadVideo(data.data.video);
             break;
     }
 }
@@ -168,11 +175,30 @@ Gateway.onopen = function() {
     }
 }
 
+function handleSetVideoCommand(args) {
+    let videoURL = new URL(args[0]);
+    let videoID = videoURL.searchParams.get("v");
+    if (!videoID) return;
+    else sendGatewayMessage({ "type": "party-changevideo", "data": { "token": TOKEN, "roomID": ROOM_ID, "video": videoID } });
+}
+
 document.getElementById("chat-input").addEventListener("keyup", function(event) {
     if (event.keyCode === 13) {
         event.preventDefault();
         let message = document.getElementById("chat-input").value.trim();
         if (message == "") return;
+
+        if (message.startsWith("/")) {
+            const args = message.slice(1).split(/ +/);
+            const command = args.shift().toLowerCase();
+
+            switch (command) {
+                case "setvideo":
+                    handleSetVideoCommand(args);
+                    break;
+            }
+        }
+
         sendGatewayMessage({
             "type": "party-chatmessage",
             "data": {

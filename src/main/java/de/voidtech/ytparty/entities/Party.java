@@ -35,13 +35,17 @@ public class Party {
 	public String getPartyID() {
 		return this.partyID;
 	}
-	
+
 	public String getOwnerName() {
 		return this.ownerName;
 	}
 	
 	public String getVideoID() {
 		return this.currentVideoID;
+	}
+	
+	public void setVideoID(String videoID) {
+		this.currentVideoID = videoID;
 	}
 	
 	public List<WebSocketSession> getAllSessions() {
