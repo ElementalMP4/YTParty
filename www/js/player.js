@@ -180,7 +180,7 @@ document.getElementById("chat-input").addEventListener("keyup", function(event) 
                 "roomID": ROOM_ID,
                 "content": message,
                 "colour": USER_PROPERTIES.colour,
-                "author": USER_PROPERTIES.name,
+                "author": USER_PROPERTIES.effectiveName,
                 "modifiers": ""
             }
         });
