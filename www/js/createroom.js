@@ -23,7 +23,7 @@ Gateway.onmessage = function(message) {
     console.log(response);
     if (response.success) {
         document.getElementById("video-message").innerHTML = "Room created! You will be redirected";
-        window.location.href = "http://" + location.host + "/player.html?roomID=" + response.response;
+        window.location.href = location.protocol + "//" + location.host + "/player.html?roomID=" + response.response;
     } else {
         document.getElementById("video-message").innerHTML = response.response;
     }
@@ -31,7 +31,7 @@ Gateway.onmessage = function(message) {
 
 function getToken() {
     if (document.cookie == "") {
-        window.location.href = "http://" + location.host + "/login.html";
+        window.location.href = location.protocol + "//" + location.host + "/login.html";
     } else {
         const cookie = JSON.parse(document.cookie);
         return cookie.token;

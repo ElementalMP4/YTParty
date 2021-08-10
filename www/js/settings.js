@@ -34,7 +34,7 @@ function handleProfileResponse(response) {
         document.getElementById("name-colour-picker").value = userProfile.colour;
         document.getElementById("nickname-entry").value = userProfile.nickname;
     } else {
-        window.location.href = "http://" + location.host + "/login.html";
+        window.location.href = location.protocol + "//" + location.host + "/login.html";
     }
 }
 
@@ -109,7 +109,7 @@ function updatePassword() {
 
 function getUserProfile() {
     if (document.cookie == "") {
-        window.location.href = "http://" + location.host + "/login.html";
+        window.location.href = location.protocol + "//" + location.host + "/login.html";
     } else {
         const cookie = JSON.parse(document.cookie);
         var payload = {

@@ -25,7 +25,7 @@ Gateway.onmessage = function(message) {
     console.log(response);
     if (response.success) {
         showUserMessage("Redirecting to room");
-        window.location.href = "http://" + location.host + "/player.html?roomID=" + globalRoomID;
+        window.location.href = location.protocol + "//" + location.host + "/player.html?roomID=" + globalRoomID;
     } else {
         showUserMessage(response.response);
     }
@@ -33,7 +33,7 @@ Gateway.onmessage = function(message) {
 
 function getToken() {
     if (document.cookie == "") {
-        window.location.href = "http://" + location.host + "/login.html";
+        window.location.href = location.protocol + "//" + location.host + "/login.html";
     } else {
         const cookie = JSON.parse(document.cookie);
         return cookie.token;

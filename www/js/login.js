@@ -24,7 +24,7 @@ Gateway.onmessage = function(message) {
     if (response.success) {
         showUserMessage("Logging you in!");
         document.cookie = JSON.stringify({ "token": response.response });
-        window.location.href = "http://" + location.host + "/home.html";
+        window.location.href = location.protocol + "//" + location.host + "/home.html";
     } else {
         showUserMessage(response.response);
     }
