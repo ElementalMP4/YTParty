@@ -19,7 +19,7 @@ import main.java.de.voidtech.ytparty.entities.Party;
 @Service
 public class PartyService {
 	
-	private static final List<String> LEXICON = Arrays.asList("ABCDEFGHIJKLMNOPQRSTUVWXYZ12345674890".split(""));
+	private static final List<String> LEXICON = Arrays.asList("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz12345674890".split(""));
 	private HashMap<String, Party> parties = new HashMap<String, Party>();  
 	
 	@Autowired
@@ -30,6 +30,16 @@ public class PartyService {
 		try(Session session = sessionFactory.openSession())	{
 			session.getTransaction().begin();
 			session.createQuery("DELETE FROM Messages")
+				.executeUpdate();
+			session.getTransaction().commit();
+		}
+	}
+	
+	public void deletePartyMessageHistory(String partyID) {
+		try(Session session = sessionFactory.openSession())	{
+			session.getTransaction().begin();
+			session.createQuery("DELETE FROM Messages where partyID = :partyID")
+				.setParameter("partyID", partyID)
 				.executeUpdate();
 			session.getTransaction().commit();
 		}
@@ -61,6 +71,10 @@ public class PartyService {
 			party.checkRemoveSession(session);
 			if (party.getAllSessions().isEmpty() && party.hasBeenVisited()) invalidParties.add(key);
 		}
-		if (!invalidParties.isEmpty()) for (String key : invalidParties) parties.remove(key);
+		if (!invalidParties.isEmpty()) for (String key : invalidParties) { 
+			String partyID = parties.get(key).getPartyID();
+			deletePartyMessageHistory(partyID);
+			parties.remove(key);
+		};
 	}
 }
