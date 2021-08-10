@@ -30,7 +30,7 @@ public class GetProfileHandler extends AbstractHandler {
 		if (tokenService.getUsernameFromToken(token) == null) responder.sendError(session, "An invalid token was provided", this.getHandlerType());
 		else{
 			User user = userService.getUser(tokenService.getUsernameFromToken(token));
-			String userData = new JSONObject().put("nickname", user.getNickname()).put("colour", user.getHexColour()).toString();
+			String userData = new JSONObject().put("name", user.getEffectiveName()).put("colour", user.getHexColour()).toString();
 			responder.sendSuccess(session, userData, this.getHandlerType());
 		}
 	}
@@ -39,5 +39,4 @@ public class GetProfileHandler extends AbstractHandler {
 	public String getHandlerType() {
 		return "user-getprofile";
 	}
-
 }

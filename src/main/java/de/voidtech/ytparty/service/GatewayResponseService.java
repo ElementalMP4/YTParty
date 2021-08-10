@@ -4,8 +4,6 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +19,7 @@ import main.java.de.voidtech.ytparty.entities.SystemMessage;
 public class GatewayResponseService {
 	
 	@Autowired
-	private SessionFactory sessionFactory;
+	private MessageService messageService;
 	
 	private static final Logger LOGGER = Logger.getLogger(GatewayResponseService.class.getName());
 
@@ -41,14 +39,17 @@ public class GatewayResponseService {
 		}
 	}
 	
+	public void sendSingleTextMessage(WebSocketSession session, String text) {
+		try {
+			session.sendMessage(new TextMessage(text));
+		} catch (IOException e) {
+			LOGGER.log(Level.SEVERE, "Error during Service Execution: " + e.getMessage());
+		}
+	}
+	
 	public void sendChatMessage(Party party, ChatMessage message) {
 		party.broadcastMessage(message.convertToJSON());
-		try(Session session = sessionFactory.openSession())
-		{
-			session.getTransaction().begin();			
-			session.saveOrUpdate(message);
-			session.getTransaction().commit();
-		}
+		messageService.saveMessage(message);
 	}
 	
 	public void sendSystemMessage(Party party, SystemMessage systemMessage) {

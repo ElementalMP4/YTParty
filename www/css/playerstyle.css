@@ -33,12 +33,16 @@ body {
     padding: 3px;
 }
 
+.div-input-container {
+    width: 19%;
+}
+
 div {
     padding: 0px;
 }
 
 .chat {
-    height: 95%;
+    height: 93%;
     overflow-y: scroll;
     overflow-x: hidden;
     overflow: auto;
@@ -92,7 +96,7 @@ p.typing-message {
     font-style: italic;
 }
 
-p.system-message {
+p.system {
     color: grey;
     font-style: italic;
 }
