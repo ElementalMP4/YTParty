@@ -171,7 +171,8 @@ Gateway.onopen = function() {
 document.getElementById("chat-input").addEventListener("keyup", function(event) {
     if (event.keyCode === 13) {
         event.preventDefault();
-        let message = document.getElementById("chat-input").value;
+        let message = document.getElementById("chat-input").value.trim();
+        if (message == "") return;
         sendGatewayMessage({
             "type": "party-chatmessage",
             "data": {
