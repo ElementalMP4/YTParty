@@ -45,6 +45,10 @@ function addChatMessage(data) {
     $('#chat-history').scrollTop($('#chat-history')[0].scrollHeight);
 }
 
+function displayLocalMessage(message) {
+    addChatMessage({ "author": "System", "colour": "#ff0000", "content": message, "modifiers": "system" });
+}
+
 function sendPlayingMessage() {
     let time = PLAYER.getCurrentTime();
     sendGatewayMessage({ "type": "party-playvideo", "data": { "token": TOKEN, "roomID": ROOM_ID, "timestamp": time } });
@@ -175,11 +179,31 @@ Gateway.onopen = function() {
     }
 }
 
+
+Gateway.onclose = function() {
+    displayLocalMessage("You lost connection to the server! Use /r to reconnect");
+}
+
 function handleSetVideoCommand(args) {
     let videoURL = new URL(args[0]);
     let videoID = videoURL.searchParams.get("v");
     if (!videoID) return;
     else sendGatewayMessage({ "type": "party-changevideo", "data": { "token": TOKEN, "roomID": ROOM_ID, "video": videoID } });
+}
+
+function handleHelpCommand() {
+    displayLocalMessage(`
+    ~ ~ YTParty Help ~ ~<br>
+    /help - shows this message<br><br>
+    /setvideo [video URL] - changes the video<br><br>
+    /i [message] - changes your message to italics<br><br>
+    /u [message] - changes your message to underline<br><br>
+    /b [message] - makes your message bold<br><br>
+    /s [message] - changes your message to strikethrough<br><br>
+    /c [message] - changes your message to cursive<br><br>
+    /big [message] - makes your message big<br><br>
+    /r - reloads your session
+    `);
 }
 
 document.getElementById("chat-input").addEventListener("keyup", function(event) {
@@ -188,28 +212,64 @@ document.getElementById("chat-input").addEventListener("keyup", function(event) 
         let message = document.getElementById("chat-input").value.trim();
         if (message == "") return;
 
+        let sendChatMessage = true;
+        let modifiers = "";
+
         if (message.startsWith("/")) {
             const args = message.slice(1).split(/ +/);
             const command = args.shift().toLowerCase();
 
             switch (command) {
+                case "help":
+                    handleHelpCommand();
+                    sendChatMessage = false;
+                    break;
                 case "setvideo":
                     handleSetVideoCommand(args);
                     break;
+                case "i":
+                    modifiers = "italic";
+                    message = args.join(" ");
+                    break;
+                case "u":
+                    modifiers = "underline";
+                    message = args.join(" ");
+                    break;
+                case "b":
+                    modifiers = "bold";
+                    message = args.join(" ");
+                    break;
+                case "s":
+                    modifiers = "strikethrough";
+                    message = args.join(" ");
+                    break;
+                case "c":
+                    modifiers = "cursive";
+                    message = args.join(" ");
+                    break;
+                case "big":
+                    modifiers = "big";
+                    message = args.join(" ");
+                    break;
+                case "r":
+                    sendChatMessage = false;
+                    location.reload();
+                    break;
             }
         }
-
-        sendGatewayMessage({
-            "type": "party-chatmessage",
-            "data": {
-                "token": TOKEN,
-                "roomID": ROOM_ID,
-                "content": message,
-                "colour": USER_PROPERTIES.colour,
-                "author": USER_PROPERTIES.effectiveName,
-                "modifiers": ""
-            }
-        });
+        if (sendChatMessage) {
+            sendGatewayMessage({
+                "type": "party-chatmessage",
+                "data": {
+                    "token": TOKEN,
+                    "roomID": ROOM_ID,
+                    "content": message,
+                    "colour": USER_PROPERTIES.colour,
+                    "author": USER_PROPERTIES.effectiveName,
+                    "modifiers": modifiers
+                }
+            });
+        }
         document.getElementById("chat-input").value = "";
     }
 });
