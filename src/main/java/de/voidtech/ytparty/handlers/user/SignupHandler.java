@@ -37,7 +37,7 @@ public class SignupHandler extends AbstractHandler {
 		else if (!passwordPattern.matcher(password).matches()) responder.sendError(session, "That password is not valid!", this.getHandlerType());
 		else if (userService.usernameInUse(username)) responder.sendError(session, "That username is already in use!", this.getHandlerType());
 		else {
-			User newUser = new User(username, "", password, "#FF0000");
+			User newUser = new User(username, null, password, "#FF0000");
 			userService.saveUser(newUser);
 			responder.sendSuccess(session, tokenService.getToken(username), this.getHandlerType());
 		}
