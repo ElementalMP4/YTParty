@@ -1,6 +1,9 @@
 package main.java.de.voidtech.ytparty.service;
 
 import java.security.SecureRandom;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Random;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -11,6 +14,9 @@ import main.java.de.voidtech.ytparty.entities.TokenContainer;
 
 @Service
 public class UserTokenService {
+	
+	private static final String LEXICON_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz12345674890!£$%^&*()_+{}:@~<>?,./;'#\\|`¬]['";
+	private static final List<String> LEXICON = Arrays.asList(LEXICON_CHARS.split(""));
 	
 	@Autowired
 	private SessionFactory sessionFactory;
@@ -43,7 +49,10 @@ public class UserTokenService {
 	}
 	
     private synchronized String generateToken() {
-        return Long.toString(Math.abs(new SecureRandom().nextLong()), 16);
+    	String token = "";
+		Random random = new SecureRandom();
+		for (int i = 0; i < 40; i++) token += LEXICON.get(random.nextInt(LEXICON.size() - 1));
+		return token;
     }
     
 	public synchronized String getToken(String username) {
