@@ -32,6 +32,10 @@ p {
     line-height: 1.5;
 }
 
+p.danger-text {
+    color: red;
+}
+
 hr {
     border: 1px solid grey;
     width: 50%;
@@ -46,6 +50,10 @@ button {
     display: block;
     margin: auto;
     width: 50%;
+}
+
+button.danger-button {
+    color: red;
 }
 
 button:hover {

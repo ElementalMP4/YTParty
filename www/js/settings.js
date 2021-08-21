@@ -32,7 +32,7 @@ function handleProfileResponse(response) {
     if (response.success) {
         var userProfile = JSON.parse(response.response);
         document.getElementById("name-colour-picker").value = userProfile.colour;
-        document.getElementById("nickname-entry").value = userProfile.nickname;
+        document.getElementById("nickname-entry").value = userProfile.effectiveName;
     } else {
         window.location.href = location.protocol + "//" + location.host + "/login.html";
     }
@@ -41,6 +41,11 @@ function handleProfileResponse(response) {
 function handlePasswordChange(response) {
     if (response.success) showUserMessage("Password changed! You may need to log in again", "password-message");
     else showUserMessage(response.response, "password-message");
+}
+
+function handleAccountDeleteResponse(response) {
+    if (response.success) showUserMessage("Your account has been deleted!", "delete-message");
+    else showUserMessage(response.response, "delete-message");
 }
 
 Gateway.onmessage = function(message) {
@@ -58,6 +63,9 @@ Gateway.onmessage = function(message) {
             break;
         case "user-getprofile":
             handleProfileResponse(response);
+            break;
+        case "user-deleteaccount":
+            handleAccountDeleteResponse(response);
             break;
     }
 }
@@ -100,6 +108,20 @@ function updatePassword() {
             "type": "user-changepassword",
             "data": {
                 "password": password,
+                "token": cookie.token == undefined ? "" : cookie.token
+            }
+        }
+        Gateway.send(JSON.stringify(payload));
+    }
+}
+
+function deleteAccount() {
+    var deleteMessageAccepted = window.confirm("Are you wure you want to delete your account? This action cannot be undone!");
+    const cookie = JSON.parse(document.cookie);
+    if (deleteMessageAccepted) {
+        var payload = {
+            "type": "user-deleteaccount",
+            "data": {
                 "token": cookie.token == undefined ? "" : cookie.token
             }
         }

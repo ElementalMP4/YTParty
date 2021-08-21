@@ -35,4 +35,14 @@ public class UserService {
 			session.getTransaction().commit();
 		}
 	}
+	
+	public synchronized void removeUser(String username) {
+		try(Session session = sessionFactory.openSession())	{
+			session.getTransaction().begin();
+			session.createQuery("DELETE FROM Users WHERE username = :username")
+				.setParameter("username", username)
+				.executeUpdate();
+			session.getTransaction().commit();
+		}
+	}
 }
