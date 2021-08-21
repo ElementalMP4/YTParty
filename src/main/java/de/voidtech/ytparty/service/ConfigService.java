@@ -67,4 +67,14 @@ public class ConfigService {
 		String port = config.getProperty("http.port");
 		return port != null ? port : "6969";
 	}
+	
+	public boolean textCacheEnabled() {
+		String cacheEnabled = config.getProperty("cache.TextIsEnabled");
+		return cacheEnabled != null ? Boolean.parseBoolean(cacheEnabled) : true;	
+	}
+	
+	public boolean binaryCacheEnabled() {
+		String cacheEnabled = config.getProperty("cache.BinaryIsEnabled");
+		return cacheEnabled != null ? Boolean.parseBoolean(cacheEnabled) : true;	
+	}
 }
