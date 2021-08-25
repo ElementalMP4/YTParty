@@ -9,8 +9,9 @@ var ROOM_ID;
 
 var LAST_RECEIVED_MESSAGE;
 var LAST_SENT_MESSAGE;
-
 var LAST_MESSAGE_AUTHOR;
+
+var CAN_CONTROL_PLAYER;
 
 var PLAYER_READY = false;
 
@@ -62,6 +63,7 @@ function onYouTubeIframeAPIReady() {
     PLAYER = new YT.Player('player', {
         height: '100%',
         width: '80%',
+        playerVars: { 'controls': CAN_CONTROL_PLAYER ? 1 : 0 },
         videoId: CURRENT_VIDEO_ID,
         events: {
             'onReady': onPlayerReady,
@@ -136,7 +138,9 @@ Gateway.onmessage = function(message) {
 
     switch (response.origin) {
         case "party-joinparty":
-            loadVideo(JSON.parse(response.response).video);
+            let options = JSON.parse(response.response);
+            loadVideo(options.video);
+            CAN_CONTROL_PLAYER = options.canControl;
             break;
         case "user-getprofile":
             USER_PROPERTIES = JSON.parse(response.response);
