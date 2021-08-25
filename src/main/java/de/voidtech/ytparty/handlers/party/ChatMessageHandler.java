@@ -40,8 +40,11 @@ public class ChatMessageHandler extends AbstractHandler {
 			Party party = partyService.getParty(roomID);
 			if (party == null) responder.sendError(session, "An invalid room ID was provided", this.getHandlerType());
 			else {
-				ChatMessage userMessage = new ChatMessage(roomID, author, colour, content, modifiers);
-				responder.sendChatMessage(party, userMessage);
+				if (content.length() > 800) responder.sendError(session, "Your message is too long! Messages cannot be longer than 800 characters.", this.getHandlerType());
+				else {
+					ChatMessage userMessage = new ChatMessage(roomID, author, colour, content, modifiers);
+					responder.sendChatMessage(party, userMessage);	
+				}
 			}
 		}		
 	}

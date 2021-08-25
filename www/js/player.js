@@ -134,8 +134,18 @@ Gateway.onmessage = function(message) {
     const response = JSON.parse(message.data);
     console.log(response);
 
-    if (response.origin == "party-joinparty") loadVideo(JSON.parse(response.response).video);
-    if (response.origin == "user-getprofile") USER_PROPERTIES = JSON.parse(response.response);
+    switch (response.origin) {
+        case "party-joinparty":
+            loadVideo(JSON.parse(response.response).video);
+            break;
+        case "user-getprofile":
+            USER_PROPERTIES = JSON.parse(response.response);
+            break;
+        case "party-chatmessage":
+            if (!response.success) displayLocalMessage(response.response);
+            break;
+
+    }
 
     switch (response.type) {
         case "party-chatmessage":
@@ -211,6 +221,10 @@ document.getElementById("chat-input").addEventListener("keyup", function(event) 
         event.preventDefault();
         let message = document.getElementById("chat-input").value.trim();
         if (message == "") return;
+        if (message.length > 800) {
+            displayLocalMessage("Your message is too long! Messages cannot be longer than 800 characters.");
+            return;
+        }
 
         let sendChatMessage = true;
         let modifiers = "";

@@ -8,6 +8,7 @@ import javax.persistence.Id;
 import javax.persistence.Index;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.Type;
 import org.json.JSONObject;
 
 @Entity(name = "Messages")
@@ -26,7 +27,8 @@ public class ChatMessage {
 	@Column
 	private String colour;
 	
-	@Column 
+	@Column
+	@Type(type = "org.hibernate.type.TextType")
 	private String content;
 	
 	@Column
