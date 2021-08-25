@@ -139,6 +139,8 @@ function initialiseParty(response) {
     chatInput.addEventListener("blur", function() {
         this.style.borderBottom = "2px solid grey";
     });
+
+    displayLocalMessage("This party's Room ID is " + ROOM_ID + "<br> Use /help to see some chat commands!");
 }
 
 Gateway.onopen = function() {
@@ -208,7 +210,6 @@ Gateway.onopen = function() {
     }
 }
 
-
 Gateway.onclose = function() {
     displayLocalMessage("You lost connection to the server! Use /r to reconnect");
 }
@@ -225,6 +226,7 @@ function handleHelpCommand() {
     ~ ~ YTParty Help ~ ~<br>
     /help - shows this message<br><br>
     /setvideo [video URL] - changes the video<br><br>
+    /id - Shows you the room ID<br><br>
     /i [message] - changes your message to italics<br><br>
     /u [message] - changes your message to underline<br><br>
     /b [message] - makes your message bold<br><br>
@@ -255,6 +257,10 @@ document.getElementById("chat-input").addEventListener("keyup", function(event) 
             switch (command) {
                 case "help":
                     handleHelpCommand();
+                    sendChatMessage = false;
+                    break;
+                case "id":
+                    displayLocalMessage("This Party's Room ID is " + ROOM_ID);
                     sendChatMessage = false;
                     break;
                 case "setvideo":
