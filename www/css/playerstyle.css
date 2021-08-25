@@ -19,7 +19,7 @@ input[type=text] {
 }
 
 input[type=text]:focus {
-    border-bottom: 2px solid rgb(143, 39, 39)
+    border-bottom: 2px solid #8f2727
 }
 
 body {

@@ -12,6 +12,7 @@ var LAST_SENT_MESSAGE;
 var LAST_MESSAGE_AUTHOR;
 
 var CAN_CONTROL_PLAYER;
+var ROOM_COLOUR;
 
 var PLAYER_READY = false;
 
@@ -47,7 +48,7 @@ function addChatMessage(data) {
 }
 
 function displayLocalMessage(message) {
-    addChatMessage({ "author": "System", "colour": "#ff0000", "content": message, "modifiers": "system" });
+    addChatMessage({ "author": "System", "colour": ROOM_COLOUR, "content": message, "modifiers": "system" });
 }
 
 function sendPlayingMessage() {
@@ -124,6 +125,22 @@ function handleSystemMessage(data) {
     }
 }
 
+function initialiseParty(response) {
+    let options = JSON.parse(response);
+    loadVideo(options.video);
+    CAN_CONTROL_PLAYER = options.canControl;
+    ROOM_COLOUR = options.theme;
+
+    var chatInput = document.getElementById("chat-input");
+    chatInput.addEventListener("focus", function() {
+        this.style.borderBottom = "2px solid " + ROOM_COLOUR;
+    });
+
+    chatInput.addEventListener("blur", function() {
+        this.style.borderBottom = "2px solid grey";
+    });
+}
+
 Gateway.onopen = function() {
     console.log("Connected To Gateway");
 }
@@ -138,9 +155,7 @@ Gateway.onmessage = function(message) {
 
     switch (response.origin) {
         case "party-joinparty":
-            let options = JSON.parse(response.response);
-            loadVideo(options.video);
-            CAN_CONTROL_PLAYER = options.canControl;
+            initialiseParty(response.response);
             break;
         case "user-getprofile":
             USER_PROPERTIES = JSON.parse(response.response);

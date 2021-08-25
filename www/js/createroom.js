@@ -40,11 +40,13 @@ function getToken() {
 
 function sendRoomPayload(videoID) {
     const roomHasOwner = !document.getElementById("owner-checkbox").checked;
+    const theme = document.getElementById("room-colour-picker").value;
     const payload = {
         "type": "party-createparty",
         "data": {
             "token": getToken(),
             "roomHasOwner": roomHasOwner,
+            "theme": theme,
             "videoID": videoID
         }
     }

@@ -28,12 +28,13 @@ public class CreatePartyHandler extends AbstractHandler{
 		String token = data.getString("token");
 		boolean roomHasOwner = data.getBoolean("roomHasOwner");
 		String videoID = data.getString("videoID");
+		String roomThemeColour = data.getString("theme");
 		
 		if (tokenService.getUsernameFromToken(token) == null) responder.sendError(session, "An invalid token was provided", this.getHandlerType());
 		else {
 			String ownerUsername = null;
 			if (roomHasOwner) ownerUsername = tokenService.getUsernameFromToken(token);
-			Party party = new Party(partyService.generateRoomID(), ownerUsername, videoID);
+			Party party = new Party(partyService.generateRoomID(), ownerUsername, roomThemeColour, videoID);
 			partyService.saveParty(party);
 			responder.sendSuccess(session, party.getPartyID(), this.getHandlerType());
 		}

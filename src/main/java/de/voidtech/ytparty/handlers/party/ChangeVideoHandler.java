@@ -38,7 +38,7 @@ public class ChangeVideoHandler extends AbstractHandler {
 			if (party == null) responder.sendError(session, "An invalid room ID was provided", this.getHandlerType());
 			else {
 				responder.sendSuccess(session, new JSONObject().put("video", newVideoID).toString(), this.getHandlerType());
-				ChatMessage videoMessage = new ChatMessage(roomID, "System", "#ff0000", "The video has been changed!", "system");
+				ChatMessage videoMessage = new ChatMessage(roomID, "System", party.getRoomColour(), "The video has been changed!", "system");
 				party.setVideoID(newVideoID);
 				responder.sendChatMessage(party, videoMessage);
 				responder.sendSystemMessage(party, new SystemMessage("changevideo", new JSONObject().put("video", newVideoID)));

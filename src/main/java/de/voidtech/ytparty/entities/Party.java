@@ -22,11 +22,14 @@ public class Party {
 	
 	private boolean hasBeenVisited;
 	
+	private String roomColour;
+	
 	private static final Logger LOGGER = Logger.getLogger(Party.class.getName());
 	
-	public Party(String partyID, String ownerName, String videoID)
+	public Party(String partyID, String ownerName, String roomColour, String videoID)
 	{
 	  this.partyID = partyID;
+	  this.roomColour = roomColour;
 	  this.ownerName = ownerName;
 	  this.currentVideoID = videoID;
 	  this.sessions = new ArrayList<WebSocketSession>();
@@ -34,6 +37,10 @@ public class Party {
 
 	public String getPartyID() {
 		return this.partyID;
+	}
+	
+	public String getRoomColour() {
+		return this.roomColour;
 	}
 
 	public String getOwnerName() {
