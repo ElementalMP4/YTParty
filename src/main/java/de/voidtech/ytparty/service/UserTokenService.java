@@ -15,7 +15,7 @@ import main.java.de.voidtech.ytparty.entities.TokenContainer;
 @Service
 public class UserTokenService {
 	
-	private static final String LEXICON_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz12345674890!£$%^&*()_+{}:@~<>?,./;'#\\|`¬]['";
+	private static final String LEXICON_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz12345674890!£$%^&#@?";
 	private static final List<String> LEXICON = Arrays.asList(LEXICON_CHARS.split(""));
 	
 	@Autowired
