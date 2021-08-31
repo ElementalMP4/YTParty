@@ -16,6 +16,11 @@ public class HttpRestController {
 	public String indexRoute() {
 		return fileReader.getTextFileContents("html/index.html");
 	}
+	
+	@RequestMapping(value = "/terms.html")
+	public String termsRoute() {
+		return fileReader.getTextFileContents("html/terms.html");
+	}
   
 	@RequestMapping(value = "/primarystyle.css")
 	public String primaryStyleRoute() {
