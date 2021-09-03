@@ -19,7 +19,6 @@ public class YouTubeParty {
 		properties.put("server.port", configService.getHttpPort());
 		properties.put("server.error.whitelabel.enabled", false);
 		properties.put("server.error.path", "/error");
-		properties.put("spring.datasource.url", configService.getConnectionURL());
 		properties.put("spring.datasource.username", configService.getDBUser());
 		properties.put("spring.datasource.password", configService.getDBPassword());
 		properties.put("spring.datasource.url", configService.getConnectionURL());
