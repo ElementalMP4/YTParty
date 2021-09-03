@@ -111,4 +111,9 @@ public class HttpRestController {
 	public String joinRoomRoute() {
 		return fileReader.getTextFileContents("html/joinroom.html");
 	}
+	
+	@RequestMapping(value = "/doesonestillequalone.html")
+	public String easterEggRoute() {
+		return fileReader.getTextFileContents("/html/doesonestillequalone.html");
+	}
 }

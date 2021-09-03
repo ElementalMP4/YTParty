@@ -1,0 +1,33 @@
+<html>
+
+<head>
+    <title>Does one still equal one?</title>
+    <link rel="stylesheet" type="text/css" href="/primarystyle.css">
+    <meta property="og:site_name" content="Does one still equal one?">
+    <link href="/favicon.png" rel="icon" type="image/png">
+    <meta property="og:url" content="https://ytparty.voidtech.de/">
+    <meta property="og:description" content="A very important test to ensure the stability of the universe">
+    <meta property="og:image" content="https://ytparty.voidtech.de/favicon.png" />
+    <meta property="og:type" content="website">
+    <meta name="theme-color" content="#24d600">
+</head>
+
+<body>
+    <p id="oneequalsone">Does one still equal one? </p>
+    <p id="zeroequalszero">Does zero still equal zero? </p>
+</body>
+<script>
+    var oneEqualsOneMessage = document.getElementById("oneequalsone");
+    var zeroEqualsZeroMessage = document.getElementById("zeroequalszero");
+
+    const REMAIN_CALM_MESSAGE = "Yes. Remain calm.";
+    const PANIC_MESSAGE = "No. Panic.";
+
+    if (1 == 1) oneEqualsOneMessage.innerHTML += REMAIN_CALM_MESSAGE
+    else oneEqualsOneMessage.innerHTML += PANIC_MESSAGE
+
+    if (0 == 0) zeroEqualsZeroMessage.innerHTML += REMAIN_CALM_MESSAGE;
+    else zeroEqualsZeroMessage.innerHTML += PANIC_MESSAGE;
+</script>
+
+</html>
