@@ -22,9 +22,11 @@ Gateway.onmessage = function(message) {
     const response = JSON.parse(message.data);
     console.log(response);
     if (response.success) {
+        let url = new URL(location.href);
+        let redirect = url.searchParams.get("redirect");
         showUserMessage("Logging you in!");
         document.cookie = JSON.stringify({ "token": response.response });
-        window.location.href = location.protocol + "//" + location.host + "/home.html";
+        window.location.href = location.protocol + "//" + location.host + (redirect == null ? "/home.html" : redirect);
     } else {
         showUserMessage(response.response);
     }

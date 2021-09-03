@@ -34,7 +34,8 @@ Gateway.onmessage = function(message) {
     console.log(response);
     if (response.success) {
         showUserMessage("Account Created!");
-        document.cookie = "token:" + response.response;
+        document.cookie = JSON.stringify({ "token": response.response });
+        window.location.href = location.protocol + "//" + location.host + "/home.html";
     } else {
         showUserMessage(response.response);
     }

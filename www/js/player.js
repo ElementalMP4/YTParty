@@ -155,6 +155,17 @@ Gateway.onmessage = function(message) {
     const response = JSON.parse(message.data);
     console.log(response);
 
+    if (!response.success && response.response == "An invalid token was provided") {
+        switch (response.response) {
+            case "An invalid token was provided":
+                window.location.href = location.protocol + "//" + location.host + "/login.html?redirect=" + location.pathname + location.search;
+                break;
+            case "An invalid room ID was provided":
+                displayLocalMessage("This room does not exist! Check the room ID and try again!");
+                break;
+        }
+    }
+
     switch (response.origin) {
         case "party-joinparty":
             initialiseParty(response.response);
@@ -180,7 +191,7 @@ Gateway.onmessage = function(message) {
 
 function getToken() {
     if (document.cookie == "") {
-        window.location.href = location.protocol + "//" + location.host + "/login.html";
+        window.location.href = location.protocol + "//" + location.host + "/login.html?redirect=" + location.pathname + location.search;
     } else {
         const cookie = JSON.parse(document.cookie);
         return cookie.token;
@@ -200,7 +211,7 @@ Gateway.onopen = function() {
     TOKEN = getToken();
 
     if (!selfURL.searchParams.get("roomID")) {
-        window.location.href = location.protocol + "//" + location.host + "/login.html";
+        window.location.href = location.protocol + "//" + location.host + "/home.html";
     } else {
         ROOM_ID = selfURL.searchParams.get("roomID");
         embedPlayer();
