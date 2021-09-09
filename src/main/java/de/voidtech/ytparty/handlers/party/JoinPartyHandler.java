@@ -7,9 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.socket.WebSocketSession;
 
 import main.java.de.voidtech.ytparty.annotations.Handler;
+import main.java.de.voidtech.ytparty.entities.AuthResponse;
 import main.java.de.voidtech.ytparty.entities.ChatMessage;
 import main.java.de.voidtech.ytparty.entities.Party;
 import main.java.de.voidtech.ytparty.handlers.AbstractHandler;
+import main.java.de.voidtech.ytparty.service.AuthService;
 import main.java.de.voidtech.ytparty.service.GatewayResponseService;
 import main.java.de.voidtech.ytparty.service.MessageService;
 import main.java.de.voidtech.ytparty.service.PartyService;
@@ -26,6 +28,9 @@ public class JoinPartyHandler extends AbstractHandler{
 	private UserTokenService tokenService;
 	
 	@Autowired
+	private AuthService authService;
+	
+	@Autowired
 	private PartyService partyService;
 	
 	@Autowired
@@ -39,11 +44,14 @@ public class JoinPartyHandler extends AbstractHandler{
 		String token = data.getString("token");
 		String roomID = data.getString("roomID");
 		String username = tokenService.getUsernameFromToken(token); 
-		if (username == null) responder.sendError(session, "An invalid token was provided", this.getHandlerType());
-		else {
-			Party party = partyService.getParty(roomID);
-			if (party == null) responder.sendError(session, "An invalid room ID was provided", this.getHandlerType());
+		
+		AuthResponse tokenResponse = authService.validateToken(token); 
+		AuthResponse partyIDResponse = authService.validatePartyID(roomID);
+		
+		if (!tokenResponse.isSuccessful()) responder.sendError(session, tokenResponse.getMessage(), this.getHandlerType());
+		else if (!partyIDResponse.isSuccessful()) responder.sendError(session, partyIDResponse.getMessage(), this.getHandlerType());
 			else {
+				Party party = partyService.getParty(roomID);
 				responder.sendSuccess(session, new JSONObject()
 						.put("video", party.getVideoID())
 						.put("canControl", (party.getOwnerName() == null ? true : party.getOwnerName().equals(username)))
@@ -56,7 +64,6 @@ public class JoinPartyHandler extends AbstractHandler{
 				responder.sendChatMessage(party, joinMessage);
 			}
 		}
-	}
 
 	private void deliverMessageHistory(WebSocketSession session, String roomID) {
 		List<ChatMessage> messageHistory = messageService.getMessageHistory(roomID);

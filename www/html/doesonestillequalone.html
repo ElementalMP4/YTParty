@@ -17,17 +17,34 @@
     <p id="zeroequalszero">Does zero still equal zero? </p>
 </body>
 <script>
+    //I am too lazy to write unit tests but I need to ensure that these values are always constant
+    //If these tests do not return the REMAIN_CALM_MESSAGE then the armaggedon protocol must be assumed
+    //For ease of reading, all the major sections of this application-critical code have been commented
+
+    //Store the message objects in 2 variables with appropriate names
     var oneEqualsOneMessage = document.getElementById("oneequalsone");
     var zeroEqualsZeroMessage = document.getElementById("zeroequalszero");
 
+    //Store the panic and remain calm messages in 2 more constant variables
     const REMAIN_CALM_MESSAGE = "Yes. Remain calm.";
     const PANIC_MESSAGE = "No. Panic.";
 
+    //Assert that one is equal to one. If true, show the remain calm message, If false, panic.
     if (1 == 1) oneEqualsOneMessage.innerHTML += REMAIN_CALM_MESSAGE
     else oneEqualsOneMessage.innerHTML += PANIC_MESSAGE
 
+    //Assert that zero is equal to zero. If true, show the remain calm message, If false, panic.
     if (0 == 0) zeroEqualsZeroMessage.innerHTML += REMAIN_CALM_MESSAGE;
     else zeroEqualsZeroMessage.innerHTML += PANIC_MESSAGE;
+
+    //  __________________
+    //< if in doubt, panic >
+    // ------------------
+    //     \   ^__^ 
+    //     \  (oo)\_______
+    //       (__)\       )\/\
+    //           ||----w |
+    //           ||     ||
 </script>
 
 </html>

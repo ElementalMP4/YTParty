@@ -5,21 +5,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.socket.WebSocketSession;
 
 import main.java.de.voidtech.ytparty.annotations.Handler;
+import main.java.de.voidtech.ytparty.entities.AuthResponse;
 import main.java.de.voidtech.ytparty.entities.Party;
 import main.java.de.voidtech.ytparty.entities.SystemMessage;
 import main.java.de.voidtech.ytparty.handlers.AbstractHandler;
+import main.java.de.voidtech.ytparty.service.AuthService;
 import main.java.de.voidtech.ytparty.service.GatewayResponseService;
 import main.java.de.voidtech.ytparty.service.PartyService;
-import main.java.de.voidtech.ytparty.service.UserTokenService;
 
 @Handler
-public class VideoPauseHandler extends AbstractHandler {
-
-	@Autowired
-	private GatewayResponseService responder;
+public class TypingUpdateHandler extends AbstractHandler {
 	
 	@Autowired
-	private UserTokenService tokenService;
+	private GatewayResponseService responder;
+
+	@Autowired
+	private AuthService authService;
 	
 	@Autowired
 	private PartyService partyService;
@@ -28,18 +29,24 @@ public class VideoPauseHandler extends AbstractHandler {
 	public void execute(WebSocketSession session, JSONObject data) {
 		String token = data.getString("token");
 		String roomID = data.getString("roomID");
-		String username = tokenService.getUsernameFromToken(token);
+		String mode = data.getString("mode");
 		
-		if (username == null) responder.sendError(session, "An invalid token was provided", this.getHandlerType());
+		AuthResponse tokenResponse = authService.validateToken(token); 
+		AuthResponse partyIDResponse = authService.validatePartyID(roomID);
+		
+		if (!tokenResponse.isSuccessful()) responder.sendError(session, tokenResponse.getMessage(), this.getHandlerType());
+		else if (!partyIDResponse.isSuccessful()) responder.sendError(session, partyIDResponse.getMessage(), this.getHandlerType());
 		else {
 			Party party = partyService.getParty(roomID);
-			if (party == null) responder.sendError(session, "An invalid room ID was provided", this.getHandlerType());
-			else responder.sendSystemMessage(party, new SystemMessage("pausevideo", new JSONObject()));
-		}
+			if (!mode.equals("start") && !mode.equals("stop")) 
+				responder.sendError(session, "An invalid typing mode was provided", this.getHandlerType());
+			else responder.sendSystemMessage(party, new SystemMessage("typingupdate", new JSONObject().put("mode", mode)));
+		}	
 	}
 
 	@Override
 	public String getHandlerType() {
-		return "party-pausevideo";
+		return "party-typingupdate";
 	}
+	
 }

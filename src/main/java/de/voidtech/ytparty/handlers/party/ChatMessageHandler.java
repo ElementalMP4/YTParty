@@ -5,12 +5,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.socket.WebSocketSession;
 
 import main.java.de.voidtech.ytparty.annotations.Handler;
+import main.java.de.voidtech.ytparty.entities.AuthResponse;
 import main.java.de.voidtech.ytparty.entities.ChatMessage;
 import main.java.de.voidtech.ytparty.entities.Party;
 import main.java.de.voidtech.ytparty.handlers.AbstractHandler;
+import main.java.de.voidtech.ytparty.service.AuthService;
 import main.java.de.voidtech.ytparty.service.GatewayResponseService;
 import main.java.de.voidtech.ytparty.service.PartyService;
-import main.java.de.voidtech.ytparty.service.UserTokenService;
 
 @Handler
 public class ChatMessageHandler extends AbstractHandler {
@@ -19,7 +20,7 @@ public class ChatMessageHandler extends AbstractHandler {
 	private GatewayResponseService responder;
 
 	@Autowired
-	private UserTokenService tokenService;
+	private AuthService authService;
 	
 	@Autowired
 	private PartyService partyService;
@@ -33,18 +34,17 @@ public class ChatMessageHandler extends AbstractHandler {
 		String modifiers = data.getString("modifiers");
 		String author = data.getString("author");
 		
-		String username = tokenService.getUsernameFromToken(token); 
+		AuthResponse tokenResponse = authService.validateToken(token); 
+		AuthResponse partyIDResponse = authService.validatePartyID(roomID);
 		
-		if (username == null) responder.sendError(session, "An invalid token was provided", this.getHandlerType());
+		if (!tokenResponse.isSuccessful()) responder.sendError(session, tokenResponse.getMessage(), this.getHandlerType());
+		else if (!partyIDResponse.isSuccessful()) responder.sendError(session, partyIDResponse.getMessage(), this.getHandlerType());
 		else {
 			Party party = partyService.getParty(roomID);
-			if (party == null) responder.sendError(session, "An invalid room ID was provided", this.getHandlerType());
+			if (content.length() > 800) responder.sendError(session, "Your message is too long! Messages cannot be longer than 800 characters.", this.getHandlerType());
 			else {
-				if (content.length() > 800) responder.sendError(session, "Your message is too long! Messages cannot be longer than 800 characters.", this.getHandlerType());
-				else {
-					ChatMessage userMessage = new ChatMessage(roomID, author, colour, content, modifiers);
-					responder.sendChatMessage(party, userMessage);	
-				}
+				ChatMessage userMessage = new ChatMessage(roomID, author, colour, content, modifiers);
+				responder.sendChatMessage(party, userMessage);	
 			}
 		}		
 	}

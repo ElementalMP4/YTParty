@@ -27,7 +27,6 @@ public class SignInHandler extends AbstractHandler {
 	public void execute(WebSocketSession session, JSONObject data) {
 		String username = data.getString("username");
 		String enteredPassword = data.getString("password");
-		
 		User user = userService.getUser(username);
 		
 		if (user == null) responder.sendError(session, "No user found with that name!", this.getHandlerType());

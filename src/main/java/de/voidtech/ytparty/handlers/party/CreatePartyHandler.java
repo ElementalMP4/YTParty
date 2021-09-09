@@ -5,8 +5,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.socket.WebSocketSession;
 
 import main.java.de.voidtech.ytparty.annotations.Handler;
+import main.java.de.voidtech.ytparty.entities.AuthResponse;
 import main.java.de.voidtech.ytparty.entities.Party;
 import main.java.de.voidtech.ytparty.handlers.AbstractHandler;
+import main.java.de.voidtech.ytparty.service.AuthService;
 import main.java.de.voidtech.ytparty.service.GatewayResponseService;
 import main.java.de.voidtech.ytparty.service.PartyService;
 import main.java.de.voidtech.ytparty.service.UserTokenService;
@@ -16,6 +18,9 @@ public class CreatePartyHandler extends AbstractHandler{
 
 	@Autowired
 	private GatewayResponseService responder;
+	
+	@Autowired
+	private AuthService authService;
 	
 	@Autowired
 	private UserTokenService tokenService;
@@ -30,7 +35,9 @@ public class CreatePartyHandler extends AbstractHandler{
 		String videoID = data.getString("videoID");
 		String roomThemeColour = data.getString("theme");
 		
-		if (tokenService.getUsernameFromToken(token) == null) responder.sendError(session, "An invalid token was provided", this.getHandlerType());
+		AuthResponse tokenResponse = authService.validateToken(token);
+		
+		if (!tokenResponse.isSuccessful()) responder.sendError(session, tokenResponse.getMessage(), this.getHandlerType());
 		else {
 			String ownerUsername = null;
 			if (roomHasOwner) ownerUsername = tokenService.getUsernameFromToken(token);

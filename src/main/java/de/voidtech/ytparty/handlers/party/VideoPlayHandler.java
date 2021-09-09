@@ -5,7 +5,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.socket.WebSocketSession;
 
 import main.java.de.voidtech.ytparty.annotations.Handler;
-import main.java.de.voidtech.ytparty.entities.ChatMessage;
 import main.java.de.voidtech.ytparty.entities.Party;
 import main.java.de.voidtech.ytparty.entities.SystemMessage;
 import main.java.de.voidtech.ytparty.handlers.AbstractHandler;
@@ -36,20 +35,8 @@ public class VideoPlayHandler extends AbstractHandler {
 		else {
 			Party party = partyService.getParty(roomID);
 			if (party == null) responder.sendError(session, "An invalid room ID was provided", this.getHandlerType());
-			else {
-				ChatMessage joinMessage = new ChatMessage(roomID, "System", party.getRoomColour(), "Video playing at " + getTimestampFromSeconds(timestamp), "system");
-				responder.sendChatMessage(party, joinMessage);
-				responder.sendSystemMessage(party, new SystemMessage("playvideo", new JSONObject().put("time", timestamp)));
-			}
+			else responder.sendSystemMessage(party, new SystemMessage("playvideo", new JSONObject().put("time", timestamp)));
 		}
-	}
-
-	private String getTimestampFromSeconds(int totalSeconds) {
-		int seconds = totalSeconds % 60;
-        int hours = totalSeconds / 60;
-        int minutes = hours % 60;
-        hours = hours / 60;
-		return hours + ":" + minutes + ":" + seconds;
 	}
 
 	@Override
