@@ -54,10 +54,12 @@ function displayLocalMessage(message) {
 function sendPlayingMessage() {
     let time = PLAYER.getCurrentTime();
     sendGatewayMessage({ "type": "party-playvideo", "data": { "token": TOKEN, "roomID": ROOM_ID, "timestamp": time } });
+    displayLocalMessage("Video playing at " + new Date(time * 1000).toISOString().substr(11, 8));
 }
 
 function sendPausedMessage() {
     sendGatewayMessage({ "type": "party-pausevideo", "data": { "token": TOKEN, "roomID": ROOM_ID } });
+    displayLocalMessage("Video paused");
 }
 
 function onYouTubeIframeAPIReady() {
@@ -96,12 +98,16 @@ function loadVideo(youTubeVideoID) {
 }
 
 function startVideo(data) {
-    PLAYER.seekTo(data.time, true);
-    PLAYER.playVideo();
+    if (PLAYER.getPlayerState() !== YT.PlayerState.PLAYING) {
+        PLAYER.seekTo(data.time, true);
+        PLAYER.playVideo();
+    }
 }
 
 function pauseVideo() {
-    PLAYER.pauseVideo();
+    if (PLAYER.getPlayerState() !== YT.PlayerState.PAUSED) {
+        PLAYER.pauseVideo();
+    }
 }
 
 function handleChatMessage(data) {
