@@ -37,14 +37,12 @@ public class DatabaseService
 	public SessionFactory getSessionFactory() 
 	{
 		SessionFactory sessionFactory = null;
-			try 
-			{
+			try {
 				exportSchema();
 				Properties hibernateProperties = getHibernateProperties();
 				Configuration hibernateConfig = new Configuration();
 				getAllEntities().forEach(hibernateConfig::addAnnotatedClass);
 				hibernateConfig.setProperties(hibernateProperties);
-				
 				sessionFactory = hibernateConfig.buildSessionFactory();
 			} catch (Exception e) {
 				LOGGER.log(Level.SEVERE, "An error occurred while setting up Hibernate SessionFactory:\n" + e.getMessage());
@@ -58,7 +56,7 @@ public class DatabaseService
 		
 		MetadataSources metadataSources = new MetadataSources(new StandardServiceRegistryBuilder().applySettings(hbnProperties).build());
 		
-		Set<Class<?>> annotated = new Reflections("main.java.de.voidtech.ytparty").getTypesAnnotatedWith(Entity.class);
+		Set<Class<?>> annotated = getAllEntities();
 		annotated.forEach(metadataSources::addAnnotatedClass);
 		
 		new SchemaUpdate()
