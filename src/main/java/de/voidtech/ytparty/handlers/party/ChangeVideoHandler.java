@@ -13,7 +13,6 @@ import main.java.de.voidtech.ytparty.handlers.AbstractHandler;
 import main.java.de.voidtech.ytparty.service.AuthService;
 import main.java.de.voidtech.ytparty.service.GatewayResponseService;
 import main.java.de.voidtech.ytparty.service.PartyService;
-import main.java.de.voidtech.ytparty.service.UserTokenService;
 
 @Handler
 public class ChangeVideoHandler extends AbstractHandler {
