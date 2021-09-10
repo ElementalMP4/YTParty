@@ -7,8 +7,6 @@ var PLAYER;
 var CURRENT_VIDEO_ID;
 var ROOM_ID;
 
-var LAST_RECEIVED_MESSAGE;
-var LAST_SENT_MESSAGE;
 var LAST_MESSAGE_AUTHOR;
 
 var CAN_CONTROL_PLAYER;
@@ -25,8 +23,6 @@ function hideTypingMessage() {
 }
 
 function sendGatewayMessage(message) {
-    if (message.type == LAST_SENT_MESSAGE && message.type !== "party-chatmessage") return;
-    if (message.type !== "party-chatmessage") LAST_SENT_MESSAGE = message.type;
     Gateway.send(JSON.stringify(message));
 }
 
@@ -115,9 +111,6 @@ function handleChatMessage(data) {
 }
 
 function handleSystemMessage(data) {
-    if (data.type == LAST_RECEIVED_MESSAGE || data.type == LAST_SENT_MESSAGE) return;
-    LAST_RECEIVED_MESSAGE = data.type;
-
     switch (data.type) {
         case "playvideo":
             startVideo(data.data);
