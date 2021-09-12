@@ -6,12 +6,13 @@ var TOKEN;
 var PLAYER;
 var CURRENT_VIDEO_ID;
 var ROOM_ID;
-
 var LAST_MESSAGE_AUTHOR;
-
 var CAN_CONTROL_PLAYER;
 var ROOM_COLOUR;
 
+var TYPING_COUNT = 0;
+
+var TYPING = false;
 var PLAYER_READY = false;
 
 function showTypingMessage() {
@@ -21,6 +22,15 @@ function showTypingMessage() {
 function hideTypingMessage() {
     document.getElementById("typing-message").style.display = "none";
 }
+
+function updateTyping(data) {
+    if (data.user == USER_PROPERTIES.username) return;
+    if (data.mode == "start") TYPING_COUNT = TYPING_COUNT + 1;
+    else TYPING_COUNT = TYPING_COUNT - 1;
+
+    if (TYPING_COUNT > 0) showTypingMessage();
+    else hideTypingMessage();
+};
 
 function sendGatewayMessage(message) {
     Gateway.send(JSON.stringify(message));
@@ -121,6 +131,9 @@ function handleSystemMessage(data) {
         case "changevideo":
             loadVideo(data.data.video);
             break;
+        case "typingupdate":
+            updateTyping(data.data);
+            break;
     }
 }
 
@@ -154,7 +167,7 @@ Gateway.onmessage = function(message) {
     const response = JSON.parse(message.data);
     console.log(response);
 
-    if (!response.success && response.response == "An invalid token was provided") {
+    if (!response.success) {
         switch (response.response) {
             case "An invalid token was provided":
                 window.location.href = location.protocol + "//" + location.host + "/login.html?redirect=" + location.pathname + location.search;
@@ -247,8 +260,23 @@ function handleHelpCommand() {
     `);
 }
 
+function sendTypingStop() {
+    if (TYPING) {
+        TYPING = false;
+        sendGatewayMessage({ "type": "party-typingupdate", "data": { "token": TOKEN, "roomID": ROOM_ID, "mode": "stop", "user": USER_PROPERTIES.username } });
+    }
+}
+
+function sendTypingStart() {
+    if (!TYPING) {
+        TYPING = true;
+        sendGatewayMessage({ "type": "party-typingupdate", "data": { "token": TOKEN, "roomID": ROOM_ID, "mode": "start", "user": USER_PROPERTIES.username } });
+    }
+}
+
 document.getElementById("chat-input").addEventListener("keyup", function(event) {
     if (event.keyCode === 13) {
+        sendTypingStop();
         event.preventDefault();
         let message = document.getElementById("chat-input").value.trim();
         if (message == "") return;
@@ -320,5 +348,9 @@ document.getElementById("chat-input").addEventListener("keyup", function(event) 
             });
         }
         document.getElementById("chat-input").value = "";
+    } else {
+        let message = document.getElementById("chat-input").value.trim();
+        if (message == "") sendTypingStop();
+        else sendTypingStart();
     }
 });

@@ -30,6 +30,7 @@ public class TypingUpdateHandler extends AbstractHandler {
 		String token = data.getString("token");
 		String roomID = data.getString("roomID");
 		String mode = data.getString("mode");
+		String user = data.getString("user");
 		
 		AuthResponse tokenResponse = authService.validateToken(token); 
 		AuthResponse partyIDResponse = authService.validatePartyID(roomID);
@@ -40,13 +41,12 @@ public class TypingUpdateHandler extends AbstractHandler {
 			Party party = partyService.getParty(roomID);
 			if (!mode.equals("start") && !mode.equals("stop")) 
 				responder.sendError(session, "An invalid typing mode was provided", this.getHandlerType());
-			else responder.sendSystemMessage(party, new SystemMessage("typingupdate", new JSONObject().put("mode", mode)));
+			else responder.sendSystemMessage(party, new SystemMessage("typingupdate", new JSONObject().put("mode", mode).put("user", user)));
 		}	
 	}
 
 	@Override
 	public String getHandlerType() {
 		return "party-typingupdate";
-	}
-	
+	}	
 }

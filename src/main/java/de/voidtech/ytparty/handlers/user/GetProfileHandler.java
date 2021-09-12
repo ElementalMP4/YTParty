@@ -34,6 +34,7 @@ public class GetProfileHandler extends AbstractHandler {
 					.put("nickname", user.getNickname())
 					.put("colour", user.getHexColour())
 					.put("effectiveName", user.getEffectiveName())
+					.put("username", user.getUsername())
 				.toString();
 			responder.sendSuccess(session, userData, this.getHandlerType());
 		}
