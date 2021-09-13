@@ -7,8 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.socket.WebSocketSession;
 
 import main.java.de.voidtech.ytparty.annotations.Handler;
+import main.java.de.voidtech.ytparty.entities.AuthResponse;
 import main.java.de.voidtech.ytparty.entities.User;
 import main.java.de.voidtech.ytparty.handlers.AbstractHandler;
+import main.java.de.voidtech.ytparty.service.AuthService;
 import main.java.de.voidtech.ytparty.service.GatewayResponseService;
 import main.java.de.voidtech.ytparty.service.UserService;
 import main.java.de.voidtech.ytparty.service.UserTokenService;
@@ -25,14 +27,19 @@ public class PasswordUpdateHandler extends AbstractHandler {
 	@Autowired
 	private UserService userService;
 	
+	@Autowired
+	private AuthService authService;
+	
 	private Pattern passwordPattern = Pattern.compile("(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{8,}");
 	
 	@Override
 	public void execute(WebSocketSession session, JSONObject data) {
 		String username = tokenService.getUsernameFromToken(data.getString("token"));
+		String token =  data.getString("token");
 		String password = data.getString("password").trim();
+		AuthResponse tokenResponse = authService.validateToken(token); 
 		
-		if (username == null) responder.sendError(session, "Invalid access token provided", this.getHandlerType());
+		if (!tokenResponse.isSuccessful()) responder.sendError(session, tokenResponse.getMessage(), this.getHandlerType());
 		else if (!passwordPattern.matcher(password).matches()) responder.sendError(session, "That password is not valid! Make sure it contains a capital letter and a number and is at least 8 characters!", this.getHandlerType());
 		else {
 			User user = userService.getUser(username);

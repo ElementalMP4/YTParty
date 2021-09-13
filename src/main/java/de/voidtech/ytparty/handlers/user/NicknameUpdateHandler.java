@@ -5,8 +5,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.socket.WebSocketSession;
 
 import main.java.de.voidtech.ytparty.annotations.Handler;
+import main.java.de.voidtech.ytparty.entities.AuthResponse;
 import main.java.de.voidtech.ytparty.entities.User;
 import main.java.de.voidtech.ytparty.handlers.AbstractHandler;
+import main.java.de.voidtech.ytparty.service.AuthService;
 import main.java.de.voidtech.ytparty.service.GatewayResponseService;
 import main.java.de.voidtech.ytparty.service.UserService;
 import main.java.de.voidtech.ytparty.service.UserTokenService;
@@ -23,12 +25,17 @@ public class NicknameUpdateHandler extends AbstractHandler {
 	@Autowired
 	private UserTokenService tokenService;
 	
+	@Autowired
+	private AuthService authService;
+	
 	@Override
 	public void execute(WebSocketSession session, JSONObject data) {
 		String nickname = data.getString("nickname").trim();
 		String token = data.getString("token");
+		AuthResponse tokenResponse = authService.validateToken(token); 
+		
 		if (nickname.equals("") || nickname.length() > 40) responder.sendError(session, "That nickname is not valid!", this.getHandlerType());
-		else if (tokenService.getUsernameFromToken(token) == null) responder.sendError(session, "An invalid token was provided", this.getHandlerType());
+		else if (!tokenResponse.isSuccessful()) responder.sendError(session, tokenResponse.getMessage(), this.getHandlerType());
 		else {
 			String username = tokenService.getUsernameFromToken(token);
 			User user = userService.getUser(username);
