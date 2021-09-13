@@ -74,7 +74,7 @@ p {
 
 p.msg-nickname {
     font-size: 16px;
-    font-weight: bold;
+    font-family: 'Kanit', sans-serif;
 }
 
  ::-webkit-scrollbar {

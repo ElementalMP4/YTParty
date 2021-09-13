@@ -1,33 +1,20 @@
-* :not(body) {
-    animation: slide-up 0.3s ease;
-}
-
-@keyframes slide-up {
-    0% {
-        opacity: 0;
-        transform: translateY(60px);
-    }
-    100% {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-footer {
-    text-align: center;
-    position: fixed;
-    left: 0;
-    bottom: 0;
-    align-items: center;
-    width: 100%;
-}
-
 body {
+    padding: 0%;
+    margin: 0%;
     background-color: #1a1a1a;
 }
 
+svg {
+    position: absolute;
+    left: 0;
+    bottom: 0%;
+    z-index: -1;
+}
+
 a {
-    color: red;
+    text-decoration: none;
+    margin: auto;
+    color: blue;
 }
 
 p {
@@ -36,37 +23,36 @@ p {
     line-height: 1.5;
 }
 
+p.button-text {
+    font-family: 'Kanit', sans-serif;
+    margin: none;
+    border: none;
+    line-height: 0;
+}
+
 p.danger-text {
     color: red;
 }
 
 hr {
     border: 1px solid grey;
-    width: 50%;
+    width: 60%;
 }
 
 button {
     color: white;
-    background-color: #1a1a1a;
-    border-radius: 10px;
+    background-color: #ab1400;
     padding: 10px;
-    border: 2px solid grey;
+    border: none;
+    border-radius: 10px;
+    border-bottom: 2px solid grey;
     display: block;
     margin: auto;
-    width: 50%;
-}
-
-button.danger-button {
-    color: red;
+    width: 60%;
 }
 
 button:hover {
-    border: 2px solid #ab1400;
-}
-
-a {
-    text-decoration: none;
-    margin: auto;
+    background-color: red;
 }
 
 a.link {
@@ -76,32 +62,32 @@ a.link {
 input[type=text],
 input[type=password] {
     background-color: #1a1a1a;
-    border: solid 2px grey;
+    border: none;
+    border-bottom: solid 2px grey;
     display: block;
     margin: auto;
     padding: 10px;
-    border-radius: 10px;
     outline: none;
     box-sizing: border-box;
     color: white;
-    width: 50%;
+    width: 60%;
 }
 
 input[type=text],
 input[type=password]:focus {
-    border: solid 2px #ab1400;
+    border-bottom: solid 2px #ab1400;
 }
 
 input[type=color] {
     margin: auto;
-    width: 50%;
+    width: 60%;
     border-radius: 10px;
 }
 
 .menu {
-    border: 2px solid grey;
+    border: none;
     border-radius: 10px;
-    width: 50%;
+    width: 60%;
     padding: 10px;
     margin: auto;
 }
@@ -112,23 +98,19 @@ input[type=color] {
 }
 
 .header {
-    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-family: 'Kanit', sans-serif;
+    padding: 0px;
+    margin: 0px;
 }
 
 .header-sub {
-    font-size: 20px;
-    color: #ab1400;
+    font-size: 30px;
+    color: red;
 }
 
 .header-main {
-    font-size: 40px;
-    color: #ab1400;
-    transition-duration: 0.2s;
-}
-
-.header-main:hover {
-    font-size: 40px;
-    color: #da1a01;
+    font-size: 80px;
+    color: red;
 }
 
 .switch {

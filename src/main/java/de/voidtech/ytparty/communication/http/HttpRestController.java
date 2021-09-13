@@ -52,6 +52,11 @@ public class HttpRestController {
 		return fileReader.getBinaryFileContents("img/deadcat.gif");
 	}
 	
+	@RequestMapping(value = "/wave.svg", produces = {"img/svg+xml"})
+	public byte[] waveRoute() {
+		return fileReader.getBinaryFileContents("img/wave.svg");
+	}
+	
 	@RequestMapping(value = "/login.html")
 	public String loginRoute() {
 		return fileReader.getTextFileContents("html/login.html");
