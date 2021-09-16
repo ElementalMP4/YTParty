@@ -77,4 +77,8 @@ public class ConfigService {
 		String cacheEnabled = config.getProperty("cache.BinaryIsEnabled");
 		return cacheEnabled != null ? Boolean.parseBoolean(cacheEnabled) : true;	
 	}
+	
+	public String getHCaptchaToken() {
+		return config.getProperty("hcaptcha.Token");
+	}
 }

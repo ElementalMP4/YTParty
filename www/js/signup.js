@@ -1,14 +1,3 @@
-const GatewayServerURL = (location.protocol == "https:" ? "wss://" : "ws://") + location.host + "/gateway";
-var Gateway = new WebSocket(GatewayServerURL);
-
-Gateway.onopen = function() {
-    console.log("Connected To Gateway");
-}
-
-Gateway.onclose = function(content) {
-    console.log("Connection Lost");
-}
-
 function showUserMessage(message) {
     document.getElementById("user-message").style.display = "block";
     document.getElementById("user-message").innerHTML = message;
@@ -29,15 +18,14 @@ function reactToAuth(data) {
     }
 }
 
-Gateway.onmessage = function(message) {
-    const response = JSON.parse(message.data);
+function handleResponse(response) {
     console.log(response);
     if (response.success) {
         showUserMessage("Account Created!");
-        document.cookie = JSON.stringify({ "token": response.response });
+        document.cookie = JSON.stringify({ "token": response.token });
         window.location.href = location.protocol + "//" + location.host + "/home.html";
     } else {
-        showUserMessage(response.response);
+        showUserMessage(response.message);
     }
 }
 
@@ -53,19 +41,22 @@ function createSignupPayload(username, password) {
 }
 
 function sendSignupData() {
-
-    const integerTest = /\d/;
-
-    const username = document.getElementById("username-input").value;
-    const password = document.getElementById("password-input").value;
-    const passwordRepeat = document.getElementById("password-input-repeat").value;
-
-    if (password !== passwordRepeat) {
-        showUserMessage("Your passwords do not match!");
-    } else if (!integerTest.test(password)) {
-        showUserMessage("Your password needs to contain a number!");
-    } else {
-        Gateway.send(createSignupPayload(username, password));
-        hideUserMessage();
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "/signup");
+    xhr.setRequestHeader('Content-Type', 'application/json;');
+    xhr.onload = function(event) {
+        let response = JSON.parse(event.target.response);
+        if (response)
+            handleResponse(response);
+    };
+    var formData = new FormData(document.getElementById("signup-form"));
+    var values = [];
+    formData.forEach(item => values.push(item));
+    finalData = {
+        "username": values[0],
+        "password": values[1],
+        "password-confirm": values[2],
+        "h-captcha": values[3]
     }
+    xhr.send(JSON.stringify(finalData));
 }
