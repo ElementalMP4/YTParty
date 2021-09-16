@@ -69,30 +69,30 @@ public class UserService {
 	
 	private boolean getCaptchaResponse(String secretKey, String response) {
 	    try {
-	        String url = VERIFY_URL, params = "secret=" + secretKey + "&response=" + response;
+	        String params = "secret=" + secretKey + "&response=" + response;
 
-	        HttpURLConnection http = (HttpURLConnection) new URL(url).openConnection();
-	        http.setDoOutput(true);
-	        http.setRequestMethod("POST");
-	        http.setRequestProperty("Content-Type",
+	        HttpURLConnection con = (HttpURLConnection) new URL(VERIFY_URL).openConnection();
+	        con.setDoOutput(true);
+	        con.setRequestMethod("POST");
+	        con.setRequestProperty("Content-Type",
 	                "application/x-www-form-urlencoded; charset=UTF-8");
-	        OutputStream out = http.getOutputStream();
+	        OutputStream out = con.getOutputStream();
 	        out.write(params.getBytes("UTF-8"));
 	        out.flush();
 	        out.close();
 
-	        InputStream res = http.getInputStream();
-	        BufferedReader rd = new BufferedReader(new InputStreamReader(res, "UTF-8"));
+	        InputStream inStream = con.getInputStream();
+	        BufferedReader buffer = new BufferedReader(new InputStreamReader(inStream, "UTF-8"));
 
-	        StringBuilder sb = new StringBuilder();
-	        int cp;
-	        while ((cp = rd.read()) != -1) {
-	            sb.append((char) cp);
+	        StringBuilder responseString = new StringBuilder();
+	        int charBuffer;
+	        while ((charBuffer = buffer.read()) != -1) {
+	            responseString.append((char) charBuffer);
 	        }
-	        JSONObject json = new JSONObject(sb.toString());
-	        res.close();
+	        JSONObject responseJson = new JSONObject(responseString.toString());
+	        inStream.close();
 
-	        return json.getBoolean("success");
+	        return responseJson.getBoolean("success");
 	    } catch (Exception e) {
 	        LOGGER.log(Level.SEVERE, "An error occurred during ServiceExecution: " + e.getMessage());
 	    }
