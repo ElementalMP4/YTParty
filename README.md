@@ -16,6 +16,8 @@ http.port=8080
 #Cache options
 cache.TextIsEnabled=true
 cache.BinaryIsEnabled=true
+#HCaptcha Token
+hcaptcha.Token=a_nice_token
 ```
 
 As well as a PostgreSQL server. PGAdmin is recommended for database management.
