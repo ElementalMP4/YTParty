@@ -1,4 +1,4 @@
-package main.java.de.voidtech.ytparty.communication.websocket;
+package main.java.de.voidtech.ytparty.api.websocket;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;

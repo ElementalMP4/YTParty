@@ -1,4 +1,4 @@
-package main.java.de.voidtech.ytparty.communication.websocket;
+package main.java.de.voidtech.ytparty.api.websocket;
 
 import java.util.ArrayList;
 import java.util.List;

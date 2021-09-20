@@ -1,4 +1,4 @@
-package main.java.de.voidtech.ytparty.communication.http;
+package main.java.de.voidtech.ytparty.api.http;
 
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;

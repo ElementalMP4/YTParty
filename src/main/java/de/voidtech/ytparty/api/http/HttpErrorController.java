@@ -1,4 +1,4 @@
-package main.java.de.voidtech.ytparty.communication.http;
+package main.java.de.voidtech.ytparty.api.http;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
