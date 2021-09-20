@@ -100,10 +100,7 @@ public class UserService {
 	}
 	
 	public String createUser(JSONObject parameters) {
-		if (!getCaptchaResponse(configService.getHCaptchaToken(), parameters.getString("h-captcha")))
-			return new JSONObject().put("success", false).put("message", "You did not pass the captcha!").toString();
-		
-		else if (parameters.getString("username").equals(""))
+		if (parameters.getString("username").equals(""))
 			return new JSONObject().put("success", false).put("message", "That username is not valid!").toString();
 		
 		if (!parameters.getString("password").equals(parameters.get("password-confirm")))
@@ -115,6 +112,9 @@ public class UserService {
 		
 		else if (usernameInUse(parameters.getString("username")))
 			return new JSONObject().put("success", false).put("message", "That username is already in use!").toString();
+		
+		else if (!getCaptchaResponse(configService.getHCaptchaToken(), parameters.getString("h-captcha")))
+			return new JSONObject().put("success", false).put("message", "You did not pass the captcha!").toString();
 		
 		else {
 			User newUser = new User(parameters.getString("username"), null, parameters.getString("password"), "#FF0000");
