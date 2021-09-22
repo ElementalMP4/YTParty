@@ -1,6 +1,8 @@
 const GatewayServerURL = (location.protocol == "https:" ? "wss://" : "ws://") + location.host + "/gateway";
 var Gateway = new WebSocket(GatewayServerURL);
 
+var TOKEN;
+
 Gateway.onopen = function() {
     console.log("Connected To Gateway");
 }
@@ -70,34 +72,37 @@ Gateway.onmessage = function(message) {
     }
 }
 
+function getToken() {
+    let token = window.localStorage.getItem("token");
+    if (token == null) window.location.href = location.protocol + "//" + location.host + "/login.html?redirect=" + location.pathname + location.search;
+    else return token;
+}
+
 function updateColour() {
-    const cookie = JSON.parse(document.cookie);
     var hexColour = document.getElementById("name-colour-picker").value;
     var payload = {
         "type": "user-changecolour",
         "data": {
             "colour": hexColour,
-            "token": cookie.token == undefined ? "" : cookie.token
+            "token": TOKEN
         }
     }
     Gateway.send(JSON.stringify(payload));
 }
 
 function updateNickname() {
-    const cookie = JSON.parse(document.cookie);
     var nickname = document.getElementById("nickname-entry").value;
     var payload = {
         "type": "user-changenickname",
         "data": {
             "nickname": nickname,
-            "token": cookie.token == undefined ? "" : cookie.token
+            "token": TOKEN
         }
     }
     Gateway.send(JSON.stringify(payload));
 }
 
 function updatePassword() {
-    const cookie = JSON.parse(document.cookie);
     var password = document.getElementById("password-entry").value;
     var passwordMatch = document.getElementById("password-match-entry").value;
 
@@ -108,7 +113,7 @@ function updatePassword() {
             "type": "user-changepassword",
             "data": {
                 "password": password,
-                "token": cookie.token == undefined ? "" : cookie.token
+                "token": TOKEN
             }
         }
         Gateway.send(JSON.stringify(payload));
@@ -117,12 +122,11 @@ function updatePassword() {
 
 function deleteAccount() {
     var deleteMessageAccepted = window.confirm("Are you wure you want to delete your account? This action cannot be undone!");
-    const cookie = JSON.parse(document.cookie);
     if (deleteMessageAccepted) {
         var payload = {
             "type": "user-deleteaccount",
             "data": {
-                "token": cookie.token == undefined ? "" : cookie.token
+                "token": TOKEN
             }
         }
         Gateway.send(JSON.stringify(payload));
@@ -130,20 +134,16 @@ function deleteAccount() {
 }
 
 function getUserProfile() {
-    if (document.cookie == "") {
-        window.location.href = location.protocol + "//" + location.host + "/login.html";
-    } else {
-        const cookie = JSON.parse(document.cookie);
-        var payload = {
-            "type": "user-getprofile",
-            "data": {
-                "token": cookie.token == undefined ? "" : cookie.token
-            }
+    var payload = {
+        "type": "user-getprofile",
+        "data": {
+            "token": TOKEN
         }
-        Gateway.send(JSON.stringify(payload));
     }
+    Gateway.send(JSON.stringify(payload));
 }
 
 Gateway.onopen = function() {
+    TOKEN = getToken();
     getUserProfile();
 }

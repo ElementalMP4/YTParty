@@ -22,7 +22,7 @@ function handleResponse(response) {
     console.log(response);
     if (response.success) {
         showUserMessage("Account Created!");
-        document.cookie = JSON.stringify({ "token": response.token });
+        window.localStorage.setItem("token", response.token);
         window.location.href = location.protocol + "//" + location.host + "/home.html";
     } else {
         showUserMessage(response.message);

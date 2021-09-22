@@ -202,12 +202,9 @@ Gateway.onmessage = function(message) {
 }
 
 function getToken() {
-    if (document.cookie == "") {
-        window.location.href = location.protocol + "//" + location.host + "/login.html?redirect=" + location.pathname + location.search;
-    } else {
-        const cookie = JSON.parse(document.cookie);
-        return cookie.token;
-    }
+    let token = window.localStorage.getItem("token");
+    if (token == null) window.location.href = location.protocol + "//" + location.host + "/login.html?redirect=" + location.pathname + location.search;
+    else return token;
 }
 
 function embedPlayer() {

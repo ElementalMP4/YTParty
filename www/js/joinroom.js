@@ -2,6 +2,7 @@ const GatewayServerURL = (location.protocol == "https:" ? "wss://" : "ws://") + 
 var Gateway = new WebSocket(GatewayServerURL);
 
 var globalRoomID;
+var TOKEN;
 
 function showUserMessage(message) {
     document.getElementById("ID-message").style.display = "block";
@@ -32,12 +33,9 @@ Gateway.onmessage = function(message) {
 }
 
 function getToken() {
-    if (document.cookie == "") {
-        window.location.href = location.protocol + "//" + location.host + "/login.html";
-    } else {
-        const cookie = JSON.parse(document.cookie);
-        return cookie.token;
-    }
+    let token = window.localStorage.getItem("token");
+    if (token == null) window.location.href = location.protocol + "//" + location.host + "/login.html?redirect=" + location.pathname + location.search;
+    else return token;
 }
 
 function sendRoomPayload(roomID) {
@@ -45,7 +43,7 @@ function sendRoomPayload(roomID) {
     const payload = {
         "type": "party-joinparty",
         "data": {
-            "token": getToken(),
+            "token": TOKEN,
             "roomID": roomID
         }
     }
@@ -60,3 +58,5 @@ function joinRoom() {
         sendRoomPayload(roomID);
     }
 }
+
+TOKEN = getToken();

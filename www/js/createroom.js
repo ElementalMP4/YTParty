@@ -1,6 +1,8 @@
 const GatewayServerURL = (location.protocol == "https:" ? "wss://" : "ws://") + location.host + "/gateway";
 var Gateway = new WebSocket(GatewayServerURL);
 
+var TOKEN;
+
 function showUserMessage(message) {
     document.getElementById("video-message").style.display = "block";
     document.getElementById("video-message").innerHTML = message;
@@ -30,12 +32,9 @@ Gateway.onmessage = function(message) {
 }
 
 function getToken() {
-    if (document.cookie == "") {
-        window.location.href = location.protocol + "//" + location.host + "/login.html";
-    } else {
-        const cookie = JSON.parse(document.cookie);
-        return cookie.token;
-    }
+    let token = window.localStorage.getItem("token");
+    if (token == null) window.location.href = location.protocol + "//" + location.host + "/login.html?redirect=" + location.pathname + location.search;
+    else return token;
 }
 
 function sendRoomPayload(videoID) {
@@ -44,7 +43,7 @@ function sendRoomPayload(videoID) {
     const payload = {
         "type": "party-createparty",
         "data": {
-            "token": getToken(),
+            "token": TOKEN,
             "roomHasOwner": roomHasOwner,
             "theme": theme,
             "videoID": videoID
@@ -64,3 +63,5 @@ function createRoom() {
         showUserMessage("You supplied an invalid link!");
     }
 }
+
+TOKEN = getToken();

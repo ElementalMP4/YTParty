@@ -25,7 +25,7 @@ Gateway.onmessage = function(message) {
         let url = new URL(location.href);
         let redirect = url.searchParams.get("redirect");
         showUserMessage("Logging you in!");
-        document.cookie = JSON.stringify({ "token": response.response });
+        window.localStorage.setItem("token", response.response);
         window.location.href = location.protocol + "//" + location.host + (redirect == null ? "/home.html" : redirect);
     } else {
         showUserMessage(response.response);
