@@ -23,7 +23,7 @@ public class UserService {
 	
 	private static final String VERIFY_URL = "https://hcaptcha.com/siteverify";	
 	private static final Logger LOGGER = Logger.getLogger(UserService.class.getName());
-	private static final Pattern passwordPattern = Pattern.compile("(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{8,}");
+	private static final Pattern PASSWORD_PATTERN = Pattern.compile("(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{8,}");
 	
 	@Autowired
 	private SessionFactory sessionFactory;
@@ -76,10 +76,10 @@ public class UserService {
 	        con.setRequestMethod("POST");
 	        con.setRequestProperty("Content-Type",
 	                "application/x-www-form-urlencoded; charset=UTF-8");
-	        OutputStream out = con.getOutputStream();
-	        out.write(params.getBytes("UTF-8"));
-	        out.flush();
-	        out.close();
+	        OutputStream outStream = con.getOutputStream();
+	        outStream.write(params.getBytes("UTF-8"));
+	        outStream.flush();
+	        outStream.close();
 
 	        InputStream inStream = con.getInputStream();
 	        BufferedReader buffer = new BufferedReader(new InputStreamReader(inStream, "UTF-8"));
@@ -100,26 +100,24 @@ public class UserService {
 	}
 	
 	public String createUser(JSONObject parameters) {
+		JSONObject responseObject = new JSONObject();
 		if (parameters.getString("username").equals(""))
-			return new JSONObject().put("success", false).put("message", "That username is not valid!").toString();
-		
-		if (!parameters.getString("password").equals(parameters.get("password-confirm")))
-			return new JSONObject().put("success", false).put("message", "The passwords you entered do not match!").toString();
-		
-		else if (!passwordPattern.matcher(parameters.getString("password")).matches())
-			return new JSONObject().put("success", false)
-					.put("message", "The password you entered does not meet the complexity requirements! (One capital letter, One number)").toString();
-		
+			responseObject.put("success", false).put("message", "That username is not valid!");
+		else if (!parameters.getString("password").equals(parameters.get("password-confirm")))
+			responseObject.put("success", false).put("message", "The passwords you entered do not match!");
+		else if (!PASSWORD_PATTERN.matcher(parameters.getString("password")).matches())
+			responseObject.put("success", false).put("message",
+					"The password you entered does not meet the complexity requirements! (One capital letter, One number, 8 Characters long)");
 		else if (usernameInUse(parameters.getString("username")))
-			return new JSONObject().put("success", false).put("message", "That username is already in use!").toString();
-		
+			responseObject.put("success", false).put("message", "That username is already in use!");
 		else if (!getCaptchaResponse(configService.getHCaptchaToken(), parameters.getString("h-captcha")))
-			return new JSONObject().put("success", false).put("message", "You did not pass the captcha!").toString();
-		
+			responseObject.put("success", false).put("message", "You did not pass the captcha!");
 		else {
 			User newUser = new User(parameters.getString("username"), null, parameters.getString("password"), "#FF0000");
 			saveUser(newUser);
-			return new JSONObject().put("success", true).put("token", tokenService.getToken(parameters.getString("username"))).toString();
+			responseObject.put("success", true).put("token", tokenService.getToken(parameters.getString("username")));
 		}
+		
+		return responseObject.toString();
 	}
 }
