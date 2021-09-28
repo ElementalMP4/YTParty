@@ -11,7 +11,6 @@ import org.springframework.security.crypto.bcrypt.BCrypt;
 
 @Entity(name = "Users")
 @Table(name = "Users")
-
 public class User {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

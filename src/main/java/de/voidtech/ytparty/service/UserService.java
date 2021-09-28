@@ -107,7 +107,8 @@ public class UserService {
 			responseObject.put("success", false).put("message", "The passwords you entered do not match!");
 		else if (!PASSWORD_PATTERN.matcher(parameters.getString("password")).matches())
 			responseObject.put("success", false).put("message",
-					"The password you entered does not meet the complexity requirements! (One capital letter, One number, 8 Characters long)");
+					"The password you entered does not meet the complexity requirements! "
+					+ "(One capital letter, One number, 8 Characters long)");
 		else if (usernameInUse(parameters.getString("username")))
 			responseObject.put("success", false).put("message", "That username is already in use!");
 		else if (!getCaptchaResponse(configService.getHCaptchaToken(), parameters.getString("h-captcha")))

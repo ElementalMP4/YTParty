@@ -6,7 +6,7 @@ public class AuthResponse {
 	private String message;
 	
 	public String getMessage() {
-		return !this.success ? this.message : "Success";
+		return this.success ? "Success" : this.message;
 	}
 	
 	public boolean isSuccessful() {
