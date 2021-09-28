@@ -68,6 +68,11 @@ function sendPausedMessage() {
     displayLocalMessage("Video paused");
 }
 
+function sendVideoEndedMessage() {
+    sendGatewayMessage({ "type": "party-videoend", "data": { "token": TOKEN, "roomID": ROOM_ID } });
+    displayLocalMessage("Video ended!");
+}
+
 function onYouTubeIframeAPIReady() {
     PLAYER = new YT.Player('player', {
         height: '100%',
@@ -89,6 +94,9 @@ function onPlayerStateChange(event) {
     let playerState = event.data;
     console.log(event);
     switch (playerState) {
+        case 0:
+            sendVideoEndedMessage();
+            break;
         case 1:
             sendPlayingMessage();
             break;
@@ -252,9 +260,32 @@ function handleHelpCommand() {
     /b [message] - makes your message bold<br><br>
     /s [message] - changes your message to strikethrough<br><br>
     /c [message] - changes your message to cursive<br><br>
+    /cc [message] - cHaNgEs YoUr TeXt LiKe ThIs<br><br>
     /big [message] - makes your message big<br><br>
     /r - reloads your session
     `);
+}
+
+function toCrazyCase(body) {
+    let toUpper = Math.round(Math.random());
+    toUpper = toUpper == 1 ? true : false;
+    let messageLetters = body.split("");
+    let final = "";
+
+    for (var i = 0; i < messageLetters.length; i++) {
+        if (messageLetters[i].replace(/[A-Za-z]+/g, " ") !== "") {
+            if (toUpper) {
+                final += messageLetters[i].toLowerCase();
+                toUpper = !toUpper;
+            } else {
+                final += messageLetters[i].toUpperCase();
+                toUpper = !toUpper;
+            }
+        } else {
+            final += messageLetters[i];
+        }
+    }
+    return final;
 }
 
 function sendTypingStop() {
@@ -301,6 +332,8 @@ document.getElementById("chat-input").addEventListener("keyup", function(event) 
                 case "setvideo":
                     handleSetVideoCommand(args);
                     break;
+                case "cc":
+                    message = toCrazyCase(message);
                 case "i":
                     modifiers = "italic";
                     message = args.join(" ");
