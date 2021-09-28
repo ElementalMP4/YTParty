@@ -16,7 +16,7 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import main.java.de.voidtech.ytparty.entities.User;
+import main.java.de.voidtech.ytparty.entities.persistent.User;
 
 @Service
 public class UserService {

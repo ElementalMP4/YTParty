@@ -1,4 +1,4 @@
-package main.java.de.voidtech.ytparty.entities;
+package main.java.de.voidtech.ytparty.entities.ephemeral;
 
 import org.json.JSONObject;
 

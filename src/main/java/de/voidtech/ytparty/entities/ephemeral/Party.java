@@ -1,4 +1,4 @@
-package main.java.de.voidtech.ytparty.entities;
+package main.java.de.voidtech.ytparty.entities.ephemeral;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -9,6 +9,8 @@ import java.util.logging.Logger;
 import org.json.JSONException;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
+
+import main.java.de.voidtech.ytparty.entities.persistent.ChatMessage;
 
 public class Party {
 	

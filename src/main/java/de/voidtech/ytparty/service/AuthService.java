@@ -3,7 +3,7 @@ package main.java.de.voidtech.ytparty.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import main.java.de.voidtech.ytparty.entities.AuthResponse;
+import main.java.de.voidtech.ytparty.entities.ephemeral.AuthResponse;
 
 @Service
 public class AuthService {

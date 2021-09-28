@@ -10,7 +10,7 @@ import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import main.java.de.voidtech.ytparty.entities.TokenContainer;
+import main.java.de.voidtech.ytparty.entities.persistent.TokenContainer;
 
 @Service
 public class UserTokenService {

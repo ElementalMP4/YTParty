@@ -11,9 +11,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 
-import main.java.de.voidtech.ytparty.entities.ChatMessage;
-import main.java.de.voidtech.ytparty.entities.Party;
-import main.java.de.voidtech.ytparty.entities.SystemMessage;
+import main.java.de.voidtech.ytparty.entities.ephemeral.Party;
+import main.java.de.voidtech.ytparty.entities.ephemeral.SystemMessage;
+import main.java.de.voidtech.ytparty.entities.persistent.ChatMessage;
 
 @Service
 public class GatewayResponseService {

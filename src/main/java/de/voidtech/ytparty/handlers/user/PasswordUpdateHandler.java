@@ -7,8 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.socket.WebSocketSession;
 
 import main.java.de.voidtech.ytparty.annotations.Handler;
-import main.java.de.voidtech.ytparty.entities.AuthResponse;
-import main.java.de.voidtech.ytparty.entities.User;
+import main.java.de.voidtech.ytparty.entities.ephemeral.AuthResponse;
+import main.java.de.voidtech.ytparty.entities.persistent.User;
 import main.java.de.voidtech.ytparty.handlers.AbstractHandler;
 import main.java.de.voidtech.ytparty.service.AuthService;
 import main.java.de.voidtech.ytparty.service.GatewayResponseService;
