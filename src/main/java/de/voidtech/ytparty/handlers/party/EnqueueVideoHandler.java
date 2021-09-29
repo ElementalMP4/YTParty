@@ -7,7 +7,6 @@ import org.springframework.web.socket.WebSocketSession;
 import main.java.de.voidtech.ytparty.annotations.Handler;
 import main.java.de.voidtech.ytparty.entities.ephemeral.AuthResponse;
 import main.java.de.voidtech.ytparty.entities.ephemeral.Party;
-import main.java.de.voidtech.ytparty.entities.ephemeral.SystemMessage;
 import main.java.de.voidtech.ytparty.entities.persistent.ChatMessage;
 import main.java.de.voidtech.ytparty.handlers.AbstractHandler;
 import main.java.de.voidtech.ytparty.service.AuthService;
@@ -15,7 +14,7 @@ import main.java.de.voidtech.ytparty.service.GatewayResponseService;
 import main.java.de.voidtech.ytparty.service.PartyService;
 
 @Handler
-public class ChangeVideoHandler extends AbstractHandler {
+public class EnqueueVideoHandler extends AbstractHandler {
 
 	@Autowired
 	private GatewayResponseService responder;
@@ -39,16 +38,14 @@ public class ChangeVideoHandler extends AbstractHandler {
 		else if (!partyIDResponse.isSuccessful()) responder.sendError(session, partyIDResponse.getMessage(), this.getHandlerType());
 		else {
 			Party party = partyService.getParty(roomID);
-			responder.sendSuccess(session, new JSONObject().put("video", newVideoID).toString(), this.getHandlerType());
-			ChatMessage videoMessage = new ChatMessage(roomID, "System", party.getRoomColour(), "The video has been changed!", "System");
-			party.setVideoID(newVideoID);
+			ChatMessage videoMessage = new ChatMessage(roomID, "System", party.getRoomColour(), "A video has been queued!", "System");
+			party.enqueueVideo(newVideoID);
 			responder.sendChatMessage(party, videoMessage);
-			responder.sendSystemMessage(party, new SystemMessage("changevideo", new JSONObject().put("video", newVideoID)));
 		}
 	}
 
 	@Override
 	public String getHandlerType() {
-		return "party-changevideo";
+		return "party-queuevideo";
 	}
 }
