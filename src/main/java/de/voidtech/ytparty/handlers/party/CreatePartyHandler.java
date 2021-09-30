@@ -39,8 +39,7 @@ public class CreatePartyHandler extends AbstractHandler{
 		
 		if (!tokenResponse.isSuccessful()) responder.sendError(session, tokenResponse.getMessage(), this.getHandlerType());
 		else {
-			String ownerUsername = null;
-			if (roomHasOwner) ownerUsername = tokenService.getUsernameFromToken(token);
+			String ownerUsername = roomHasOwner ? tokenService.getUsernameFromToken(token) : null;
 			Party party = new Party(partyService.generateRoomID(), ownerUsername, roomThemeColour, videoID);
 			partyService.saveParty(party);
 			responder.sendSuccess(session, party.getPartyID(), this.getHandlerType());

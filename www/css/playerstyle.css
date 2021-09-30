@@ -77,6 +77,10 @@ p.msg-nickname {
     font-family: 'Kanit', sans-serif;
 }
 
+.player {
+    padding: 0px;
+}
+
  ::-webkit-scrollbar {
     width: 5px;
 }

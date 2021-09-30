@@ -14,7 +14,7 @@ import main.java.de.voidtech.ytparty.service.GatewayResponseService;
 import main.java.de.voidtech.ytparty.service.PartyService;
 
 @Handler
-public class SkipQueuedVideoHandler extends AbstractHandler {
+public class ClearQueueHandler extends AbstractHandler {
 
 	@Autowired
 	private GatewayResponseService responder;
@@ -24,7 +24,7 @@ public class SkipQueuedVideoHandler extends AbstractHandler {
 	
 	@Autowired
 	private AuthService authService;
-	
+
 	@Override
 	public void execute(WebSocketSession session, JSONObject data) {
 		String token = data.getString("token");
@@ -38,19 +38,15 @@ public class SkipQueuedVideoHandler extends AbstractHandler {
 		else {
 			Party party = partyService.getParty(roomID);
 			if (party.canControlRoom(tokenResponse.getActingString())) {
-				if (party.getQueue().isEmpty()) responder.sendError(session, "The queue is empty! You cannot skip!", this.getHandlerType());
-				else {
-					party.skipVideo();
-					responder.sendChatMessage(party, new ChatMessage(roomID, "System", party.getRoomColour(),
-							String.format("Video Skipped by %s!", tokenResponse.getActingString()), "System"));
-				}
+				party.clearQueue();
+				responder.sendChatMessage(party, new ChatMessage(roomID, "System", party.getRoomColour(), 
+						String.format("Queue Cleared by %s!", tokenResponse.getActingString()), "System"));
 			} else responder.sendError(session, "You do not have permission to do that!", this.getHandlerType());
 		}
 	}
 
 	@Override
 	public String getHandlerType() {
-		return "party-skipvideo";
+		return "party-clearqueue";
 	}
-
 }

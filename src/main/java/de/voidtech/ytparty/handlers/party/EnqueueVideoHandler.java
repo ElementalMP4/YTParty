@@ -38,9 +38,12 @@ public class EnqueueVideoHandler extends AbstractHandler {
 		else if (!partyIDResponse.isSuccessful()) responder.sendError(session, partyIDResponse.getMessage(), this.getHandlerType());
 		else {
 			Party party = partyService.getParty(roomID);
-			ChatMessage videoMessage = new ChatMessage(roomID, "System", party.getRoomColour(), "A video has been queued!", "System");
-			party.enqueueVideo(newVideoID);
-			responder.sendChatMessage(party, videoMessage);
+			if (party.canControlRoom(tokenResponse.getActingString())) {
+				ChatMessage videoMessage = new ChatMessage(roomID, "System", party.getRoomColour(), 
+						String.format("Video Queued by %s!", tokenResponse.getActingString()), "System");
+				party.enqueueVideo(newVideoID);
+				responder.sendChatMessage(party, videoMessage);
+			} else responder.sendError(session, "You do not have permission to do that!", this.getHandlerType());
 		}
 	}
 

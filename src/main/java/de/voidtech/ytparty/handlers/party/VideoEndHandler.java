@@ -36,7 +36,7 @@ public class VideoEndHandler extends AbstractHandler {
 		else if (!partyIDResponse.isSuccessful()) responder.sendError(session, partyIDResponse.getMessage(), this.getHandlerType());
 		else {
 			Party party = partyService.getParty(roomID);
-			party.incrementFinishedCount();
+			if (party.canControlRoom(tokenResponse.getActingString())) party.incrementFinishedCount();
 		}
 	}
 

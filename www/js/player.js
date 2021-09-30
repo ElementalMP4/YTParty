@@ -92,7 +92,6 @@ function onPlayerReady() {
 
 function onPlayerStateChange(event) {
     let playerState = event.data;
-    console.log(event);
     switch (playerState) {
         case 0:
             sendVideoEndedMessage();
@@ -128,19 +127,19 @@ function handleChatMessage(data) {
     addChatMessage(data);
 }
 
-function handleSystemMessage(data) {
-    switch (data.type) {
+function handleSystemMessage(response) {
+    switch (response.type) {
         case "playvideo":
-            startVideo(data.data);
+            startVideo(response.data);
             break;
         case "pausevideo":
             pauseVideo();
             break;
         case "changevideo":
-            loadVideo(data.data.video);
+            loadVideo(response.data.video);
             break;
         case "typingupdate":
-            updateTyping(data.data);
+            updateTyping(response.data);
             break;
     }
 }
@@ -172,39 +171,41 @@ Gateway.onclose = function() {
 }
 
 Gateway.onmessage = function(message) {
-    const response = JSON.parse(message.data);
-    console.log(response);
+    const packet = JSON.parse(message.data);
+    console.log(packet);
 
-    if (!response.success) {
-        switch (response.response) {
+    if (!packet.success) {
+        switch (packet.response) {
             case "An invalid token was provided":
                 window.location.href = location.protocol + "//" + location.host + "/login.html?redirect=" + location.pathname + location.search;
                 break;
             case "An invalid room ID was provided":
                 displayLocalMessage("This room does not exist! Check the room ID and try again!");
                 break;
+            case "You do not have permission to do that!":
+                displayLocalMessage(packet.response);
         }
     }
 
-    switch (response.origin) {
+    switch (packet.origin) {
         case "party-joinparty":
-            initialiseParty(response.response);
+            initialiseParty(packet.response);
             break;
         case "user-getprofile":
-            USER_PROPERTIES = JSON.parse(response.response);
+            USER_PROPERTIES = JSON.parse(packet.response);
             break;
         case "party-chatmessage":
-            if (!response.success) displayLocalMessage(response.response);
+            if (!packet.success) displayLocalMessage(packet.response);
             break;
 
     }
 
-    switch (response.type) {
+    switch (packet.type) {
         case "party-chatmessage":
-            handleChatMessage(response.data);
+            handleChatMessage(packet.data);
             break;
         case "party-systemmessage":
-            handleSystemMessage(response.data);
+            handleSystemMessage(packet.data);
             break;
     }
 }
@@ -245,8 +246,24 @@ Gateway.onclose = function() {
 function handleSetVideoCommand(args) {
     let videoURL = new URL(args[0]);
     let videoID = videoURL.searchParams.get("v");
-    if (!videoID) return;
-    else sendGatewayMessage({ "type": "party-changevideo", "data": { "token": TOKEN, "roomID": ROOM_ID, "video": videoID } });
+    if (videoID) sendGatewayMessage({ "type": "party-changevideo", "data": { "token": TOKEN, "roomID": ROOM_ID, "video": videoID } });
+}
+
+function handleSkipCommand() {
+    sendGatewayMessage({ "type": "party-skipvideo", "data": { "token": TOKEN, "roomID": ROOM_ID } });
+}
+
+function handleClearCommand() {
+    sendGatewayMessage({ "type": "party-skipvideo", "data": { "token": TOKEN, "roomID": ROOM_ID } });
+}
+
+function handleQueueCommand(args) {
+    if (args.length == 0) sendGatewayMessage({ "type": "party-getqueue", "data": { "token": TOKEN, "roomID": ROOM_ID } });
+    else {
+        let videoURL = new URL(args[0]);
+        let videoID = videoURL.searchParams.get("v");
+        if (videoID) sendGatewayMessage({ "type": "party-queuevideo", "data": { "token": TOKEN, "roomID": ROOM_ID, "video": videoID } });
+    }
 }
 
 function handleHelpCommand() {
@@ -274,16 +291,10 @@ function toCrazyCase(body) {
 
     for (var i = 0; i < messageLetters.length; i++) {
         if (messageLetters[i].replace(/[A-Za-z]+/g, " ") !== "") {
-            if (toUpper) {
-                final += messageLetters[i].toLowerCase();
-                toUpper = !toUpper;
-            } else {
-                final += messageLetters[i].toUpperCase();
-                toUpper = !toUpper;
-            }
-        } else {
-            final += messageLetters[i];
-        }
+            if (toUpper) final += messageLetters[i].toLowerCase();
+            else final += messageLetters[i].toUpperCase();
+            toUpper = !toUpper;
+        } else final += messageLetters[i];
     }
     return final;
 }
@@ -330,6 +341,7 @@ document.getElementById("chat-input").addEventListener("keyup", function(event) 
                     sendChatMessage = false;
                     break;
                 case "setvideo":
+                    sendChatMessage = false;
                     handleSetVideoCommand(args);
                     break;
                 case "cc":
@@ -362,6 +374,19 @@ document.getElementById("chat-input").addEventListener("keyup", function(event) 
                     sendChatMessage = false;
                     location.reload();
                     break;
+                case "queue":
+                    sendChatMessage = false;
+                    handleQueueCommand(args);
+                    break;
+                case "skip":
+                    sendChatMessage = false;
+                    handleSkipCommand();
+                    break;
+                case "clear":
+                    sendChatMessage = false;
+                    handleClearCommand();
+                    break;
+
             }
         }
         if (sendChatMessage) {

@@ -39,11 +39,14 @@ public class ChangeVideoHandler extends AbstractHandler {
 		else if (!partyIDResponse.isSuccessful()) responder.sendError(session, partyIDResponse.getMessage(), this.getHandlerType());
 		else {
 			Party party = partyService.getParty(roomID);
-			responder.sendSuccess(session, new JSONObject().put("video", newVideoID).toString(), this.getHandlerType());
-			ChatMessage videoMessage = new ChatMessage(roomID, "System", party.getRoomColour(), "The video has been changed!", "System");
-			party.setVideoID(newVideoID);
-			responder.sendChatMessage(party, videoMessage);
-			responder.sendSystemMessage(party, new SystemMessage("changevideo", new JSONObject().put("video", newVideoID)));
+			if (party.canControlRoom(tokenResponse.getActingString())) {
+				responder.sendSuccess(session, new JSONObject().put("video", newVideoID).toString(), this.getHandlerType());
+				ChatMessage videoMessage = new ChatMessage(roomID, "System", party.getRoomColour(), 
+						String.format("Video Changed by %s!", tokenResponse.getActingString()), "System");
+				party.setVideoID(newVideoID);
+				responder.sendChatMessage(party, videoMessage);
+				responder.sendSystemMessage(party, new SystemMessage("changevideo", new JSONObject().put("video", newVideoID)));	
+			} else responder.sendError(session, "You do not have permission to do that!", this.getHandlerType());
 		}
 	}
 

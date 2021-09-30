@@ -5,12 +5,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.socket.WebSocketSession;
 
 import main.java.de.voidtech.ytparty.annotations.Handler;
+import main.java.de.voidtech.ytparty.entities.ephemeral.AuthResponse;
 import main.java.de.voidtech.ytparty.entities.ephemeral.Party;
 import main.java.de.voidtech.ytparty.entities.ephemeral.SystemMessage;
 import main.java.de.voidtech.ytparty.handlers.AbstractHandler;
+import main.java.de.voidtech.ytparty.service.AuthService;
 import main.java.de.voidtech.ytparty.service.GatewayResponseService;
 import main.java.de.voidtech.ytparty.service.PartyService;
-import main.java.de.voidtech.ytparty.service.UserTokenService;
 
 @Handler
 public class VideoPlayHandler extends AbstractHandler {
@@ -19,7 +20,7 @@ public class VideoPlayHandler extends AbstractHandler {
 	private GatewayResponseService responder;
 	
 	@Autowired
-	private UserTokenService tokenService;
+	private AuthService authService;
 	
 	@Autowired
 	private PartyService partyService;
@@ -29,14 +30,19 @@ public class VideoPlayHandler extends AbstractHandler {
 		String token = data.getString("token");
 		String roomID = data.getString("roomID");
 		int timestamp = data.getInt("timestamp");
-		String username = tokenService.getUsernameFromToken(token);
 		
-		if (username == null) responder.sendError(session, "An invalid token was provided", this.getHandlerType());
+		AuthResponse tokenResponse = authService.validateToken(token); 
+		AuthResponse partyIDResponse = authService.validatePartyID(roomID);
+		
+		if (!tokenResponse.isSuccessful()) responder.sendError(session, tokenResponse.getMessage(), this.getHandlerType());
+		else if (!partyIDResponse.isSuccessful()) responder.sendError(session, partyIDResponse.getMessage(), this.getHandlerType());
 		else {
 			Party party = partyService.getParty(roomID);
-			if (party == null) responder.sendError(session, "An invalid room ID was provided", this.getHandlerType());
-			else responder.sendSystemMessage(party, new SystemMessage("playvideo", new JSONObject().put("time", timestamp)));
+			if (party.canControlRoom(tokenResponse.getActingString()))
+				responder.sendSystemMessage(party, new SystemMessage("playvideo", new JSONObject().put("time", timestamp)));
+			else responder.sendError(session, "You do not have permission to do that!", this.getHandlerType());
 		}
+		
 	}
 
 	@Override

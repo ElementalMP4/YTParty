@@ -18,19 +18,12 @@ import main.java.de.voidtech.ytparty.entities.persistent.ChatMessage;
 public class Party {
 	
 	private String partyID; 
-	
 	private String ownerName; 
-	
 	private String currentVideoID;
-	
-	private List<WebSocketSession> sessions;
-	
-	private BlockingQueue<String> videoQueue;
-	
-	private boolean hasBeenVisited;
-	
 	private String roomColour;
-	
+	private List<WebSocketSession> sessions;
+	private BlockingQueue<String> videoQueue;
+	private boolean hasBeenVisited;
 	private int finishedCount;
 	
 	private static final Logger LOGGER = Logger.getLogger(Party.class.getName());
@@ -68,6 +61,10 @@ public class Party {
 		broadcastMessage(new SystemMessage("changevideo", new JSONObject().put("video", this.videoQueue.poll())).convertToJSON());
 	}
 	
+	public void clearQueue() {
+		this.videoQueue.clear();
+	}
+	
 	public BlockingQueue<String> getQueue() {
 		return this.videoQueue;
 	}
@@ -82,6 +79,10 @@ public class Party {
 
 	public String getOwnerName() {
 		return this.ownerName;
+	}
+	
+	public boolean canControlRoom(String username) {
+		return this.ownerName == null ? true : this.ownerName.equals(username);
 	}
 	
 	public String getVideoID() {

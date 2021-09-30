@@ -4,6 +4,7 @@ public class AuthResponse {
 
 	private boolean success;
 	private String message;
+	private String actingString;
 	
 	public String getMessage() {
 		return this.success ? "Success" : this.message;
@@ -11,7 +12,15 @@ public class AuthResponse {
 	
 	public boolean isSuccessful() {
 		return this.success;
-	}	
+	}
+	
+	public void setActingString(String actingString) {
+		this.actingString = actingString;
+	}
+	
+	public String getActingString() {
+		return this.actingString;
+	}
 	
 	public void setSuccess(boolean success) {
 		this.success = success;

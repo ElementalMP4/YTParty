@@ -1,5 +1,8 @@
 package main.java.de.voidtech.ytparty.handlers.party;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.socket.WebSocketSession;
@@ -14,16 +17,18 @@ import main.java.de.voidtech.ytparty.service.GatewayResponseService;
 import main.java.de.voidtech.ytparty.service.PartyService;
 
 @Handler
-public class SkipQueuedVideoHandler extends AbstractHandler {
+public class GetQueueHandler extends AbstractHandler {
+	
+	private static final String YOUTUBE_BASE_URL = "https://www.youtube.com/watch?v=";
 
 	@Autowired
 	private GatewayResponseService responder;
 	
 	@Autowired
-	private PartyService partyService;
+	private AuthService authService;
 	
 	@Autowired
-	private AuthService authService;
+	private PartyService partyService;
 	
 	@Override
 	public void execute(WebSocketSession session, JSONObject data) {
@@ -37,20 +42,20 @@ public class SkipQueuedVideoHandler extends AbstractHandler {
 		else if (!partyIDResponse.isSuccessful()) responder.sendError(session, partyIDResponse.getMessage(), this.getHandlerType());
 		else {
 			Party party = partyService.getParty(roomID);
-			if (party.canControlRoom(tokenResponse.getActingString())) {
-				if (party.getQueue().isEmpty()) responder.sendError(session, "The queue is empty! You cannot skip!", this.getHandlerType());
-				else {
-					party.skipVideo();
-					responder.sendChatMessage(party, new ChatMessage(roomID, "System", party.getRoomColour(),
-							String.format("Video Skipped by %s!", tokenResponse.getActingString()), "System"));
-				}
-			} else responder.sendError(session, "You do not have permission to do that!", this.getHandlerType());
+			List<String> videos = new ArrayList<String>(party.getQueue());
+			String videoList = "Video Queue:<br><br>";
+			
+			for (String video : videos) {
+				videoList = videoList + String.format("<a href='%s'>%s</a><br>", YOUTUBE_BASE_URL + video, video);
+			}
+			
+			responder.sendSingleTextMessage(session,
+					new ChatMessage(party.getPartyID(), "System", "#FF0000", videoList, "system").convertToJSON());
 		}
 	}
 
 	@Override
 	public String getHandlerType() {
-		return "party-skipvideo";
+		return "party-getqueue";
 	}
-
 }
