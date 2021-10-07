@@ -42,7 +42,7 @@ public class GetQueueHandler extends AbstractHandler {
 		else if (!partyIDResponse.isSuccessful()) responder.sendError(session, partyIDResponse.getMessage(), this.getHandlerType());
 		else {
 			Party party = partyService.getParty(roomID);
-			List<String> videos = new ArrayList<String>(party.getQueue());
+			List<String> videos = new ArrayList<String>(party.getQueueAsList());
 			String videoList = "Video Queue:<br><br>";
 			
 			for (String video : videos) {
@@ -50,7 +50,7 @@ public class GetQueueHandler extends AbstractHandler {
 			}
 			
 			responder.sendSingleTextMessage(session,
-					new ChatMessage(party.getPartyID(), "System", "#FF0000", videoList, "system").convertToJSON());
+					new ChatMessage(party.getPartyID(), "System", party.getRoomColour(), videoList, "system").convertToJSON());
 		}
 	}
 

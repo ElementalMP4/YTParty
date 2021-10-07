@@ -38,7 +38,7 @@ public class SkipQueuedVideoHandler extends AbstractHandler {
 		else {
 			Party party = partyService.getParty(roomID);
 			if (party.canControlRoom(tokenResponse.getActingString())) {
-				if (party.getQueue().isEmpty()) responder.sendError(session, "The queue is empty! You cannot skip!", this.getHandlerType());
+				if (party.queueIsEmpty()) responder.sendError(session, "The queue is empty! You cannot skip!", this.getHandlerType());
 				else {
 					party.skipVideo();
 					responder.sendChatMessage(party, new ChatMessage(roomID, "System", party.getRoomColour(),
