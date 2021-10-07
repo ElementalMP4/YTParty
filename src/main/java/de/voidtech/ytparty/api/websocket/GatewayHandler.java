@@ -35,7 +35,7 @@ public class GatewayHandler extends AbstractWebSocketHandler {
 	}
 	
 	@Override
-	public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception{
+	public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
 		partyService.removeSessionFromParty(session);
 		sessions.remove(session);
 	}

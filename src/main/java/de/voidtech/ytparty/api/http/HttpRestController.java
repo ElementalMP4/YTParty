@@ -129,10 +129,4 @@ public class HttpRestController {
 	public String easterEggRoute() {
 		return fileReader.getTextFileContents("/html/doesonestillequalone.html");
 	}
-	
-	@RequestMapping(value = "/signup", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public String signupUser(@RequestBody String content) {
-		JSONObject parameters = new JSONObject(content);
-		return userService.createUser(parameters);
-	}
 }
