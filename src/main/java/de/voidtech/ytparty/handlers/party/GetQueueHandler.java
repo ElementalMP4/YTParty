@@ -46,7 +46,7 @@ public class GetQueueHandler extends AbstractHandler {
 			String videoList = "Video Queue:<br><br>";
 			
 			for (String video : videos) {
-				videoList = videoList + String.format("<a href='%s'>%s</a><br>", YOUTUBE_BASE_URL + video, video);
+				videoList = videoList + String.format("<a href='%s' target='_blank'>%s</a><br>", YOUTUBE_BASE_URL + video, video);
 			}
 			
 			responder.sendSingleTextMessage(session,
