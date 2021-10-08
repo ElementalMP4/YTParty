@@ -20,7 +20,7 @@ public class Party {
 	private String currentVideoID;
 	private String roomColour;
 	private List<WebSocketSession> sessions;
-	private Queue videoQueue;
+	private Queue<String> videoQueue;
 	private boolean hasBeenVisited;
 	private int finishedCount;
 	
@@ -33,7 +33,7 @@ public class Party {
 	  this.ownerName = ownerName;
 	  this.currentVideoID = videoID;
 	  this.sessions = new ArrayList<WebSocketSession>();
-	  this.videoQueue = new Queue();
+	  this.videoQueue = new Queue<String>();
 	  this.finishedCount = 0;
 	}
 	
