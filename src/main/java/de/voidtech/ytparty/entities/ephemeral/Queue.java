@@ -30,7 +30,7 @@ public class Queue<T> extends AbstractCollection<T> {
 
 	@Override
 	public Iterator<T> iterator() {
-		return (Iterator<T>) this.queue.iterator();
+		return this.queue.iterator();
 	}
 
 	@Override
