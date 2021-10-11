@@ -79,6 +79,6 @@ public class ConfigService {
 	}
 	
 	public String getHCaptchaToken() {
-		return config.getProperty("hcaptcha.Token");
+		return config.getProperty("captcha.Token");
 	}
 }
