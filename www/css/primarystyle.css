@@ -11,6 +11,10 @@ body {
     z-index: -1;
 }
 
+.g-recaptcha {
+    display: inline-block;
+}
+
 a {
     text-decoration: none;
     margin: auto;

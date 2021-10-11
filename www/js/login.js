@@ -28,24 +28,22 @@ Gateway.onmessage = function(message) {
         window.localStorage.setItem("token", response.response);
         window.location.href = location.protocol + "//" + location.host + (redirect == null ? "/home.html" : redirect);
     } else {
+        grecaptcha.reset();
         showUserMessage(response.response);
     }
 }
 
-function createLoginPayload(username, password) {
-    const payload = {
+function sendLoginData() {
+    var formData = new FormData(document.getElementById("signin-form"));
+    var values = [];
+    formData.forEach(item => values.push(item));
+    finalData = {
         "type": "user-signin",
         "data": {
-            "username": username,
-            "password": password
+            "username": values[0],
+            "password": values[1],
+            "captcha-token": values[2]
         }
     }
-    return JSON.stringify(payload);
-}
-
-function sendLoginData() {
-    const username = document.getElementById("username-input").value;
-    const password = document.getElementById("password-input").value;
-
-    Gateway.send(createLoginPayload(username, password));
+    Gateway.send(JSON.stringify(finalData));
 }

@@ -9,6 +9,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@800&display=swap" rel="stylesheet">
 
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
     <meta property="og:site_name" content="YTParty">
     <meta property="og:url" content="https://ytparty.voidtech.de/">
     <meta property="og:description" content="Watch YouTube with friends!">
@@ -22,9 +24,16 @@
     <h3 class="centre-align header header-sub">Watch YouTube with friends!</h3>
     <div class="menu centre-align">
         <h3 class="centre-align header header-sub">Login</h3>
-        <input type="text" placeholder="Enter Your Username" id="username-input">
-        <br />
-        <input type="password" placeholder="Enter Your Password" id="password-input">
+        <iframe name="redirect-cancel" id="redirect-cancel" style="display: none;"></iframe>
+
+        <form action="/signup" method="POST" target="redirect-cancel" id="signin-form" enctype="application/x-www-form-urlencoded">
+            <input type="text" name="username" placeholder="Username" />
+            <br />
+            <input type="password" name="password" placeholder="Password" />
+            <br />
+            <div class="g-recaptcha" data-sitekey="6LfmY8IcAAAAAJdu7ge1I2mjxdGGNjH5uA1nUQHM"></div>
+        </form>
+
         <p id="user-message"></p>
         <button class="button hover-animation" onclick="sendLoginData()"><p class="button-text">Log me in!</p></button>
     </div>

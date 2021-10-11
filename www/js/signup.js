@@ -38,7 +38,7 @@ function sendSignupData() {
             "username": values[0],
             "password": values[1],
             "password-confirm": values[2],
-            "h-captcha": values[3]
+            "captcha-token": values[3]
         }
     }
     Gateway.send(JSON.stringify(finalData));
