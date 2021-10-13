@@ -17,7 +17,6 @@ public class ConfigService {
 
 	private final Properties config = new Properties();
 
-	//PRIVATE FOR SINGLETON
 	public ConfigService() {
 
 		File configFile = new File("config.properties");
@@ -80,5 +79,13 @@ public class ConfigService {
 	
 	public String getHCaptchaToken() {
 		return config.getProperty("captcha.Token");
+	}
+
+	public String getMailUser() {
+		return config.getProperty("mail.User");
+	}
+
+	public String getMailPassword() {
+		return config.getProperty("mail.Password");
 	}
 }

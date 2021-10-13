@@ -16,7 +16,10 @@ Gateway.onmessage = function(message) {
         showUserMessage("Account Created!");
         window.localStorage.setItem("token", response.token);
         window.location.href = location.protocol + "//" + location.host + "/home.html";
-    } else showUserMessage(response.message);
+    } else {
+        grecaptcha.reset();
+        showUserMessage(response.message);
+    }
 }
 
 function showUserMessage(message) {
