@@ -4,6 +4,8 @@
 
 Watch YouTube with friends!
 
+[Check us out here!](https://ytparty.voidtech.de/)
+
 ## Running YTParty
 
 YTParty requires a config file as such:
