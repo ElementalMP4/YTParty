@@ -13,15 +13,15 @@ YTParty requires a config file as such:
 ```conf
 #Hibernate Options
 hibernate.User=YTParty
-hibernate.Password=password
+hibernate.Password=n0th1n9_t0_533_h3r3
 hibernate.ConnectionURL=jdbc:postgresql://localhost:5432/YTParty
 #Tomcat options
 http.port=8080
 #Cache options
 cache.TextIsEnabled=true
 cache.BinaryIsEnabled=true
-#HCaptcha Token
-hcaptcha.Token=a_nice_token
+#reCaptcha Token
+captcha.Token=n0_h1dd3n_m355ag35
 ```
 
 As well as a PostgreSQL server. PGAdmin is recommended for database management.
