@@ -14,7 +14,7 @@ Gateway.onmessage = function(message) {
     console.log(response);
     if (response.success) {
         showUserMessage("Account Created!");
-        window.localStorage.setItem("token", response.token);
+        window.localStorage.setItem("token", response.response);
         window.location.href = location.protocol + "//" + location.host + "/home.html";
     } else {
         grecaptcha.reset();
