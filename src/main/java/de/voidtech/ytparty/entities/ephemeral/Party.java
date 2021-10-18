@@ -3,6 +3,8 @@ package main.java.de.voidtech.ytparty.entities.ephemeral;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -20,7 +22,7 @@ public class Party {
 	private String currentVideoID;
 	private String roomColour;
 	private List<WebSocketSession> sessions;
-	private Queue<String> videoQueue;
+	private BlockingQueue<String> videoQueue;
 	private boolean hasBeenVisited;
 	private int finishedCount;
 	
@@ -33,7 +35,7 @@ public class Party {
 	  this.ownerName = ownerName;
 	  this.currentVideoID = videoID;
 	  this.sessions = new ArrayList<WebSocketSession>();
-	  this.videoQueue = new Queue<String>();
+	  this.videoQueue = new LinkedBlockingQueue<String>();
 	  this.finishedCount = 0;
 	}
 	
@@ -41,7 +43,7 @@ public class Party {
 		finishedCount = finishedCount + 1;
 		if (finishedCount >= sessions.size()) {
 			finishedCount = 0;
-			String nextVideo = videoQueue.pop();
+			String nextVideo = videoQueue.poll();
 			if (nextVideo != null) setNextVideo(nextVideo);
 		}
 	}
@@ -52,11 +54,11 @@ public class Party {
 	}
 	
 	public void enqueueVideo(String id) {
-		this.videoQueue.appendItem(id);
+		this.videoQueue.offer(id);
 	}
 	
 	public void skipVideo() {
-		broadcastMessage(new SystemMessage("changevideo", new JSONObject().put("video", this.videoQueue.pop())).convertToJSON());
+		broadcastMessage(new SystemMessage("changevideo", new JSONObject().put("video", this.videoQueue.poll())).convertToJSON());
 	}
 	
 	public void clearQueue() {
@@ -64,7 +66,7 @@ public class Party {
 	}
 	
 	public List<String> getQueueAsList() {
-		return this.videoQueue.getAsList();
+		return new ArrayList<String>(this.videoQueue);
 	}
 	
 	public boolean queueIsEmpty() {
