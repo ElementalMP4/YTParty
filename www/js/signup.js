@@ -18,7 +18,7 @@ Gateway.onmessage = function(message) {
         window.location.href = location.protocol + "//" + location.host + "/home.html";
     } else {
         grecaptcha.reset();
-        showUserMessage(response.message);
+        showUserMessage(response.response);
     }
 }
 
