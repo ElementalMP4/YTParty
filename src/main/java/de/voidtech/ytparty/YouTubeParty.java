@@ -31,7 +31,7 @@ public class YouTubeParty {
 		springApp.run(args);
 	}
 	
-	//@Bean
+	@Bean
 	public JavaMailSenderImpl getMailSender() {
 	    JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
 	    ConfigService config = new ConfigService();
