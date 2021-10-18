@@ -88,4 +88,12 @@ public class ConfigService {
 	public String getMailPassword() {
 		return config.getProperty("mail.Password");
 	}
+
+	public String getMailHost() {
+		return config.getProperty("mail.Host");
+	}
+
+	public int getMailPort() {
+		return Integer.parseInt(config.getProperty("mail.Port"));
+	}
 }

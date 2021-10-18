@@ -5,12 +5,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import main.java.de.voidtech.ytparty.service.FileReader;
+import main.java.de.voidtech.ytparty.service.MailService;
 
 @RestController
 public class HttpRestController {
 	
 	@Autowired
 	private FileReader fileReader;
+	
+	@Autowired
+	private MailService mailService;
 
 	@RequestMapping(value = "/")
 	public String indexRoute() {
@@ -120,5 +124,11 @@ public class HttpRestController {
 	@RequestMapping(value = "/doesonestillequalone.html")
 	public String easterEggRoute() {
 		return fileReader.getTextFileContents("/html/doesonestillequalone.html");
+	}
+	
+	@RequestMapping(value = "/sendsebanemail")
+	public String sendEmail() {
+		mailService.sendMessage("sebastianbeattie@btinternet.com", "A Very Dense Test", "Mucho Testico");
+		return "seb has been abused";
 	}
 }

@@ -1,6 +1,5 @@
 package main.java.de.voidtech.ytparty.service;
 
-import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -8,33 +7,17 @@ import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMessage.RecipientType;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.stereotype.Service;
 
 @Service
 public class MailService {
 	
+	@Autowired
 	private JavaMailSenderImpl mailSender;
-	private static final Logger LOGGER = Logger.getLogger(MailService.class.getName());
 	
-	MailService() {
-		    JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
-		    ConfigService config = new ConfigService();
-		    mailSender.setHost("smtp.gmail.com");
-		    mailSender.setPort(465);
-		    
-		    mailSender.setUsername(config.getMailUser());
-		    mailSender.setPassword(config.getMailPassword());
-		    
-		    Properties props = mailSender.getJavaMailProperties();
-		    props.put("mail.transport.protocol", "smtp");
-		    props.put("mail.smtp.auth", "true");
-		    props.put("mail.smtp.starttls.enable", "true");
-		    props.put("mail.smtp.ssl.enable", "true");
-		    props.put("mail.debug", "false");
-		    
-		    this.mailSender = mailSender;
-	}
+	private static final Logger LOGGER = Logger.getLogger(MailService.class.getName());
 	
 	public void sendMessage(String recipient, String message, String subject) {
 		try {
