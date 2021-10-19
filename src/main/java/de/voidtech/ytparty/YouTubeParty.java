@@ -37,7 +37,6 @@ public class YouTubeParty {
 	    ConfigService config = new ConfigService();
 	    mailSender.setHost(config.getMailHost());
 	    mailSender.setPort(config.getMailPort());
-	    
 	    mailSender.setUsername(config.getMailUser());
 	    mailSender.setPassword(config.getMailPassword());
 	    

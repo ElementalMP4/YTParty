@@ -8,8 +8,12 @@ import java.util.List;
 public class Queue<T> extends AbstractCollection<T> {
 	private List<T> queue;
 	
+	public Queue() {
+		this.queue = new ArrayList<T>();
+	}
+	
 	public T pop() {
-		return this.queue.size() > 0 ? this.queue.remove(0) : null;
+		return this.queue.isEmpty() ? this.queue.remove(0) : null;
 	}
 	
 	public void appendItem(T item) {
