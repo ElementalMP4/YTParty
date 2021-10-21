@@ -43,10 +43,12 @@ public class SignupHandler extends AbstractHandler {
 					+ "(One capital letter, One number, 8 Characters long)", this.getHandlerType());
 		else if (userService.usernameInUse(data.getString("username")))
 			responder.sendError(session, "That username is already in use!", this.getHandlerType());
+		else if (data.getString("email").equals("")) 
+			responder.sendError(session, "You must enter an email address", this.getHandlerType());
 		else if (!captchaService.validateCaptcha(data.getString("captcha-token")))
 			responder.sendError(session, "You need to complete the captcha!", this.getHandlerType());
 		else {
-			User newUser = new User(data.getString("username"), null, data.getString("password"), "#FF0000");
+			User newUser = new User(data.getString("username"), null, data.getString("password"), "#FF0000", data.getString("email"));
 			userService.saveUser(newUser);
 			responder.sendSuccess(session, tokenService.getToken(data.getString("username")), this.getHandlerType());
 		}

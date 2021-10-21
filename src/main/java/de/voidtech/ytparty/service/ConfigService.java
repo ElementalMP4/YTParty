@@ -66,7 +66,7 @@ public class ConfigService {
 		String port = config.getProperty("http.port");
 		return port != null ? port : "6969";
 	}
-	
+		
 	public boolean textCacheEnabled() {
 		String cacheEnabled = config.getProperty("cache.TextIsEnabled");
 		return cacheEnabled != null ? Boolean.parseBoolean(cacheEnabled) : true;	
@@ -95,5 +95,9 @@ public class ConfigService {
 
 	public int getMailPort() {
 		return Integer.parseInt(config.getProperty("mail.Port"));
+	}
+
+	public String getMailAddress() {
+		return config.getProperty("mail.Address");
 	}
 }

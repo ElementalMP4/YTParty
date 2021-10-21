@@ -28,17 +28,21 @@ public class User {
 	@Column
 	private String hexColour;
 	
+	@Column
+	private String email;
+	
 	@Deprecated
 	//ONLY FOR HIBERNATE, DO NOT USE
 	User() {
 	}
 	
-	public User(String username, String nickname, String password, String hexColour)
+	public User(String username, String nickname, String password, String hexColour, String email)
 	{
 	  this.username = username;
 	  this.nickname = nickname;
 	  this.passwordHash = BCrypt.hashpw(password, BCrypt.gensalt());
 	  this.hexColour = hexColour;
+	  this.email = email;
 	}
 
 	public boolean checkPassword(String enteredPassword) {
@@ -71,6 +75,14 @@ public class User {
 	
 	public void setHexColour(String newHexColour) {
 		this.hexColour = newHexColour;
+	}
+	
+	public String getEmail() {
+		return this.email;
+	}
+	
+	public void setEmail(String email) {
+		this.email = email;
 	}
 	
 	public String getEffectiveName() {

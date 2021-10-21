@@ -5,7 +5,7 @@ body {
 }
 
 .waves {
-    position: absolute;
+    position: fixed;
     left: 0;
     bottom: 0%;
     z-index: -1;
@@ -65,9 +65,9 @@ a.link {
 }
 
 input[type=text],
+input[type=email],
 input[type=password] {
     background-color: #1a1a1a;
-    border: none;
     border: solid 2px grey;
     border-radius: 50px;
     display: block;
@@ -80,6 +80,7 @@ input[type=password] {
 }
 
 input[type=text],
+input[type=email],
 input[type=password]:focus {
     border: solid 2px #ab1400;
 }

@@ -9,19 +9,6 @@ Gateway.onclose = function() {
     console.log("Connection Lost");
 }
 
-Gateway.onmessage = function(message) {
-    const response = JSON.parse(message.data);
-    console.log(response);
-    if (response.success) {
-        showUserMessage("Account Created!");
-        window.localStorage.setItem("token", response.response);
-        window.location.href = location.protocol + "//" + location.host + "/home.html";
-    } else {
-        grecaptcha.reset();
-        showUserMessage(response.response);
-    }
-}
-
 function showUserMessage(message) {
     document.getElementById("user-message").style.display = "block";
     document.getElementById("user-message").innerHTML = message;
@@ -31,18 +18,22 @@ function hideUserMessage() {
     document.getElementById("user-message").style.display = "none";
 }
 
-function sendSignupData() {
-    var formData = new FormData(document.getElementById("signup-form"));
+Gateway.onmessage = function(message) {
+    const response = JSON.parse(message.data);
+    console.log(response);
+    showUserMessage(response.response);
+    if (!response.success) grecaptcha.reset();
+}
+
+function sendResetRequestData() {
+    var formData = new FormData(document.getElementById("reset-form"));
     var values = [];
     formData.forEach(item => values.push(item));
     finalData = {
-        "type": "user-signup",
+        "type": "user-forgottenpassword",
         "data": {
             "username": values[0],
-            "email": values[1],
-            "password": values[2],
-            "password-confirm": values[3],
-            "captcha-token": values[4]
+            "captcha-token": values[1]
         }
     }
     Gateway.send(JSON.stringify(finalData));

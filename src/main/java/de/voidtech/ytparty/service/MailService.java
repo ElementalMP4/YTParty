@@ -17,6 +17,9 @@ public class MailService {
 	@Autowired
 	private JavaMailSenderImpl mailSender;
 	
+	@Autowired
+	private ConfigService configService;
+	
 	private static final Logger LOGGER = Logger.getLogger(MailService.class.getName());
 	
 	public void sendMessage(String recipient, String message, String subject) {
@@ -25,6 +28,7 @@ public class MailService {
 			mimeMessage.addRecipients(RecipientType.TO, recipient);
 			mimeMessage.setContent(message, "text/plain");
 			mimeMessage.setSubject(subject);
+			mimeMessage.setFrom(configService.getMailAddress());
 			mailSender.send(mimeMessage);
 			LOGGER.log(Level.INFO, "Sent e-mail");
 		} catch (MessagingException e) {

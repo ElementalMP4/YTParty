@@ -5,16 +5,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import main.java.de.voidtech.ytparty.service.FileReader;
-import main.java.de.voidtech.ytparty.service.MailService;
 
 @RestController
 public class HttpRestController {
 	
 	@Autowired
 	private FileReader fileReader;
-	
-	@Autowired
-	private MailService mailService;
 
 	@RequestMapping(value = "/")
 	public String indexRoute() {
@@ -126,9 +122,23 @@ public class HttpRestController {
 		return fileReader.getTextFileContents("/html/doesonestillequalone.html");
 	}
 	
-	@RequestMapping(value = "/sendsebanemail")
-	public String sendEmail() {
-		mailService.sendMessage("sebastianbeattie@btinternet.com", "A Very Dense Test", "Mucho Testico");
-		return "seb has been abused";
+	@RequestMapping(value = "/resetpassword.html")
+	public String passwordResetRoute() {
+		return fileReader.getTextFileContents("/html/resetpassword.html");
+	}
+	
+	@RequestMapping(value = "/forgotpassword.html")
+	public String forgotPasswordRoute() {
+		return fileReader.getTextFileContents("/html/forgotpassword.html");
+	}
+	
+	@RequestMapping(value = "/resetpassword.js")
+	public String passwordResetScriptRoute() {
+		return fileReader.getTextFileContents("/js/resetpassword.js");
+	}
+	
+	@RequestMapping(value = "/forgotpassword.js")
+	public String forgotPasswordScriptRoute() {
+		return fileReader.getTextFileContents("/js/forgotpassword.js");
 	}
 }

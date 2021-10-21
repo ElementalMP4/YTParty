@@ -36,7 +36,8 @@ public class HttpErrorController implements ErrorController{
     }
     
     private String formatErrorPage(int statusCode) {
-    	return String.format("<html><title>YouTube Party Error</title><center><h1>YouTube Party</h1><hr />Server Error: %s"
-    			+ "<br></br><img src='/deadcat.gif'></center></html>", statusCode == 0 ? "Unknown Error" : statusCode);
+    	return String.format("<html><title>YTParty Error</title><center><h1>There seems to be a problem...</h1><hr />Error: %s"
+    			+ "<br></br><img src='/deadcat.gif'><br></br><a href='https://http.cat/%s'>Click here to find out what this error means</a></center></html>",
+    			statusCode == 0 ? "Unknown Error" : statusCode, statusCode == 0 ? 404 : statusCode);
     }
 }
