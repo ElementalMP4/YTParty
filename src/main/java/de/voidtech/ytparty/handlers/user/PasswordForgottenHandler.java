@@ -46,13 +46,16 @@ public class PasswordForgottenHandler extends AbstractHandler {
 			responder.sendError(session, "That username does not exist!", this.getHandlerType());
 		else {
 			String email = user.getEmail();
-			String title = "Password reset request";
-			PasswordResetCase resetCase = passwordService.openPasswordResetCase(username);
-			String body = "You have requested to reset your password. Please click the link below to continue:\n\n" +
-			RESET_URL + "?token=" + resetCase.getToken() + "&user=" + username +
-				"\n\nKeep this link a secret! Someone could use it to take over your account.";
-			mailService.sendMessage(email, body, title);
-			responder.sendSuccess(session, "Please check your e-mail inbox. Please also check your spam if you cannot find our message.", this.getHandlerType());
+			if (email == null) responder.sendError(session, "This account has no recovery email!", this.getHandlerType());
+			else {
+				String title = "Password reset request";
+				PasswordResetCase resetCase = passwordService.openPasswordResetCase(username);
+				String body = "You have requested to reset your password. Please click the link below to continue:\n\n" +
+				RESET_URL + "?token=" + resetCase.getToken() + "&user=" + username +
+					"\n\nKeep this link a secret! Someone could use it to take over your account.";
+				mailService.sendMessage(email, body, title);
+				responder.sendSuccess(session, "Please check your e-mail inbox. Please also check your spam if you cannot find our message.", this.getHandlerType());	
+			}
 		}
 	}
 
