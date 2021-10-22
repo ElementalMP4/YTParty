@@ -36,17 +36,26 @@ public class PasswordUpdateHandler extends AbstractHandler {
 	public void execute(WebSocketSession session, JSONObject data) {
 		String username = tokenService.getUsernameFromToken(data.getString("token"));
 		String token =  data.getString("token");
-		String password = data.getString("password").trim();
+
+		String currentPassword = data.getString("original-password").trim();
+		String newPassword = data.getString("new-password").trim();
+		String newPasswordConfirm = data.getString("password-match").trim();
+		
 		AuthResponse tokenResponse = authService.validateToken(token); 
 		
 		if (!tokenResponse.isSuccessful()) responder.sendError(session, tokenResponse.getMessage(), this.getHandlerType());
-		else if (!passwordPattern.matcher(password).matches()) responder.sendError(session, "That password is not valid! Make sure it contains a capital letter and a number and is at least 8 characters!", this.getHandlerType());
 		else {
 			User user = userService.getUser(username);
-			user.setPassword(password);
-			userService.saveUser(user);
-			tokenService.removeToken(username);
-			responder.sendSuccess(session, "Password changed", this.getHandlerType());
+			if (!user.checkPassword(currentPassword)) responder.sendError(session, "Your current password is not correct!", this.getHandlerType());
+			else if (!newPassword.equals(newPasswordConfirm)) responder.sendError(session, "The passwords you entered do not match!", this.getHandlerType());
+			else if (!passwordPattern.matcher(newPassword).matches()) responder.sendError(session, "That password is not valid! Make sure it contains a capital letter and a number and is at least 8 characters!", this.getHandlerType());
+			else {
+				user.setPassword(newPassword);
+				userService.saveUser(user);
+				tokenService.removeToken(username);
+				String newToken = tokenService.getToken(username);
+				responder.sendSuccess(session, newToken, this.getHandlerType());
+			}
 		}
 	}
 

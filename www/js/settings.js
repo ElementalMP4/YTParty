@@ -41,13 +41,17 @@ function handleProfileResponse(response) {
 }
 
 function handlePasswordChange(response) {
-    if (response.success) showUserMessage("Password changed! You may need to log in again", "password-message");
-    else showUserMessage(response.response, "password-message");
+    if (response.success) {
+        showUserMessage("Password changed!", "password-message");
+        window.localStorage.setItem("token", response.response);
+    } else showUserMessage(response.response, "password-message");
 }
 
 function handleAccountDeleteResponse(response) {
-    if (response.success) showUserMessage("Your account has been deleted!", "delete-message");
-    else showUserMessage(response.response, "delete-message");
+    if (response.success) {
+        showUserMessage("Your account has been deleted!", "delete-message");
+        window.location.href = location.protocol + "//" + location.host;
+    } else showUserMessage(response.response, "delete-message");
 }
 
 Gateway.onmessage = function(message) {
@@ -103,25 +107,23 @@ function updateNickname() {
 }
 
 function updatePassword() {
-    var password = document.getElementById("password-entry").value;
+    var password = document.getElementById("new-password-entry").value;
     var passwordMatch = document.getElementById("password-match-entry").value;
-
-    if (password !== passwordMatch) {
-        showUserMessage("Your passwords do not match!", "password-message");
-    } else {
-        var payload = {
-            "type": "user-changepassword",
-            "data": {
-                "password": password,
-                "token": TOKEN
-            }
+    var originalPassword = document.getElementById("original-password-entry").value;
+    var payload = {
+        "type": "user-changepassword",
+        "data": {
+            "new-password": password,
+            "original-password": originalPassword,
+            "password-match": passwordMatch,
+            "token": TOKEN
         }
-        Gateway.send(JSON.stringify(payload));
     }
+    Gateway.send(JSON.stringify(payload));
 }
 
 function deleteAccount() {
-    var deleteMessageAccepted = window.confirm("Are you wure you want to delete your account? This action cannot be undone!");
+    var deleteMessageAccepted = window.confirm("Are you sure you want to delete your account? This action cannot be undone!");
     if (deleteMessageAccepted) {
         var payload = {
             "type": "user-deleteaccount",
