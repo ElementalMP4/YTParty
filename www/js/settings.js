@@ -124,10 +124,12 @@ function updatePassword() {
 
 function deleteAccount() {
     var deleteMessageAccepted = window.confirm("Are you sure you want to delete your account? This action cannot be undone!");
+    let password = document.getElementById("delete-password-entry").value;
     if (deleteMessageAccepted) {
         var payload = {
             "type": "user-deleteaccount",
             "data": {
+                "password": password,
                 "token": TOKEN
             }
         }

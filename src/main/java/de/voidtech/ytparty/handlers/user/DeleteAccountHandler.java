@@ -6,6 +6,7 @@ import org.springframework.web.socket.WebSocketSession;
 
 import main.java.de.voidtech.ytparty.annotations.Handler;
 import main.java.de.voidtech.ytparty.entities.ephemeral.AuthResponse;
+import main.java.de.voidtech.ytparty.entities.persistent.User;
 import main.java.de.voidtech.ytparty.handlers.AbstractHandler;
 import main.java.de.voidtech.ytparty.service.AuthService;
 import main.java.de.voidtech.ytparty.service.GatewayResponseService;
@@ -30,14 +31,19 @@ public class DeleteAccountHandler extends AbstractHandler {
 	@Override
 	public void execute(WebSocketSession session, JSONObject data) {
 		String token = data.getString("token");
+		String password = data.getString("password");
 		AuthResponse tokenResponse = authService.validateToken(token); 
 		
 		if (!tokenResponse.isSuccessful()) responder.sendError(session, tokenResponse.getMessage(), this.getHandlerType());
 		else {
-			String username = tokenService.getUsernameFromToken(token);
-			tokenService.removeToken(username);
-			userService.removeUser(username);
-			responder.sendSuccess(session, "Account deleted!", this.getHandlerType());
+			String username = tokenResponse.getActingString();
+			User user = userService.getUser(username);
+			if (!user.checkPassword(password)) responder.sendError(session, "The password you entered is not correct!", this.getHandlerType());
+			else {
+				tokenService.removeToken(username);
+				userService.removeUser(username);
+				responder.sendSuccess(session, "Account deleted!", this.getHandlerType());	
+			}
 		}
 	}
 
