@@ -11,23 +11,14 @@ Gateway.onclose = function() {
     console.log("Connection Lost");
 }
 
-function showUserMessage(message, location) {
-    document.getElementById(location).style.display = "block";
-    document.getElementById(location).innerHTML = message;
-}
-
-function hideUserMessage(location) {
-    document.getElementById(location).style.display = "none";
-}
-
 function handleColourChange(response) {
-    if (response.success) showUserMessage("Colour changed!", "colour-message");
-    else showUserMessage(response.response, "colour-message");
+    if (response.success) showModalMessage("Success!", "Colour changed!");
+    else showModalMessage("Error", response.response);
 }
 
 function handleNicknameChange(response) {
-    if (response.success) showUserMessage("Nickname changed!", "nickname-message");
-    else showUserMessage(response.response, "nickname-message");
+    if (response.success) showModalMessage("Success!", "Nickname changed!");
+    else showModalMessage("Error", response.response);
 }
 
 function handleProfileResponse(response) {
@@ -42,16 +33,16 @@ function handleProfileResponse(response) {
 
 function handlePasswordChange(response) {
     if (response.success) {
-        showUserMessage("Password changed!", "password-message");
+        showModalMessage("Success!", "Password changed!");
         window.localStorage.setItem("token", response.response);
-    } else showUserMessage(response.response, "password-message");
+    } else showModalMessage("Error", response.response);
 }
 
 function handleAccountDeleteResponse(response) {
     if (response.success) {
-        showUserMessage("Your account has been deleted!", "delete-message");
+        window.localStorage.removeItem("token");
         window.location.href = location.protocol + "//" + location.host;
-    } else showUserMessage(response.response, "delete-message");
+    } else showModalMessage("Error", response.response);
 }
 
 Gateway.onmessage = function(message) {
