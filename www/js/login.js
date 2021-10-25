@@ -3,6 +3,8 @@ var Gateway = new WebSocket(GatewayServerURL);
 
 Gateway.onopen = function() {
     console.log("Connected To Gateway");
+    if (window.localStorage.getItem("token") !== null)
+        window.location.href = location.protocol + "//" + location.host + "/home.html";
 }
 
 Gateway.onclose = function() {
