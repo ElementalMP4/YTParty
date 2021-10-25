@@ -3,6 +3,7 @@
 <head>
     <title>YTParty - Watch YouTube with friends!</title>
     <link rel="stylesheet" type="text/css" href="/primarystyle.css">
+    <link rel="stylesheet" type="text/css" href="/modal.css">
     <link href="/favicon.png" rel="icon" type="image/png">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -20,6 +21,20 @@
 <body>
     <h1 class="centre-align header header-main">YTParty</h1>
     <h3 class="centre-align header header-sub">Watch YouTube with friends!</h3>
+
+    <button style="display:none" id="open-modal"></button>
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span id="close" class="close">&times;</span>
+                <h2 id="modal-title"></h2>
+            </div>
+            <div class="modal-body">
+                <p id="modal-message"></p>
+            </div>
+        </div>
+    </div>
+
     <div class="menu centre-align">
         <h3 class="centre-align header header-sub">Create a room!</h3>
         <p>Enter your video URL here:</p>
@@ -40,5 +55,6 @@
 </body>
 
 <script src="/createroom.js"></script>
+<script src="/modal.js"></script>
 
 </html>

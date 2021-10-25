@@ -9,19 +9,10 @@ Gateway.onclose = function() {
     console.log("Connection Lost");
 }
 
-function showUserMessage(message) {
-    document.getElementById("user-message").style.display = "block";
-    document.getElementById("user-message").innerHTML = message;
-}
-
-function hideUserMessage() {
-    document.getElementById("user-message").style.display = "none";
-}
-
 Gateway.onmessage = function(message) {
     const response = JSON.parse(message.data);
     console.log(response);
-    showUserMessage(response.response);
+    showModalMessage(response.success ? "Error" : "Success!", response.response);
     if (!response.success) grecaptcha.reset();
 }
 

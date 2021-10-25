@@ -27,6 +27,11 @@ public class HttpRestController {
 		return fileReader.getTextFileContents("css/primarystyle.css");
 	}
 	
+	@RequestMapping(value = "/modal.css")
+	public String modalStyleRoute() {
+		return fileReader.getTextFileContents("css/modal.css");
+	}
+	
 	@RequestMapping(value = "/playerstyle.css")
 	public String playerStyleRoute() {
 		return fileReader.getTextFileContents("css/playerstyle.css");
@@ -35,6 +40,11 @@ public class HttpRestController {
 	@RequestMapping(value = "/player.html")
 	public String playerRoute() {
 		return fileReader.getTextFileContents("html/player.html");
+	}
+	
+	@RequestMapping(value = "/modal.js")
+	public String modalScriptRoute() {
+		return fileReader.getTextFileContents("js/modal.js");
 	}
 	
 	@RequestMapping(value = "/player.js")

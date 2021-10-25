@@ -13,22 +13,12 @@ Gateway.onmessage = function(message) {
     const response = JSON.parse(message.data);
     console.log(response);
     if (response.success) {
-        showUserMessage("Account Created!");
         window.localStorage.setItem("token", response.response);
         window.location.href = location.protocol + "//" + location.host + "/home.html";
     } else {
         grecaptcha.reset();
-        showUserMessage(response.response);
+        showModalMessage("Error", response.response);
     }
-}
-
-function showUserMessage(message) {
-    document.getElementById("user-message").style.display = "block";
-    document.getElementById("user-message").innerHTML = message;
-}
-
-function hideUserMessage() {
-    document.getElementById("user-message").style.display = "none";
 }
 
 function sendSignupData() {

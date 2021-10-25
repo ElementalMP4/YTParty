@@ -3,6 +3,7 @@
 <head>
     <title>YTParty - Watch YouTube with friends!</title>
     <link rel="stylesheet" type="text/css" href="/primarystyle.css">
+    <link rel="stylesheet" type="text/css" href="/modal.css">
     <link href="/favicon.png" rel="icon" type="image/png">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -27,6 +28,19 @@
         <p>Please make sure your password has one capital letter, one number and is 8 characters long!</p>
         <iframe name="redirect-cancel" id="redirect-cancel" style="display: none;"></iframe>
 
+        <button style="display:none" id="open-modal"></button>
+        <div id="modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <span id="close" class="close">&times;</span>
+                    <h2 id="modal-title"></h2>
+                </div>
+                <div class="modal-body">
+                    <p id="modal-message"></p>
+                </div>
+            </div>
+        </div>
+
         <form action="/" method="POST" target="redirect-cancel" id="signup-form" enctype="application/x-www-form-urlencoded">
             <input type="text" name="username" placeholder="Username" />
             <br />
@@ -48,5 +62,6 @@
 </body>
 
 <script src="/signup.js"></script>
+<script src="/modal.js"></script>
 
 </html>

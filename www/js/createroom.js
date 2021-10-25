@@ -3,15 +3,6 @@ var Gateway = new WebSocket(GatewayServerURL);
 
 var TOKEN;
 
-function showUserMessage(message) {
-    document.getElementById("video-message").style.display = "block";
-    document.getElementById("video-message").innerHTML = message;
-}
-
-function hideUserMessage() {
-    document.getElementById("video-message").style.display = "none";
-}
-
 Gateway.onopen = function() {
     console.log("Connected To Gateway");
 }
@@ -24,10 +15,9 @@ Gateway.onmessage = function(message) {
     const response = JSON.parse(message.data);
     console.log(response);
     if (response.success) {
-        document.getElementById("video-message").innerHTML = "Room created! You will be redirected";
         window.location.href = location.protocol + "//" + location.host + "/player.html?roomID=" + response.response;
     } else {
-        document.getElementById("video-message").innerHTML = response.response;
+        showModalMessage("Error", response.response);
     }
 }
 
@@ -60,7 +50,7 @@ function createRoom() {
         const videoID = urlObject.searchParams.get("v");
         sendRoomPayload(videoID);
     } catch {
-        showUserMessage("You supplied an invalid link!");
+        showModalMessage("Error", "You supplied an invalid link!");
     }
 }
 
