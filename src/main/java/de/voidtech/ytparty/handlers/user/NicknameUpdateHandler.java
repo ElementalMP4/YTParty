@@ -30,7 +30,7 @@ public class NicknameUpdateHandler extends AbstractHandler {
 	
 	@Override
 	public void execute(WebSocketSession session, JSONObject data) {
-		String nickname = data.getString("nickname").trim();
+		String nickname = data.getString("nickname").trim().replaceAll("<", "\\\\<").replaceAll(">", "\\\\>");
 		String token = data.getString("token");
 		AuthResponse tokenResponse = authService.validateToken(token); 
 		
