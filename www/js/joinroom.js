@@ -4,15 +4,6 @@ var Gateway = new WebSocket(GatewayServerURL);
 var globalRoomID;
 var TOKEN;
 
-function showUserMessage(message) {
-    document.getElementById("ID-message").style.display = "block";
-    document.getElementById("ID-message").innerHTML = message;
-}
-
-function hideUserMessage() {
-    document.getElementById("ID-message").style.display = "none";
-}
-
 Gateway.onopen = function() {
     console.log("Connected To Gateway");
 }
@@ -24,12 +15,8 @@ Gateway.onclose = function() {
 Gateway.onmessage = function(message) {
     const response = JSON.parse(message.data);
     console.log(response);
-    if (response.success) {
-        showUserMessage("Redirecting to room");
-        window.location.href = location.protocol + "//" + location.host + "/player.html?roomID=" + globalRoomID;
-    } else {
-        showUserMessage(response.response);
-    }
+    if (response.success) window.location.href = location.protocol + "//" + location.host + "/player.html?roomID=" + globalRoomID;
+    else showModalMessage("Error", response.response);
 }
 
 function getToken() {
@@ -52,11 +39,8 @@ function sendRoomPayload(roomID) {
 
 function joinRoom() {
     const roomID = document.getElementById("ID-entry").value;
-    if (roomID == "") {
-        showUserMessage("You need to provide an ID!");
-    } else {
-        sendRoomPayload(roomID);
-    }
+    if (roomID == "") showModalMessage("Error", "You need to provide an ID!");
+    else sendRoomPayload(roomID);
 }
 
 TOKEN = getToken();

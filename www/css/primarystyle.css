@@ -4,6 +4,13 @@ body {
     background-color: #1a1a1a;
 }
 
+.particles {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+}
+
 .waves {
     position: fixed;
     left: 0;
@@ -52,12 +59,10 @@ button {
     display: block;
     margin: auto;
     width: 60%;
-    transition-duration: 0.2s;
 }
 
 button:hover {
     background-color: red;
-    transition-duration: 0.2s;
 }
 
 a.link {
@@ -82,7 +87,7 @@ input[type=password] {
 input[type=text],
 input[type=email],
 input[type=password]:focus {
-    border: solid 2px #ab1400;
+    border: solid 2px #c40000;
 }
 
 input[type=color] {
@@ -112,12 +117,12 @@ input[type=color] {
 
 .header-sub {
     font-size: 30px;
-    color: red;
+    color: #c40000;
 }
 
 .header-main {
     font-size: 80px;
-    color: red;
+    color: #c40000;
 }
 
 .switch {
@@ -160,7 +165,7 @@ input[type=color] {
 }
 
 input:checked+.slider {
-    border: solid 2px #ab1400;
+    border: solid 2px #c40000;
 }
 
 input:checked+.slider:before {
@@ -172,7 +177,7 @@ input:checked+.slider:before {
 }
 
  ::-webkit-scrollbar-thumb {
-    background: #ab1400;
+    background: #c40000;
     border-radius: 10px;
 }
 

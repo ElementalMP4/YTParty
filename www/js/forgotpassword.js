@@ -12,7 +12,7 @@ Gateway.onclose = function() {
 Gateway.onmessage = function(message) {
     const response = JSON.parse(message.data);
     console.log(response);
-    showModalMessage(response.success ? "Error" : "Success!", response.response);
+    showModalMessage(response.success ? "Success!" : "Error", response.response);
     if (!response.success) grecaptcha.reset();
 }
 

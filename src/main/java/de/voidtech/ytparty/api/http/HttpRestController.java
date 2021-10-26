@@ -151,4 +151,9 @@ public class HttpRestController {
 	public String forgotPasswordScriptRoute() {
 		return fileReader.getTextFileContents("/js/forgotpassword.js");
 	}
+	
+	@RequestMapping(value = "/particle-config.json")
+	public String particleConfigRoute() {
+		return fileReader.getTextFileContents("/particle-config.json");
+	}
 }
