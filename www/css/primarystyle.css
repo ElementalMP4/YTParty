@@ -1,7 +1,7 @@
 body {
     padding: 0%;
     margin: 0%;
-    background-color: #1a1a1a;
+    background-color: #111111;
 }
 
 .particles {
@@ -35,14 +35,14 @@ p {
 }
 
 p.button-text {
-    font-family: 'Kanit', sans-serif;
+    font-family: 'Paytone One', sans-serif;
     margin: none;
     border: none;
     line-height: 0;
 }
 
 p.danger-text {
-    color: red;
+    color: #d80000;
 }
 
 hr {
@@ -52,9 +52,9 @@ hr {
 
 button {
     color: white;
-    background-color: #ab1400;
+    background-color: #960303;
     padding: 10px;
-    border: 2px solid white;
+    border: none;
     border-radius: 50px;
     display: block;
     margin: auto;
@@ -62,7 +62,7 @@ button {
 }
 
 button:hover {
-    background-color: red;
+    background-color: #d80000;
 }
 
 a.link {
@@ -72,7 +72,7 @@ a.link {
 input[type=text],
 input[type=email],
 input[type=password] {
-    background-color: #1a1a1a;
+    background-color: #111111;
     border: solid 2px grey;
     border-radius: 50px;
     display: block;
@@ -87,7 +87,7 @@ input[type=password] {
 input[type=text],
 input[type=email],
 input[type=password]:focus {
-    border: solid 2px #c40000;
+    border: solid 2px #960303;
 }
 
 input[type=color] {
@@ -110,19 +110,20 @@ input[type=color] {
 }
 
 .header {
-    font-family: 'Kanit', sans-serif;
+    font-family: 'Paytone One', sans-serif;
+    letter-spacing: 0.03em;
     padding: 0px;
     margin: 0px;
 }
 
 .header-sub {
     font-size: 30px;
-    color: #c40000;
+    color: #d80000;
 }
 
 .header-main {
     font-size: 80px;
-    color: #c40000;
+    color: #d80000;
 }
 
 .switch {
@@ -165,7 +166,7 @@ input[type=color] {
 }
 
 input:checked+.slider {
-    border: solid 2px #c40000;
+    border: solid 2px #960303;
 }
 
 input:checked+.slider:before {
@@ -177,10 +178,10 @@ input:checked+.slider:before {
 }
 
  ::-webkit-scrollbar-thumb {
-    background: #c40000;
+    background: #960303;
     border-radius: 10px;
 }
 
  ::-webkit-scrollbar-thumb:hover {
-    background: red;
+    background: #d80000;
 }
