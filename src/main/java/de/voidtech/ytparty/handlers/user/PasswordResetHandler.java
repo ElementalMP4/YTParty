@@ -11,6 +11,7 @@ import main.java.de.voidtech.ytparty.entities.persistent.User;
 import main.java.de.voidtech.ytparty.handlers.AbstractHandler;
 import main.java.de.voidtech.ytparty.service.CaptchaAuthService;
 import main.java.de.voidtech.ytparty.service.GatewayResponseService;
+import main.java.de.voidtech.ytparty.service.MailService;
 import main.java.de.voidtech.ytparty.service.PasswordResetService;
 import main.java.de.voidtech.ytparty.service.UserService;
 
@@ -30,6 +31,9 @@ public class PasswordResetHandler extends AbstractHandler {
 
 	@Autowired
 	private PasswordResetService passwordService;
+	
+	@Autowired
+	private MailService mailService;
 	
 	@Override
 	public void execute(WebSocketSession session, JSONObject data) {
@@ -56,6 +60,7 @@ public class PasswordResetHandler extends AbstractHandler {
 			userService.saveUser(user);
 			passwordService.closePasswordCase(passwordService.getCaseFromResetToken(resetToken));
 			responder.sendSuccess(session, "Password reset successfully!", this.getHandlerType());
+			mailService.sendPasswordResetMessage(user.getEmail());
 		}
 	}
 

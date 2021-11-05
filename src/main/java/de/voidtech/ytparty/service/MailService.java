@@ -21,6 +21,7 @@ public class MailService {
 	private ConfigService configService;
 	
 	private static final Logger LOGGER = Logger.getLogger(MailService.class.getName());
+	private static final String RESET_URL = "https://ytparty.voidtech.de/forgotpassword.html";
 	
 	public void sendMessage(String recipient, String message, String subject) {
 		try {
@@ -34,5 +35,12 @@ public class MailService {
 		} catch (MessagingException e) {
 			LOGGER.log(Level.SEVERE, "Error occurred during ServiceExecution: " + e.getMessage());
 		}
+	}
+	
+	public void sendPasswordResetMessage(String recipient) {
+		if (recipient != null) sendMessage(recipient, 
+				"Your password has been changed.\n\n"
+				+ "If this wasn't you, click the link below to reset your password:\n"
+				+ RESET_URL, "Password Changed");
 	}
 }

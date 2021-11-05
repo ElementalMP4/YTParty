@@ -12,6 +12,7 @@ import main.java.de.voidtech.ytparty.entities.persistent.User;
 import main.java.de.voidtech.ytparty.handlers.AbstractHandler;
 import main.java.de.voidtech.ytparty.service.AuthService;
 import main.java.de.voidtech.ytparty.service.GatewayResponseService;
+import main.java.de.voidtech.ytparty.service.MailService;
 import main.java.de.voidtech.ytparty.service.UserService;
 import main.java.de.voidtech.ytparty.service.UserTokenService;
 
@@ -29,6 +30,9 @@ public class PasswordUpdateHandler extends AbstractHandler {
 	
 	@Autowired
 	private AuthService authService;
+	
+	@Autowired
+	private MailService mailService;
 	
 	private Pattern passwordPattern = Pattern.compile("(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{8,}");
 	
@@ -55,6 +59,7 @@ public class PasswordUpdateHandler extends AbstractHandler {
 				tokenService.removeToken(username);
 				String newToken = tokenService.getToken(username);
 				responder.sendSuccess(session, newToken, this.getHandlerType());
+				mailService.sendPasswordResetMessage(user.getEmail());
 			}
 		}
 	}
