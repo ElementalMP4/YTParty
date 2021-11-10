@@ -88,8 +88,8 @@ public class ChatMessage extends AbstractMessage {
 	}
 
 	@Override
-	public String getMessageType() {
-		return "party-chatmessage";
+	public MessageType getMessageType() {
+		return MessageType.CHAT;
 	}
 
 	@Override

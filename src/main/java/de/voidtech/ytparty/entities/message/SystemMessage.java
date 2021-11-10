@@ -23,7 +23,7 @@ public class SystemMessage extends AbstractMessage {
 	}
 
 	@Override
-	public String getMessageType() {
-		return "party-systemmessage";
+	public MessageType getMessageType() {
+		return MessageType.SYSTEM;
 	}
 }
