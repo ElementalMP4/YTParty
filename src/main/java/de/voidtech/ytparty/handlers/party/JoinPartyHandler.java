@@ -9,7 +9,8 @@ import org.springframework.web.socket.WebSocketSession;
 import main.java.de.voidtech.ytparty.annotations.Handler;
 import main.java.de.voidtech.ytparty.entities.ephemeral.AuthResponse;
 import main.java.de.voidtech.ytparty.entities.ephemeral.Party;
-import main.java.de.voidtech.ytparty.entities.persistent.ChatMessage;
+import main.java.de.voidtech.ytparty.entities.message.ChatMessage;
+import main.java.de.voidtech.ytparty.entities.message.MessageBuilder;
 import main.java.de.voidtech.ytparty.handlers.AbstractHandler;
 import main.java.de.voidtech.ytparty.service.AuthService;
 import main.java.de.voidtech.ytparty.service.GatewayResponseService;
@@ -57,8 +58,14 @@ public class JoinPartyHandler extends AbstractHandler{
 						.put("canControl", (party.getOwnerName() == null ? true : party.getOwnerName().equals(username)))
 						.put("theme", party.getRoomColour())
 						.toString(), this.getHandlerType());
-				ChatMessage joinMessage = new ChatMessage(roomID, "System", party.getRoomColour(),
-						userService.getUser(username).getEffectiveName() + " has joined the party!", "system");
+				
+				ChatMessage joinMessage = new MessageBuilder()
+						.partyID(roomID)
+						.author(MessageBuilder.SYSTEM_AUTHOR)
+						.colour(party.getRoomColour())
+						.content(String.format("%s has joined the party!", userService.getUser(username).getEffectiveName()))
+						.modifiers(MessageBuilder.SYSTEM_MODIFIERS)
+						.buildToChatMessage();
 				party.addToSessions(session);
 				deliverMessageHistory(session, roomID);
 				responder.sendChatMessage(party, joinMessage);
@@ -67,7 +74,7 @@ public class JoinPartyHandler extends AbstractHandler{
 
 	private void deliverMessageHistory(WebSocketSession session, String roomID) {
 		List<ChatMessage> messageHistory = messageService.getMessageHistory(roomID);
-		for (ChatMessage message : messageHistory) responder.sendSingleTextMessage(session, message.convertToJSON());
+		for (ChatMessage message : messageHistory) responder.sendSingleMessage(session, message);
 	}
 
 	@Override

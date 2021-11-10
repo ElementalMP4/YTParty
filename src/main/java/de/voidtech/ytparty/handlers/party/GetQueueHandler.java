@@ -10,7 +10,8 @@ import org.springframework.web.socket.WebSocketSession;
 import main.java.de.voidtech.ytparty.annotations.Handler;
 import main.java.de.voidtech.ytparty.entities.ephemeral.AuthResponse;
 import main.java.de.voidtech.ytparty.entities.ephemeral.Party;
-import main.java.de.voidtech.ytparty.entities.persistent.ChatMessage;
+import main.java.de.voidtech.ytparty.entities.message.ChatMessage;
+import main.java.de.voidtech.ytparty.entities.message.MessageBuilder;
 import main.java.de.voidtech.ytparty.handlers.AbstractHandler;
 import main.java.de.voidtech.ytparty.service.AuthService;
 import main.java.de.voidtech.ytparty.service.GatewayResponseService;
@@ -49,8 +50,14 @@ public class GetQueueHandler extends AbstractHandler {
 				videoList = videoList + String.format("<a href='%s' target='_blank'>%s</a><br>", YOUTUBE_BASE_URL + video, video);
 			}
 			
-			responder.sendSingleTextMessage(session,
-					new ChatMessage(party.getPartyID(), "System", party.getRoomColour(), videoList, "system").convertToJSON());
+			ChatMessage queueMessage = new MessageBuilder()
+					.partyID(roomID)
+					.author(MessageBuilder.SYSTEM_AUTHOR)
+					.colour(party.getRoomColour())
+					.content(videoList)
+					.modifiers(MessageBuilder.SYSTEM_MODIFIERS)
+					.buildToChatMessage();
+			responder.sendSingleMessage(session, queueMessage);
 		}
 	}
 

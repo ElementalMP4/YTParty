@@ -12,8 +12,9 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 
 import main.java.de.voidtech.ytparty.entities.ephemeral.Party;
-import main.java.de.voidtech.ytparty.entities.ephemeral.SystemMessage;
-import main.java.de.voidtech.ytparty.entities.persistent.ChatMessage;
+import main.java.de.voidtech.ytparty.entities.message.AbstractMessage;
+import main.java.de.voidtech.ytparty.entities.message.ChatMessage;
+import main.java.de.voidtech.ytparty.entities.message.SystemMessage;
 
 @Service
 public class GatewayResponseService {
@@ -39,20 +40,20 @@ public class GatewayResponseService {
 		}
 	}
 	
-	public void sendSingleTextMessage(WebSocketSession session, String text) {
+	public void sendSingleMessage(WebSocketSession session, AbstractMessage message) {
 		try {
-			session.sendMessage(new TextMessage(text));
+			session.sendMessage(new TextMessage(message.convertToJson()));
 		} catch (IOException e) {
 			LOGGER.log(Level.SEVERE, "Error during Service Execution: " + e.getMessage());
 		}
 	}
 	
 	public void sendChatMessage(Party party, ChatMessage message) {
-		party.broadcastMessage(message.convertToJSON());
+		party.broadcastMessage(message);
 		messageService.saveMessage(message);
 	}
 	
 	public void sendSystemMessage(Party party, SystemMessage systemMessage) {
-		party.broadcastMessage(systemMessage.convertToJSON());
+		party.broadcastMessage(systemMessage);
 	}
 }

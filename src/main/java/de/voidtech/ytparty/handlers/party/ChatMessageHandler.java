@@ -7,7 +7,8 @@ import org.springframework.web.socket.WebSocketSession;
 import main.java.de.voidtech.ytparty.annotations.Handler;
 import main.java.de.voidtech.ytparty.entities.ephemeral.AuthResponse;
 import main.java.de.voidtech.ytparty.entities.ephemeral.Party;
-import main.java.de.voidtech.ytparty.entities.persistent.ChatMessage;
+import main.java.de.voidtech.ytparty.entities.message.ChatMessage;
+import main.java.de.voidtech.ytparty.entities.message.MessageBuilder;
 import main.java.de.voidtech.ytparty.handlers.AbstractHandler;
 import main.java.de.voidtech.ytparty.service.AuthService;
 import main.java.de.voidtech.ytparty.service.GatewayResponseService;
@@ -43,7 +44,13 @@ public class ChatMessageHandler extends AbstractHandler {
 			Party party = partyService.getParty(roomID);
 			if (content.length() > 800) responder.sendError(session, "Your message is too long! Messages cannot be longer than 800 characters.", this.getHandlerType());
 			else {
-				ChatMessage userMessage = new ChatMessage(roomID, author, colour, content, modifiers);
+				ChatMessage userMessage = new MessageBuilder()
+						.partyID(roomID)
+						.content(content)
+						.colour(colour)
+						.modifiers(modifiers)
+						.author(author)
+						.buildToChatMessage();
 				responder.sendChatMessage(party, userMessage);	
 			}
 		}		

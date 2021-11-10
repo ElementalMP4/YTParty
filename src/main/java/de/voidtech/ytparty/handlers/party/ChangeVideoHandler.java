@@ -7,8 +7,8 @@ import org.springframework.web.socket.WebSocketSession;
 import main.java.de.voidtech.ytparty.annotations.Handler;
 import main.java.de.voidtech.ytparty.entities.ephemeral.AuthResponse;
 import main.java.de.voidtech.ytparty.entities.ephemeral.Party;
-import main.java.de.voidtech.ytparty.entities.ephemeral.SystemMessage;
-import main.java.de.voidtech.ytparty.entities.persistent.ChatMessage;
+import main.java.de.voidtech.ytparty.entities.message.ChatMessage;
+import main.java.de.voidtech.ytparty.entities.message.MessageBuilder;
 import main.java.de.voidtech.ytparty.handlers.AbstractHandler;
 import main.java.de.voidtech.ytparty.service.AuthService;
 import main.java.de.voidtech.ytparty.service.GatewayResponseService;
@@ -41,15 +41,21 @@ public class ChangeVideoHandler extends AbstractHandler {
 			Party party = partyService.getParty(roomID);
 			if (party.canControlRoom(tokenResponse.getActingString())) {
 				responder.sendSuccess(session, new JSONObject().put("video", newVideoID).toString(), this.getHandlerType());
-				ChatMessage videoMessage = new ChatMessage(roomID, "System", party.getRoomColour(), 
-						String.format("Video Changed by %s!", tokenResponse.getActingString()), "System");
+				ChatMessage videoMessage = new MessageBuilder()
+						.partyID(roomID)
+						.author(MessageBuilder.SYSTEM_AUTHOR)
+						.colour(party.getRoomColour())
+						.content(String.format("Video Changed by %s!", tokenResponse.getActingString()))
+						.modifiers(MessageBuilder.SYSTEM_MODIFIERS)
+						.buildToChatMessage();
 				party.setVideoID(newVideoID);
 				responder.sendChatMessage(party, videoMessage);
-				responder.sendSystemMessage(party, new SystemMessage("changevideo", new JSONObject().put("video", newVideoID)));	
+				responder.sendSystemMessage(party, new MessageBuilder().type("changevideo").data(new JSONObject().put("video", newVideoID))
+						.buildToSystemMessage());	
 			} else responder.sendError(session, "You do not have permission to do that!", this.getHandlerType());
 		}
 	}
-
+	
 	@Override
 	public String getHandlerType() {
 		return "party-changevideo";

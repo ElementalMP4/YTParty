@@ -7,7 +7,8 @@ import org.springframework.web.socket.WebSocketSession;
 import main.java.de.voidtech.ytparty.annotations.Handler;
 import main.java.de.voidtech.ytparty.entities.ephemeral.AuthResponse;
 import main.java.de.voidtech.ytparty.entities.ephemeral.Party;
-import main.java.de.voidtech.ytparty.entities.persistent.ChatMessage;
+import main.java.de.voidtech.ytparty.entities.message.ChatMessage;
+import main.java.de.voidtech.ytparty.entities.message.MessageBuilder;
 import main.java.de.voidtech.ytparty.handlers.AbstractHandler;
 import main.java.de.voidtech.ytparty.service.AuthService;
 import main.java.de.voidtech.ytparty.service.GatewayResponseService;
@@ -41,8 +42,15 @@ public class SkipQueuedVideoHandler extends AbstractHandler {
 				if (party.queueIsEmpty()) responder.sendError(session, "The queue is empty! You cannot skip!", this.getHandlerType());
 				else {
 					party.skipVideo();
-					responder.sendChatMessage(party, new ChatMessage(roomID, "System", party.getRoomColour(),
-							String.format("Video Skipped by %s!", tokenResponse.getActingString()), "System"));
+					
+					ChatMessage skipMessage = new MessageBuilder()
+							.partyID(roomID)
+							.author(MessageBuilder.SYSTEM_AUTHOR)
+							.colour(party.getRoomColour())
+							.content(String.format("Video skipped by %s!", tokenResponse.getActingString()))
+							.modifiers(MessageBuilder.SYSTEM_MODIFIERS)
+							.buildToChatMessage();
+					responder.sendChatMessage(party, skipMessage);
 				}
 			} else responder.sendError(session, "You do not have permission to do that!", this.getHandlerType());
 		}

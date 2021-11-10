@@ -13,7 +13,9 @@ import org.json.JSONObject;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 
-import main.java.de.voidtech.ytparty.entities.persistent.ChatMessage;
+import main.java.de.voidtech.ytparty.entities.message.AbstractMessage;
+import main.java.de.voidtech.ytparty.entities.message.ChatMessage;
+import main.java.de.voidtech.ytparty.entities.message.MessageBuilder;
 
 public class Party {
 	
@@ -50,7 +52,7 @@ public class Party {
 
 	private void setNextVideo(String nextVideo) {
 		this.currentVideoID = nextVideo;
-		broadcastMessage(new SystemMessage("changevideo", new JSONObject().put("video", nextVideo)).convertToJSON());
+		broadcastMessage(new MessageBuilder().type("changevideo").data(new JSONObject().put("video", nextVideo)).buildToSystemMessage());
 	}
 	
 	public void enqueueVideo(String id) {
@@ -58,7 +60,8 @@ public class Party {
 	}
 	
 	public void skipVideo() {
-		broadcastMessage(new SystemMessage("changevideo", new JSONObject().put("video", this.videoQueue.poll())).convertToJSON());
+		broadcastMessage(new MessageBuilder().type("changevideo").data(new JSONObject().put("video", this.videoQueue.poll()))
+				.buildToSystemMessage());
 	}
 	
 	public void clearQueue() {
@@ -113,7 +116,15 @@ public class Party {
 	public void checkRemoveSession(WebSocketSession session) {
 		if (sessions.contains(session)) { 
 			sessions.remove(session);
-			broadcastMessage(new ChatMessage(this.partyID, "System", "#ff0000", "Someone has left the party!", "system").convertToJSON());
+			
+			ChatMessage leftMessage = new MessageBuilder()
+					.author(MessageBuilder.SYSTEM_AUTHOR)
+					.modifiers(MessageBuilder.SYSTEM_MODIFIERS)
+					.colour(this.getRoomColour())
+					.content("Someone has left the party!")
+					.partyID(this.getPartyID())
+					.buildToChatMessage();
+			broadcastMessage(leftMessage);
 		}
 	}
 	
@@ -121,12 +132,10 @@ public class Party {
 		return this.hasBeenVisited;
 	}
 	
-	public void broadcastMessage(String message) {
+	public void broadcastMessage(AbstractMessage message) {
 		List<WebSocketSession> invalidSessions = new ArrayList<WebSocketSession>();
 		for (WebSocketSession session : sessions) {
-			if (session.isOpen()) {
-				sendMessage(message, session);
-			}
+			if (session.isOpen()) sendMessage(message.convertToJson(), session);
 			else invalidSessions.add(session);
 		}
 		if (!invalidSessions.isEmpty()) for (WebSocketSession session : invalidSessions) sessions.remove(session);

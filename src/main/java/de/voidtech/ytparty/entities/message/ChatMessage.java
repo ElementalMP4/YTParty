@@ -1,4 +1,4 @@
-package main.java.de.voidtech.ytparty.entities.persistent;
+package main.java.de.voidtech.ytparty.entities.message;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -13,7 +13,7 @@ import org.json.JSONObject;
 
 @Entity(name = "Messages")
 @Table(name = "Messages", indexes = @Index(columnList = "partyID", name = "index_message"))
-public class ChatMessage {
+public class ChatMessage extends AbstractMessage {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
@@ -38,13 +38,13 @@ public class ChatMessage {
 	ChatMessage() {
 	}
 	
-	public ChatMessage(String partyID, String author, String colour, String content, String messageModifiers)
+	public ChatMessage(MessageBuilder builder)
 	{
-	  this.partyID = partyID;
-	  this.author = author;
-	  this.colour = colour;
-	  this.content = content;
-	  this.messageModifiers = messageModifiers;
+	  this.partyID = builder.getChatMessagePartyID();
+	  this.author = builder.getChatMessageAuthor();
+	  this.colour = builder.getChatMessageColour();
+	  this.content = builder.getChatMessageContent();
+	  this.messageModifiers = builder.getChatMessageMessageModifiers();
 	}
 
 	public String getPartyID() {
@@ -86,15 +86,19 @@ public class ChatMessage {
 	public void setMessageModifiers(String newModifiers) {
 		this.messageModifiers = newModifiers;
 	}
-	
-	public String convertToJSON() {
-		JSONObject messageJsonObject = new JSONObject();
-		messageJsonObject.put("type", "party-chatmessage");
-		messageJsonObject.put("data", new JSONObject()
+
+	@Override
+	public String getMessageType() {
+		return "party-chatmessage";
+	}
+
+	@Override
+	public JSONObject getMessageData() {
+		JSONObject data = new JSONObject()
 				.put("author", this.author)
 				.put("colour", this.colour)
 				.put("content", this.content)
-				.put("modifiers", this.messageModifiers));
-		return messageJsonObject.toString();
+				.put("modifiers", this.messageModifiers);
+		return data;
 	}
 }

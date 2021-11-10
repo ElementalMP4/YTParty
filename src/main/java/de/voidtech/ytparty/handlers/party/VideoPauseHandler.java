@@ -7,7 +7,7 @@ import org.springframework.web.socket.WebSocketSession;
 import main.java.de.voidtech.ytparty.annotations.Handler;
 import main.java.de.voidtech.ytparty.entities.ephemeral.AuthResponse;
 import main.java.de.voidtech.ytparty.entities.ephemeral.Party;
-import main.java.de.voidtech.ytparty.entities.ephemeral.SystemMessage;
+import main.java.de.voidtech.ytparty.entities.message.MessageBuilder;
 import main.java.de.voidtech.ytparty.handlers.AbstractHandler;
 import main.java.de.voidtech.ytparty.service.AuthService;
 import main.java.de.voidtech.ytparty.service.GatewayResponseService;
@@ -38,7 +38,7 @@ public class VideoPauseHandler extends AbstractHandler {
 		else {
 			Party party = partyService.getParty(roomID);
 			if (party.canControlRoom(tokenResponse.getActingString()))
-				responder.sendSystemMessage(party, new SystemMessage("pausevideo", new JSONObject()));
+				responder.sendSystemMessage(party, new MessageBuilder().type("pausevideo").data(MessageBuilder.EMPTY_JSON).buildToSystemMessage());
 			else responder.sendError(session, "You do not have permission to do that!", this.getHandlerType());
 		}
 	}
