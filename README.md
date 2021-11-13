@@ -8,7 +8,7 @@ Watch YouTube with friends!
 
 ## Running YTParty
 
-YTParty requires a config file as such:
+YTParty requires a config file named `config.properties` with the following fields:
 
 ```conf
 #Hibernate Options
