@@ -15,6 +15,8 @@ var TYPING_COUNT = 0;
 var TYPING = false;
 var PLAYER_READY = false;
 
+const YOUTUBE_URL = "https://youtube.com/watch?v=";
+
 function showTypingMessage() {
     document.getElementById("typing-message").style.display = "block";
 }
@@ -123,8 +125,29 @@ function pauseVideo() {
     }
 }
 
+function convertVideoList(videos) {
+    if (videos.length == 0) return "No videos queued!";
+    else {
+        let videosFormatted = [];
+        videos.forEach(video => {
+            videosFormatted.push("<a href='" + YOUTUBE_URL + video + "'>" + video + "</a>");
+        });
+        return videosFormatted.join("<br>");
+    }
+}
+
 function handleChatMessage(data) {
     addChatMessage(data);
+}
+
+function showQueueInChat(videos) {
+    displayLocalMessage("Queued Videos:<br><br>" + convertVideoList(videos));
+}
+
+function refreshModalQueueData(videos) {
+    let message = convertVideoList(videos);
+    document.getElementById("queue-items").innerHTML = message + "<br><br>";
+    document.getElementById("queue-title").innerHTML = "Queued Items (" + videos.length + ")";
 }
 
 function handleSystemMessage(response) {
@@ -141,6 +164,10 @@ function handleSystemMessage(response) {
         case "typingupdate":
             updateTyping(response.data);
             break;
+        case "getqueue":
+            if (response.data.display == "chat") showQueueInChat(response.data.videos);
+            else refreshModalQueueData(response.data.videos);
+
     }
 }
 
@@ -159,7 +186,7 @@ function initialiseParty(response) {
         this.style.borderBottom = "2px solid grey";
     });
 
-    displayLocalMessage("This party's Room ID is " + ROOM_ID + "<br> Use /help to see some chat commands!");
+    displayLocalMessage("Use /help to see some chat commands! Use ctrl + m to open the player menu!");
 }
 
 Gateway.onopen = function() {
@@ -243,8 +270,8 @@ Gateway.onclose = function() {
     displayLocalMessage("You lost connection to the server! Use /r to reconnect");
 }
 
-function handleSetVideoCommand(args) {
-    let videoURL = new URL(args[0]);
+function handleSetVideoCommand(video) {
+    let videoURL = new URL(video);
     let videoID = videoURL.searchParams.get("v");
     if (videoID) sendGatewayMessage({ "type": "party-changevideo", "data": { "token": TOKEN, "roomID": ROOM_ID, "video": videoID } });
 }
@@ -258,7 +285,7 @@ function handleClearCommand() {
 }
 
 function handleQueueCommand(args) {
-    if (args.length == 0) sendGatewayMessage({ "type": "party-getqueue", "data": { "token": TOKEN, "roomID": ROOM_ID } });
+    if (args.length == 0) sendGatewayMessage({ "type": "party-getqueue", "data": { "token": TOKEN, "roomID": ROOM_ID, "display": "chat" } });
     else {
         let videoURL = new URL(args[0]);
         let videoID = videoURL.searchParams.get("v");
@@ -270,8 +297,7 @@ function handleHelpCommand() {
     displayLocalMessage(`
     ~ ~ YTParty Help ~ ~<br>
     /help - shows this message<br><br>
-    /setvideo [video URL] - changes the video<br><br>
-    /id - Shows you the room ID<br><br>
+    /setvideo [video URL] - changes the currently playing video<br><br>
     /i [message] - changes your message to italics<br><br>
     /u [message] - changes your message to underline<br><br>
     /b [message] - makes your message bold<br><br>
@@ -279,7 +305,7 @@ function handleHelpCommand() {
     /c [message] - changes your message to cursive<br><br>
     /cc [message] - cHaNgEs YoUr TeXt LiKe ThIs<br><br>
     /big [message] - makes your message big<br><br>
-    /r - reloads your session
+    /r - reloads your session<br>
     `);
 }
 
@@ -314,7 +340,7 @@ function sendTypingStart() {
 }
 
 document.getElementById("chat-input").addEventListener("keyup", function(event) {
-    if (event.keyCode === 13) {
+    if (event.key == "Enter") {
         sendTypingStop();
         event.preventDefault();
         let message = document.getElementById("chat-input").value.trim();
@@ -342,7 +368,7 @@ document.getElementById("chat-input").addEventListener("keyup", function(event) 
                     break;
                 case "setvideo":
                     sendChatMessage = false;
-                    handleSetVideoCommand(args);
+                    handleSetVideoCommand(args[0]);
                     break;
                 case "cc":
                     message = toCrazyCase(message);
@@ -407,5 +433,35 @@ document.getElementById("chat-input").addEventListener("keyup", function(event) 
         let message = document.getElementById("chat-input").value.trim();
         if (message == "") sendTypingStop();
         else sendTypingStart();
+    }
+});
+
+document.addEventListener("keydown", function(event) {
+    if (event.code == "KeyM" && event.ctrlKey) {
+        sendGatewayMessage({ "type": "party-getqueue", "data": { "token": TOKEN, "roomID": ROOM_ID, "display": "modal" } });
+        showModalMenu();
+    }
+});
+
+document.getElementById("current-video-input").addEventListener("keyup", function(event) {
+    if (event.key == "Enter") {
+        event.preventDefault();
+        let videoURL = document.getElementById("current-video-input").value.trim();
+        if (videoURL == "") return;
+        handleSetVideoCommand(videoURL);
+    }
+});
+
+document.getElementById("queue-input").addEventListener("keyup", function(event) {
+    if (event.key == "Enter") {
+        event.preventDefault();
+        let videoURL = document.getElementById("queue-input").value.trim();
+        if (videoURL == "") return;
+        let videoURLClass = new URL(videoURL);
+        let videoID = videoURLClass.searchParams.get("v");
+        if (videoID) {
+            sendGatewayMessage({ "type": "party-queuevideo", "data": { "token": TOKEN, "roomID": ROOM_ID, "video": videoID } });
+            sendGatewayMessage({ "type": "party-getqueue", "data": { "token": TOKEN, "roomID": ROOM_ID, "display": "modal" } });
+        }
     }
 });

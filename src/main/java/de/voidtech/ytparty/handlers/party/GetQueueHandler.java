@@ -10,8 +10,8 @@ import org.springframework.web.socket.WebSocketSession;
 import main.java.de.voidtech.ytparty.annotations.Handler;
 import main.java.de.voidtech.ytparty.entities.ephemeral.AuthResponse;
 import main.java.de.voidtech.ytparty.entities.ephemeral.Party;
-import main.java.de.voidtech.ytparty.entities.message.ChatMessage;
 import main.java.de.voidtech.ytparty.entities.message.MessageBuilder;
+import main.java.de.voidtech.ytparty.entities.message.SystemMessage;
 import main.java.de.voidtech.ytparty.handlers.AbstractHandler;
 import main.java.de.voidtech.ytparty.service.AuthService;
 import main.java.de.voidtech.ytparty.service.GatewayResponseService;
@@ -19,8 +19,6 @@ import main.java.de.voidtech.ytparty.service.PartyService;
 
 @Handler
 public class GetQueueHandler extends AbstractHandler {
-	
-	private static final String YOUTUBE_BASE_URL = "https://www.youtube.com/watch?v=";
 
 	@Autowired
 	private GatewayResponseService responder;
@@ -35,6 +33,7 @@ public class GetQueueHandler extends AbstractHandler {
 	public void execute(WebSocketSession session, JSONObject data) {
 		String token = data.getString("token");
 		String roomID = data.getString("roomID");
+		String displayMode = data.getString("display");
 		
 		AuthResponse tokenResponse = authService.validateToken(token); 
 		AuthResponse partyIDResponse = authService.validatePartyID(roomID);
@@ -44,19 +43,11 @@ public class GetQueueHandler extends AbstractHandler {
 		else {
 			Party party = partyService.getParty(roomID);
 			List<String> videos = new ArrayList<String>(party.getQueueAsList());
-			String videoList = "Video Queue:<br><br>";
 			
-			for (String video : videos) {
-				videoList = videoList + String.format("<a href='%s' target='_blank'>%s</a><br>", YOUTUBE_BASE_URL + video, video);
-			}
-			
-			ChatMessage queueMessage = new MessageBuilder()
-					.partyID(roomID)
-					.author(MessageBuilder.SYSTEM_AUTHOR)
-					.colour(party.getRoomColour())
-					.content(videoList)
-					.modifiers(MessageBuilder.SYSTEM_MODIFIERS)
-					.buildToChatMessage();
+			SystemMessage queueMessage = new MessageBuilder()
+					.type("getqueue")
+					.data(new JSONObject().put("videos", videos.toArray()).put("display", displayMode))
+					.buildToSystemMessage();
 			responder.sendSingleMessage(session, queueMessage);
 		}
 	}

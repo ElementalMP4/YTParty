@@ -1,6 +1,6 @@
 var modal = document.getElementById("modal");
-var btn = document.getElementById("open-modal");
-var span = document.getElementById("close");
+var openButton = document.getElementById("open-modal");
+var closeButton = document.getElementById("close");
 
 function showModalMessage(title, message) {
     document.getElementById("modal-title").innerHTML = title;
@@ -8,16 +8,36 @@ function showModalMessage(title, message) {
     document.getElementById("open-modal").click();
 }
 
-btn.onclick = function() {
-    modal.style.display = "block";
-}
-
-span.onclick = function() {
+function hideModal() {
     modal.style.display = "none";
 }
 
+function showModal() {
+    modal.style.display = "block";
+}
+
+function showModalMenu() {
+    document.getElementById("open-modal").click();
+}
+
+openButton.onclick = function() {
+    showModal();
+}
+
+closeButton.onclick = function() {
+    hideModal();
+}
+
+//Close modal when click detected off of modal
 window.onclick = function(event) {
     if (event.target == modal) {
-        modal.style.display = "none";
+        hideModal();
     }
 }
+
+//Close modal on escape key
+document.addEventListener("keydown", function(event) {
+    if (event.code == "Escape") {
+        hideModal();
+    }
+});

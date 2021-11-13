@@ -16,6 +16,7 @@ input[type=text] {
     border-bottom: 2px solid grey;
     outline: none;
     width: 100%;
+    float: left;
 }
 
 input[type=text]:focus {

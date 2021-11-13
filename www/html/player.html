@@ -10,6 +10,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Paytone+One&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" type="text/css" href="/playerstyle.css">
+    <link rel="stylesheet" type="text/css" href="/modal.css">
     <link href="/favicon.png" rel="icon" type="image/png">
     <meta property="og:site_name" content="YTParty">
     <meta property="og:url" content="https://ytparty.voidtech.de/">
@@ -20,6 +21,25 @@
 </head>
 
 <body>
+    <button style="display:none" id="open-modal"></button>
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span id="close" class="close">&times;</span>
+                <h2 id="modal-title">Player Menu</h2>
+            </div>
+            <div class="modal-body">
+                <br>
+                <p>Add a video to the queue</p><br>
+                <input type="text" id="queue-input" placeholder="Enter a YouTube video URL"><br><br>
+                <p>Set the currently playing video</p><br>
+                <input type="text" id="current-video-input" placeholder="Enter a YouTube video URL"><br>
+                <h2 id="queue-title">Queued Items (0)</h2>
+                <p id="queue-items"></p>
+            </div>
+        </div>
+    </div>
+
     <div id="player" class="div-float-left player"></div>
     <div id="chat-history" class="div-float-left chat" width=100px height=720px></div>
     <div class="div-float-left div-input-container">
@@ -30,5 +50,6 @@
 </body>
 
 <script src="/player.js"></script>
+<script src="/modal.js"></script>
 
 </html>
