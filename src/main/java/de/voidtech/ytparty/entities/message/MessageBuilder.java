@@ -2,6 +2,8 @@ package main.java.de.voidtech.ytparty.entities.message;
 
 import org.json.JSONObject;
 
+import main.java.de.voidtech.ytparty.entities.persistent.ChatMessage;
+
 public class MessageBuilder {
 	
 	//Chat Message Fields

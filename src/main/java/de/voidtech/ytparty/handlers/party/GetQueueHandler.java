@@ -13,7 +13,7 @@ import main.java.de.voidtech.ytparty.entities.ephemeral.Party;
 import main.java.de.voidtech.ytparty.entities.message.MessageBuilder;
 import main.java.de.voidtech.ytparty.entities.message.SystemMessage;
 import main.java.de.voidtech.ytparty.handlers.AbstractHandler;
-import main.java.de.voidtech.ytparty.service.AuthService;
+import main.java.de.voidtech.ytparty.service.GatewayAuthService;
 import main.java.de.voidtech.ytparty.service.GatewayResponseService;
 import main.java.de.voidtech.ytparty.service.PartyService;
 
@@ -24,7 +24,7 @@ public class GetQueueHandler extends AbstractHandler {
 	private GatewayResponseService responder;
 	
 	@Autowired
-	private AuthService authService;
+	private GatewayAuthService authService;
 	
 	@Autowired
 	private PartyService partyService;

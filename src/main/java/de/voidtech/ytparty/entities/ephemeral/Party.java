@@ -14,8 +14,8 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 
 import main.java.de.voidtech.ytparty.entities.message.AbstractMessage;
-import main.java.de.voidtech.ytparty.entities.message.ChatMessage;
 import main.java.de.voidtech.ytparty.entities.message.MessageBuilder;
+import main.java.de.voidtech.ytparty.entities.persistent.ChatMessage;
 
 public class Party {
 	

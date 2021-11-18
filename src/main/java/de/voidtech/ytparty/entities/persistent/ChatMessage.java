@@ -1,4 +1,4 @@
-package main.java.de.voidtech.ytparty.entities.message;
+package main.java.de.voidtech.ytparty.entities.persistent;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,6 +10,10 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.Type;
 import org.json.JSONObject;
+
+import main.java.de.voidtech.ytparty.entities.message.AbstractMessage;
+import main.java.de.voidtech.ytparty.entities.message.MessageBuilder;
+import main.java.de.voidtech.ytparty.entities.message.MessageType;
 
 @Entity(name = "Messages")
 @Table(name = "Messages", indexes = @Index(columnList = "partyID", name = "index_message"))

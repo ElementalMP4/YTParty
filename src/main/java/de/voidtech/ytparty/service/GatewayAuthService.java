@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import main.java.de.voidtech.ytparty.entities.ephemeral.AuthResponse;
 
 @Service
-public class AuthService {
+public class GatewayAuthService {
 
 	@Autowired
 	private UserTokenService tokenService;

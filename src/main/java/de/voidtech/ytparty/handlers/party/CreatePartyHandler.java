@@ -8,7 +8,7 @@ import main.java.de.voidtech.ytparty.annotations.Handler;
 import main.java.de.voidtech.ytparty.entities.ephemeral.AuthResponse;
 import main.java.de.voidtech.ytparty.entities.ephemeral.Party;
 import main.java.de.voidtech.ytparty.handlers.AbstractHandler;
-import main.java.de.voidtech.ytparty.service.AuthService;
+import main.java.de.voidtech.ytparty.service.GatewayAuthService;
 import main.java.de.voidtech.ytparty.service.GatewayResponseService;
 import main.java.de.voidtech.ytparty.service.PartyService;
 import main.java.de.voidtech.ytparty.service.UserTokenService;
@@ -20,7 +20,7 @@ public class CreatePartyHandler extends AbstractHandler{
 	private GatewayResponseService responder;
 	
 	@Autowired
-	private AuthService authService;
+	private GatewayAuthService authService;
 	
 	@Autowired
 	private UserTokenService tokenService;

@@ -8,7 +8,7 @@ import main.java.de.voidtech.ytparty.annotations.Handler;
 import main.java.de.voidtech.ytparty.entities.ephemeral.AuthResponse;
 import main.java.de.voidtech.ytparty.entities.persistent.User;
 import main.java.de.voidtech.ytparty.handlers.AbstractHandler;
-import main.java.de.voidtech.ytparty.service.AuthService;
+import main.java.de.voidtech.ytparty.service.GatewayAuthService;
 import main.java.de.voidtech.ytparty.service.GatewayResponseService;
 import main.java.de.voidtech.ytparty.service.UserService;
 import main.java.de.voidtech.ytparty.service.UserTokenService;
@@ -26,7 +26,7 @@ public class ColourChangeHandler extends AbstractHandler {
 	private UserTokenService tokenService;
 	
 	@Autowired
-	private AuthService authService;
+	private GatewayAuthService authService;
 	
 	@Override
 	public void execute(WebSocketSession session, JSONObject data) {

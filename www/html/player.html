@@ -35,6 +35,8 @@
                 <p>Set the currently playing video</p><br>
                 <input type="text" id="current-video-input" placeholder="Enter a YouTube video URL"><br>
                 <h2 id="queue-title">Queued Items (0)</h2>
+                <button id="skip-button" onclick="skipVideo()">Skip Current Video</button>
+                <button id="clear-button" onclick="clearQueue()">Clear Video Queue</button><br><br>
                 <p id="queue-items"></p>
             </div>
         </div>
@@ -46,7 +48,6 @@
         <input type="text" id="chat-input" placeholder="Enter a message">
     </div>
     <p id="typing-message" class="typing-message">People are typing...</p>
-
 </body>
 
 <script src="/player.js"></script>

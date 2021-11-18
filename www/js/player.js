@@ -1,19 +1,19 @@
 const GatewayServerURL = (location.protocol == "https:" ? "wss://" : "ws://") + location.host + "/gateway";
 var Gateway = new WebSocket(GatewayServerURL);
 
-var USER_PROPERTIES;
-var TOKEN;
-var PLAYER;
-var CURRENT_VIDEO_ID;
-var ROOM_ID;
-var LAST_MESSAGE_AUTHOR;
-var CAN_CONTROL_PLAYER;
-var ROOM_COLOUR;
-
-var TYPING_COUNT = 0;
-
-var TYPING = false;
-var PLAYER_READY = false;
+var Globals = {
+    USER_PROPERTIES: undefined,
+    TOKEN: undefined,
+    PLAYER: undefined,
+    CURRENT_VIDEO_ID: undefined,
+    ROOM_ID: undefined,
+    LAST_MESSAGE_AUTHOR: undefined,
+    CAN_CONTROL_PLAYER: undefined,
+    ROOM_COLOUR: undefined,
+    TYPING_COUNT: 0,
+    TYPING: false,
+    PLAYER_READY: false
+}
 
 const YOUTUBE_URL = "https://youtube.com/watch?v=";
 
@@ -26,11 +26,11 @@ function hideTypingMessage() {
 }
 
 function updateTyping(data) {
-    if (data.user == USER_PROPERTIES.username) return;
-    if (data.mode == "start") TYPING_COUNT = TYPING_COUNT + 1;
-    else TYPING_COUNT = TYPING_COUNT - 1;
+    if (data.user == Globals.USER_PROPERTIES.username) return;
+    if (data.mode == "start") Globals.TYPING_COUNT = Globals.TYPING_COUNT + 1;
+    else Globals.TYPING_COUNT = Globals.TYPING_COUNT - 1;
 
-    if (TYPING_COUNT > 0) showTypingMessage();
+    if (Globals.TYPING_COUNT > 0) showTypingMessage();
     else hideTypingMessage();
 };
 
@@ -45,42 +45,42 @@ function addChatMessage(data) {
     let modifiers = data.modifiers !== "" ? `class="${data.modifiers}"` : "";
 
     let newMessage = `<div class="chat-message">`;
-    if (LAST_MESSAGE_AUTHOR !== author) newMessage += `<p class="msg-nickname" style="color:${colour}">${author}</p><br>`;
+    if (Globals.LAST_MESSAGE_AUTHOR !== author) newMessage += `<p class="msg-nickname" style="color:${colour}">${author}</p><br>`;
     newMessage += `<p ${modifiers}>${content}</p></div>`;
-    if (LAST_MESSAGE_AUTHOR !== author) newMessage += "<br>";
+    if (Globals.LAST_MESSAGE_AUTHOR !== author) newMessage += "<br>";
 
-    LAST_MESSAGE_AUTHOR = author;
+    Globals.LAST_MESSAGE_AUTHOR = author;
 
     $("#chat-history").prepend(newMessage);
     $('#chat-history').scrollTop($('#chat-history')[0].scrollHeight);
 }
 
 function displayLocalMessage(message) {
-    addChatMessage({ "author": "System", "colour": ROOM_COLOUR, "content": message, "modifiers": "system" });
+    addChatMessage({ "author": "System", "colour": Globals.ROOM_COLOUR, "content": message, "modifiers": "system" });
 }
 
 function sendPlayingMessage() {
-    let time = PLAYER.getCurrentTime();
-    sendGatewayMessage({ "type": "party-playvideo", "data": { "token": TOKEN, "roomID": ROOM_ID, "timestamp": time } });
+    let time = Globals.PLAYER.getCurrentTime();
+    sendGatewayMessage({ "type": "party-playvideo", "data": { "token": Globals.TOKEN, "roomID": Globals.ROOM_ID, "timestamp": time } });
     displayLocalMessage("Video playing at " + new Date(time * 1000).toISOString().substr(11, 8));
 }
 
 function sendPausedMessage() {
-    sendGatewayMessage({ "type": "party-pausevideo", "data": { "token": TOKEN, "roomID": ROOM_ID } });
+    sendGatewayMessage({ "type": "party-pausevideo", "data": { "token": Globals.TOKEN, "roomID": Globals.ROOM_ID } });
     displayLocalMessage("Video paused");
 }
 
 function sendVideoEndedMessage() {
-    sendGatewayMessage({ "type": "party-videoend", "data": { "token": TOKEN, "roomID": ROOM_ID } });
+    sendGatewayMessage({ "type": "party-videoend", "data": { "token": Globals.TOKEN, "roomID": Globals.ROOM_ID } });
     displayLocalMessage("Video ended!");
 }
 
 function onYouTubeIframeAPIReady() {
-    PLAYER = new YT.Player('player', {
+    Globals.PLAYER = new YT.Player('player', {
         height: '100%',
         width: '80%',
-        playerVars: { 'controls': CAN_CONTROL_PLAYER ? 1 : 0 },
-        videoId: CURRENT_VIDEO_ID,
+        playerVars: { 'controls': Globals.CAN_CONTROL_PLAYER ? 1 : 0 },
+        videoId: Globals.CURRENT_VIDEO_ID,
         events: {
             'onReady': onPlayerReady,
             'onStateChange': onPlayerStateChange
@@ -89,7 +89,7 @@ function onYouTubeIframeAPIReady() {
 }
 
 function onPlayerReady() {
-    PLAYER_READY = true;
+    Globals.PLAYER_READY = true;
 }
 
 function onPlayerStateChange(event) {
@@ -108,20 +108,20 @@ function onPlayerStateChange(event) {
 }
 
 function loadVideo(youTubeVideoID) {
-    CURRENT_VIDEO_ID = youTubeVideoID;
-    if (PLAYER_READY) PLAYER.loadVideoById(youTubeVideoID, 0);
+    Globals.CURRENT_VIDEO_ID = youTubeVideoID;
+    if (Globals.PLAYER_READY) Globals.PLAYER.loadVideoById(youTubeVideoID, 0);
 }
 
 function startVideo(data) {
-    if (PLAYER.getPlayerState() !== YT.PlayerState.PLAYING) {
-        PLAYER.seekTo(data.time, true);
-        PLAYER.playVideo();
+    if (Globals.PLAYER.getPlayerState() !== YT.PlayerState.PLAYING) {
+        Globals.PLAYER.seekTo(data.time, true);
+        Globals.PLAYER.playVideo();
     }
 }
 
 function pauseVideo() {
-    if (PLAYER.getPlayerState() !== YT.PlayerState.PAUSED) {
-        PLAYER.pauseVideo();
+    if (Globals.PLAYER.getPlayerState() !== YT.PlayerState.PAUSED) {
+        Globals.PLAYER.pauseVideo();
     }
 }
 
@@ -174,12 +174,12 @@ function handleSystemMessage(response) {
 function initialiseParty(response) {
     let options = JSON.parse(response);
     loadVideo(options.video);
-    CAN_CONTROL_PLAYER = options.canControl;
-    ROOM_COLOUR = options.theme;
+    Globals.CAN_CONTROL_PLAYER = options.canControl;
+    Globals.ROOM_COLOUR = options.theme;
 
     var chatInput = document.getElementById("chat-input");
     chatInput.addEventListener("focus", function() {
-        this.style.borderBottom = "2px solid " + ROOM_COLOUR;
+        this.style.borderBottom = "2px solid " + Globals.ROOM_COLOUR;
     });
 
     chatInput.addEventListener("blur", function() {
@@ -219,7 +219,7 @@ Gateway.onmessage = function(message) {
             initialiseParty(packet.response);
             break;
         case "user-getprofile":
-            USER_PROPERTIES = JSON.parse(packet.response);
+            Globals.USER_PROPERTIES = JSON.parse(packet.response);
             break;
         case "party-chatmessage":
             if (!packet.success) displayLocalMessage(packet.response);
@@ -253,16 +253,16 @@ function embedPlayer() {
 Gateway.onopen = function() {
     hideTypingMessage();
     const selfURL = new URL(location.href);
-    TOKEN = getToken();
+    Globals.TOKEN = getToken();
 
     if (!selfURL.searchParams.get("roomID")) {
         window.location.href = location.protocol + "//" + location.host + "/home.html";
     } else {
-        ROOM_ID = selfURL.searchParams.get("roomID");
+        Globals.ROOM_ID = selfURL.searchParams.get("roomID");
         embedPlayer();
         console.log("Ready");
-        sendGatewayMessage({ "type": "party-joinparty", "data": { "token": TOKEN, "roomID": ROOM_ID } });
-        sendGatewayMessage({ "type": "user-getprofile", "data": { "token": TOKEN } });
+        sendGatewayMessage({ "type": "party-joinparty", "data": { "token": Globals.TOKEN, "roomID": Globals.ROOM_ID } });
+        sendGatewayMessage({ "type": "user-getprofile", "data": { "token": Globals.TOKEN } });
     }
 }
 
@@ -273,23 +273,25 @@ Gateway.onclose = function() {
 function handleSetVideoCommand(video) {
     let videoURL = new URL(video);
     let videoID = videoURL.searchParams.get("v");
-    if (videoID) sendGatewayMessage({ "type": "party-changevideo", "data": { "token": TOKEN, "roomID": ROOM_ID, "video": videoID } });
+    if (videoID) sendGatewayMessage({ "type": "party-changevideo", "data": { "token": Globals.TOKEN, "roomID": Globals.ROOM_ID, "video": Globals.videoID } });
 }
 
-function handleSkipCommand() {
-    sendGatewayMessage({ "type": "party-skipvideo", "data": { "token": TOKEN, "roomID": ROOM_ID } });
+function skipVideo() {
+    sendGatewayMessage({ "type": "party-skipvideo", "data": { "token": Globals.TOKEN, "roomID": Globals.ROOM_ID } });
+    sendGatewayMessage({ "type": "party-getqueue", "data": { "token": Globals.TOKEN, "roomID": Globals.ROOM_ID, "display": "modal" } });
 }
 
-function handleClearCommand() {
-    sendGatewayMessage({ "type": "party-skipvideo", "data": { "token": TOKEN, "roomID": ROOM_ID } });
+function clearQueue() {
+    sendGatewayMessage({ "type": "party-clearqueue", "data": { "token": Globals.TOKEN, "roomID": Globals.ROOM_ID } });
+    sendGatewayMessage({ "type": "party-getqueue", "data": { "token": Globals.TOKEN, "roomID": Globals.ROOM_ID, "display": "modal" } });
 }
 
 function handleQueueCommand(args) {
-    if (args.length == 0) sendGatewayMessage({ "type": "party-getqueue", "data": { "token": TOKEN, "roomID": ROOM_ID, "display": "chat" } });
+    if (args.length == 0) sendGatewayMessage({ "type": "party-getqueue", "data": { "token": Globals.TOKEN, "roomID": Globals.ROOM_ID, "display": "chat" } });
     else {
         let videoURL = new URL(args[0]);
         let videoID = videoURL.searchParams.get("v");
-        if (videoID) sendGatewayMessage({ "type": "party-queuevideo", "data": { "token": TOKEN, "roomID": ROOM_ID, "video": videoID } });
+        if (videoID) sendGatewayMessage({ "type": "party-queuevideo", "data": { "token": Globals.TOKEN, "roomID": Globals.ROOM_ID, "video": videoID } });
     }
 }
 
@@ -310,8 +312,7 @@ function handleHelpCommand() {
 }
 
 function toCrazyCase(body) {
-    let toUpper = Math.round(Math.random());
-    toUpper = toUpper == 1 ? true : false;
+    let toUpper = Math.round(Math.random()) == 1 ? true : false;
     let messageLetters = body.split("");
     let final = "";
 
@@ -326,16 +327,16 @@ function toCrazyCase(body) {
 }
 
 function sendTypingStop() {
-    if (TYPING) {
-        TYPING = false;
-        sendGatewayMessage({ "type": "party-typingupdate", "data": { "token": TOKEN, "roomID": ROOM_ID, "mode": "stop", "user": USER_PROPERTIES.username } });
+    if (Globals.TYPING) {
+        Globals.TYPING = false;
+        sendGatewayMessage({ "type": "party-typingupdate", "data": { "token": Globals.TOKEN, "roomID": Globals.ROOM_ID, "mode": "stop", "user": Globals.USER_PROPERTIES.username } });
     }
 }
 
 function sendTypingStart() {
-    if (!TYPING) {
-        TYPING = true;
-        sendGatewayMessage({ "type": "party-typingupdate", "data": { "token": TOKEN, "roomID": ROOM_ID, "mode": "start", "user": USER_PROPERTIES.username } });
+    if (!Globals.TYPING) {
+        Globals.TYPING = true;
+        sendGatewayMessage({ "type": "party-typingupdate", "data": { "token": Globals.TOKEN, "roomID": Globals.ROOM_ID, "mode": "start", "user": Globals.USER_PROPERTIES.username } });
     }
 }
 
@@ -363,7 +364,7 @@ document.getElementById("chat-input").addEventListener("keyup", function(event) 
                     sendChatMessage = false;
                     break;
                 case "id":
-                    displayLocalMessage("This Party's Room ID is " + ROOM_ID);
+                    displayLocalMessage("This Party's Room ID is " + Globals.ROOM_ID);
                     sendChatMessage = false;
                     break;
                 case "setvideo":
@@ -406,11 +407,11 @@ document.getElementById("chat-input").addEventListener("keyup", function(event) 
                     break;
                 case "skip":
                     sendChatMessage = false;
-                    handleSkipCommand();
+                    skipVideo();
                     break;
                 case "clear":
                     sendChatMessage = false;
-                    handleClearCommand();
+                    clearQueue();
                     break;
 
             }
@@ -419,11 +420,11 @@ document.getElementById("chat-input").addEventListener("keyup", function(event) 
             sendGatewayMessage({
                 "type": "party-chatmessage",
                 "data": {
-                    "token": TOKEN,
-                    "roomID": ROOM_ID,
+                    "token": Globals.TOKEN,
+                    "roomID": Globals.ROOM_ID,
                     "content": message,
-                    "colour": USER_PROPERTIES.colour,
-                    "author": USER_PROPERTIES.effectiveName,
+                    "colour": Globals.USER_PROPERTIES.colour,
+                    "author": Globals.USER_PROPERTIES.effectiveName,
                     "modifiers": modifiers
                 }
             });
@@ -436,9 +437,9 @@ document.getElementById("chat-input").addEventListener("keyup", function(event) 
     }
 });
 
-document.addEventListener("keydown", function(event) {
+window.addEventListener("keydown", function(event) {
     if (event.code == "KeyM" && event.ctrlKey) {
-        sendGatewayMessage({ "type": "party-getqueue", "data": { "token": TOKEN, "roomID": ROOM_ID, "display": "modal" } });
+        sendGatewayMessage({ "type": "party-getqueue", "data": { "token": Globals.TOKEN, "roomID": Globals.ROOM_ID, "display": "modal" } });
         showModalMenu();
     }
 });
@@ -447,6 +448,7 @@ document.getElementById("current-video-input").addEventListener("keyup", functio
     if (event.key == "Enter") {
         event.preventDefault();
         let videoURL = document.getElementById("current-video-input").value.trim();
+        document.getElementById("current-video-input").value = "";
         if (videoURL == "") return;
         handleSetVideoCommand(videoURL);
     }
@@ -456,12 +458,13 @@ document.getElementById("queue-input").addEventListener("keyup", function(event)
     if (event.key == "Enter") {
         event.preventDefault();
         let videoURL = document.getElementById("queue-input").value.trim();
+        document.getElementById("queue-input").value = "";
         if (videoURL == "") return;
         let videoURLClass = new URL(videoURL);
         let videoID = videoURLClass.searchParams.get("v");
         if (videoID) {
-            sendGatewayMessage({ "type": "party-queuevideo", "data": { "token": TOKEN, "roomID": ROOM_ID, "video": videoID } });
-            sendGatewayMessage({ "type": "party-getqueue", "data": { "token": TOKEN, "roomID": ROOM_ID, "display": "modal" } });
+            sendGatewayMessage({ "type": "party-queuevideo", "data": { "token": Globals.TOKEN, "roomID": Globals.ROOM_ID, "video": videoID } });
+            sendGatewayMessage({ "type": "party-getqueue", "data": { "token": Globals.TOKEN, "roomID": Globals.ROOM_ID, "display": "modal" } });
         }
     }
 });

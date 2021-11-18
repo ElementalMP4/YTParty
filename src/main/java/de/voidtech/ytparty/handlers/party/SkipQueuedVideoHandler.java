@@ -7,10 +7,10 @@ import org.springframework.web.socket.WebSocketSession;
 import main.java.de.voidtech.ytparty.annotations.Handler;
 import main.java.de.voidtech.ytparty.entities.ephemeral.AuthResponse;
 import main.java.de.voidtech.ytparty.entities.ephemeral.Party;
-import main.java.de.voidtech.ytparty.entities.message.ChatMessage;
 import main.java.de.voidtech.ytparty.entities.message.MessageBuilder;
+import main.java.de.voidtech.ytparty.entities.persistent.ChatMessage;
 import main.java.de.voidtech.ytparty.handlers.AbstractHandler;
-import main.java.de.voidtech.ytparty.service.AuthService;
+import main.java.de.voidtech.ytparty.service.GatewayAuthService;
 import main.java.de.voidtech.ytparty.service.GatewayResponseService;
 import main.java.de.voidtech.ytparty.service.PartyService;
 
@@ -24,7 +24,7 @@ public class SkipQueuedVideoHandler extends AbstractHandler {
 	private PartyService partyService;
 	
 	@Autowired
-	private AuthService authService;
+	private GatewayAuthService authService;
 	
 	@Override
 	public void execute(WebSocketSession session, JSONObject data) {

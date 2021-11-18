@@ -10,7 +10,7 @@ import main.java.de.voidtech.ytparty.annotations.Handler;
 import main.java.de.voidtech.ytparty.entities.ephemeral.AuthResponse;
 import main.java.de.voidtech.ytparty.entities.persistent.User;
 import main.java.de.voidtech.ytparty.handlers.AbstractHandler;
-import main.java.de.voidtech.ytparty.service.AuthService;
+import main.java.de.voidtech.ytparty.service.GatewayAuthService;
 import main.java.de.voidtech.ytparty.service.GatewayResponseService;
 import main.java.de.voidtech.ytparty.service.MailService;
 import main.java.de.voidtech.ytparty.service.UserService;
@@ -29,7 +29,7 @@ public class PasswordUpdateHandler extends AbstractHandler {
 	private UserService userService;
 	
 	@Autowired
-	private AuthService authService;
+	private GatewayAuthService authService;
 	
 	@Autowired
 	private MailService mailService;

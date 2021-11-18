@@ -13,8 +13,8 @@ import org.springframework.web.socket.WebSocketSession;
 
 import main.java.de.voidtech.ytparty.entities.ephemeral.Party;
 import main.java.de.voidtech.ytparty.entities.message.AbstractMessage;
-import main.java.de.voidtech.ytparty.entities.message.ChatMessage;
 import main.java.de.voidtech.ytparty.entities.message.SystemMessage;
+import main.java.de.voidtech.ytparty.entities.persistent.ChatMessage;
 
 @Service
 public class GatewayResponseService {
