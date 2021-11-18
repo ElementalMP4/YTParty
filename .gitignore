@@ -31,3 +31,5 @@ config.properties
 
 # environment variables
 .env
+
+/extension/
