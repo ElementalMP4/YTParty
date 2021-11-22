@@ -30,7 +30,7 @@ public class ChatMessageHandler extends AbstractHandler {
 	public void execute(WebSocketSession session, JSONObject data) {
 		String token = data.getString("token");
 		String roomID = data.getString("roomID");
-		String content = data.getString("content").replaceAll("<", "").replaceAll(">", "");
+		String content = data.getString("content").replaceAll("<", "&lt;").replaceAll(">", "&gt;");
 		String colour = data.getString("colour");
 		String modifiers = data.getString("modifiers");
 		String author = data.getString("author");

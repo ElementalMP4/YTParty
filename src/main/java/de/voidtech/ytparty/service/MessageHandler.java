@@ -42,7 +42,7 @@ public class MessageHandler {
 				compatibleHandler.execute(session, messageObject.getJSONObject("data"));			
 			} else responder.sendError(session, "Invalid message type", "gateway");
 		} catch (JSONException e) {
-			responder.sendError(session, "Invalid message format", "JSON formatter");
+			responder.sendError(session, "Invalid message - " + e.getMessage(), "gateway");
 			LOGGER.log(Level.SEVERE, "Error during Service Execution: " + e.getMessage());
 		}
 	}	
