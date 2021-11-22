@@ -67,6 +67,7 @@ div {
     width: 19%;
     background-color: #1a1a1a;
     overflow-wrap: break-word;
+    white-space: pre-wrap;
     position: relative;
 }
 
