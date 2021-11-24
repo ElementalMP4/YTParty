@@ -10,10 +10,10 @@ import org.springframework.mail.javamail.JavaMailSenderImpl;
 import main.java.de.voidtech.ytparty.service.ConfigService;
 
 @SpringBootApplication
-public class YouTubeParty {
+public class YTParty {
 	
 	public static void main(String[] args) {
-		SpringApplication springApp = new SpringApplication(YouTubeParty.class);
+		SpringApplication springApp = new SpringApplication(YTParty.class);
 		ConfigService configService = new ConfigService();
 		Properties properties = new Properties();
 		
