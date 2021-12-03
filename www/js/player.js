@@ -294,17 +294,17 @@ function clearQueue() {
 
 function handleHelpCommand() {
     displayLocalMessage(`
-    Chat Command Help:<br>
-    /help - shows this message<br><br>
-    /i [message] - changes your message to italics<br><br>
-    /u [message] - changes your message to underline<br><br>
-    /b [message] - makes your message bold<br><br>
-    /s [message] - changes your message to strikethrough<br><br>
-    /c [message] - changes your message to cursive<br><br>
-    /cc [message] - cHaNgEs YoUr TeXt LiKe ThIs<br><br>
-    /big [message] - makes your message big<br><br>
-    /r - reloads your session<br><br>
-    /tts - send a text-to-speech message
+Chat Command Help:<br>
+/help - shows this message<br><br>
+/i [message] - changes your message to italics<br><br>
+/u [message] - changes your message to underline<br><br>
+/b [message] - makes your message bold<br><br>
+/s [message] - changes your message to strikethrough<br><br>
+/c [message] - changes your message to cursive<br><br>
+/cc [message] - cHaNgEs YoUr TeXt LiKe ThIs<br><br>
+/big [message] - makes your message big<br><br>
+/r - reloads your session<br><br>
+/tts - send a text-to-speech message
     `);
 }
 
