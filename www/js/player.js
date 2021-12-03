@@ -1,21 +1,20 @@
+const YOUTUBE_URL = "https://youtube.com/watch?v=";
 const GatewayServerURL = (location.protocol == "https:" ? "wss://" : "ws://") + location.host + "/gateway";
 var Gateway = new WebSocket(GatewayServerURL);
 
 var Globals = {
-    USER_PROPERTIES: undefined,
-    TOKEN: undefined,
-    PLAYER: undefined,
-    CURRENT_VIDEO_ID: undefined,
-    ROOM_ID: undefined,
-    LAST_MESSAGE_AUTHOR: undefined,
-    CAN_CONTROL_PLAYER: undefined,
-    ROOM_COLOUR: undefined,
+    USER_PROPERTIES: {},
+    TOKEN: "",
+    PLAYER: {},
+    CURRENT_VIDEO_ID: "",
+    ROOM_ID: "",
+    LAST_MESSAGE_AUTHOR: "",
+    CAN_CONTROL_PLAYER: false,
+    ROOM_COLOUR: "",
     TYPING_COUNT: 0,
     TYPING: false,
     PLAYER_READY: false
 }
-
-const YOUTUBE_URL = "https://youtube.com/watch?v=";
 
 function showTypingMessage() {
     document.getElementById("typing-message").style.display = "block";
@@ -53,6 +52,12 @@ function addChatMessage(data) {
 
     $("#chat-history").prepend(newMessage);
     $('#chat-history').scrollTop($('#chat-history')[0].scrollHeight);
+}
+
+function speakMessage(message) {
+    var tts = new SpeechSynthesisUtterance();
+    tts.text = message;
+    window.speechSynthesis.speak(tts);
 }
 
 function displayLocalMessage(message) {
@@ -137,6 +142,7 @@ function convertVideoList(videos) {
 }
 
 function handleChatMessage(data) {
+    if (data.modifiers.includes("tts")) speakMessage(data.content);
     addChatMessage(data);
 }
 
@@ -270,10 +276,10 @@ Gateway.onclose = function() {
     displayLocalMessage("You lost connection to the server! Use /r to reconnect");
 }
 
-function handleSetVideoCommand(video) {
+function setVideo(video) {
     let videoURL = new URL(video);
     let videoID = videoURL.searchParams.get("v");
-    if (videoID) sendGatewayMessage({ "type": "party-changevideo", "data": { "token": Globals.TOKEN, "roomID": Globals.ROOM_ID, "video": Globals.videoID } });
+    if (videoID) sendGatewayMessage({ "type": "party-changevideo", "data": { "token": Globals.TOKEN, "roomID": Globals.ROOM_ID, "video": videoID } });
 }
 
 function skipVideo() {
@@ -286,20 +292,10 @@ function clearQueue() {
     sendGatewayMessage({ "type": "party-getqueue", "data": { "token": Globals.TOKEN, "roomID": Globals.ROOM_ID, "display": "modal" } });
 }
 
-function handleQueueCommand(args) {
-    if (args.length == 0) sendGatewayMessage({ "type": "party-getqueue", "data": { "token": Globals.TOKEN, "roomID": Globals.ROOM_ID, "display": "chat" } });
-    else {
-        let videoURL = new URL(args[0]);
-        let videoID = videoURL.searchParams.get("v");
-        if (videoID) sendGatewayMessage({ "type": "party-queuevideo", "data": { "token": Globals.TOKEN, "roomID": Globals.ROOM_ID, "video": videoID } });
-    }
-}
-
 function handleHelpCommand() {
     displayLocalMessage(`
-    ~ ~ YTParty Help ~ ~<br>
+    Chat Command Help:<br>
     /help - shows this message<br><br>
-    /setvideo [video URL] - changes the currently playing video<br><br>
     /i [message] - changes your message to italics<br><br>
     /u [message] - changes your message to underline<br><br>
     /b [message] - makes your message bold<br><br>
@@ -307,7 +303,8 @@ function handleHelpCommand() {
     /c [message] - changes your message to cursive<br><br>
     /cc [message] - cHaNgEs YoUr TeXt LiKe ThIs<br><br>
     /big [message] - makes your message big<br><br>
-    /r - reloads your session<br>
+    /r - reloads your session<br><br>
+    /tts - send a text-to-speech message
     `);
 }
 
@@ -340,6 +337,7 @@ function sendTypingStart() {
     }
 }
 
+//Chat Listener
 document.getElementById("chat-input").addEventListener("keyup", function(event) {
     if (event.key == "Enter") {
         sendTypingStop();
@@ -362,14 +360,6 @@ document.getElementById("chat-input").addEventListener("keyup", function(event) 
                 case "help":
                     handleHelpCommand();
                     sendChatMessage = false;
-                    break;
-                case "id":
-                    displayLocalMessage("This Party's Room ID is " + Globals.ROOM_ID);
-                    sendChatMessage = false;
-                    break;
-                case "setvideo":
-                    sendChatMessage = false;
-                    handleSetVideoCommand(args[0]);
                     break;
                 case "cc":
                     message = toCrazyCase(message);
@@ -401,19 +391,9 @@ document.getElementById("chat-input").addEventListener("keyup", function(event) 
                     sendChatMessage = false;
                     location.reload();
                     break;
-                case "queue":
-                    sendChatMessage = false;
-                    handleQueueCommand(args);
-                    break;
-                case "skip":
-                    sendChatMessage = false;
-                    skipVideo();
-                    break;
-                case "clear":
-                    sendChatMessage = false;
-                    clearQueue();
-                    break;
-
+                case "tts":
+                    modifiers = "tts";
+                    message = args.join(" ");
             }
         }
         if (sendChatMessage) {
@@ -437,6 +417,8 @@ document.getElementById("chat-input").addEventListener("keyup", function(event) 
     }
 });
 
+
+//GUI Listeners
 window.addEventListener("keydown", function(event) {
     if (event.code == "KeyM" && event.ctrlKey) {
         sendGatewayMessage({ "type": "party-getqueue", "data": { "token": Globals.TOKEN, "roomID": Globals.ROOM_ID, "display": "modal" } });
@@ -450,7 +432,7 @@ document.getElementById("current-video-input").addEventListener("keyup", functio
         let videoURL = document.getElementById("current-video-input").value.trim();
         document.getElementById("current-video-input").value = "";
         if (videoURL == "") return;
-        handleSetVideoCommand(videoURL);
+        setVideo(videoURL);
     }
 });
 
