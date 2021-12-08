@@ -1,6 +1,6 @@
 const YOUTUBE_URL = "https://youtube.com/watch?v=";
-const GatewayServerURL = (location.protocol == "https:" ? "wss://" : "ws://") + location.host + "/gateway";
-var Gateway = new WebSocket(GatewayServerURL);
+const GATEWAY_URL = (location.protocol == "https:" ? "wss://" : "ws://") + location.host + "/gateway";
+var Gateway = new WebSocket(GATEWAY_URL);
 
 var Globals = {
     USER_PROPERTIES: {},
@@ -55,7 +55,7 @@ function addChatMessage(data) {
 }
 
 function speakMessage(message) {
-    var tts = new SpeechSynthesisUtterance();
+    let tts = new SpeechSynthesisUtterance();
     tts.text = message;
     window.speechSynthesis.speak(tts);
 }
@@ -183,7 +183,7 @@ function initialiseParty(response) {
     Globals.CAN_CONTROL_PLAYER = options.canControl;
     Globals.ROOM_COLOUR = options.theme;
 
-    var chatInput = document.getElementById("chat-input");
+    let chatInput = document.getElementById("chat-input");
     chatInput.addEventListener("focus", function() {
         this.style.borderBottom = "2px solid " + Globals.ROOM_COLOUR;
     });
@@ -250,9 +250,9 @@ function getToken() {
 }
 
 function embedPlayer() {
-    var tag = document.createElement('script');
+    let tag = document.createElement('script');
     tag.src = "https://www.youtube.com/iframe_api";
-    var firstScriptTag = document.getElementsByTagName('script')[0];
+    let firstScriptTag = document.getElementsByTagName('script')[0];
     firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 }
 
@@ -293,8 +293,7 @@ function clearQueue() {
 }
 
 function handleHelpCommand() {
-    displayLocalMessage(`
-Chat Command Help:<br>
+    displayLocalMessage(`Chat Command Help:<br>
 /help - shows this message<br><br>
 /i [message] - changes your message to italics<br><br>
 /u [message] - changes your message to underline<br><br>
@@ -304,8 +303,7 @@ Chat Command Help:<br>
 /cc [message] - cHaNgEs YoUr TeXt LiKe ThIs<br><br>
 /big [message] - makes your message big<br><br>
 /r - reloads your session<br><br>
-/tts - send a text-to-speech message
-    `);
+/tts - send a text-to-speech message`);
 }
 
 function toCrazyCase(body) {
@@ -313,7 +311,7 @@ function toCrazyCase(body) {
     let messageLetters = body.split("");
     let final = "";
 
-    for (var i = 0; i < messageLetters.length; i++) {
+    for (let i = 0; i < messageLetters.length; i++) {
         if (messageLetters[i].replace(/[A-Za-z]+/g, " ") !== "") {
             if (toUpper) final += messageLetters[i].toLowerCase();
             else final += messageLetters[i].toUpperCase();
