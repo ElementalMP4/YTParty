@@ -100,4 +100,9 @@ public class ConfigService {
 	public String getMailAddress() {
 		return config.getProperty("mail.Address");
 	}
+	
+	public String getParticleMode() {
+		String mode = config.getProperty("particles.Mode");
+		return (mode == null ? "regular" : mode);
+	}
 }

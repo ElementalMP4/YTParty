@@ -9,6 +9,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import main.java.de.voidtech.ytparty.service.ConfigService;
 import main.java.de.voidtech.ytparty.service.FileReader;
 
 @RestController
@@ -19,6 +20,9 @@ public class HttpRestController {
 	
 	@Autowired
 	private ApplicationContext context;
+	
+	@Autowired
+	private ConfigService configService;
 
 	@RequestMapping(value = "/")
 	public String indexRoute() {
@@ -162,7 +166,8 @@ public class HttpRestController {
 	
 	@RequestMapping(value = "/particle-config.json")
 	public String particleConfigRoute() {
-		return fileReader.getTextFileContents("/particle-config.json");
+		String mode = configService.getParticleMode();
+		return fileReader.getTextFileContents("/particle-config-" + mode + ".json");
 	}
 	
 	@RequestMapping(value = "/beansandthreads")
