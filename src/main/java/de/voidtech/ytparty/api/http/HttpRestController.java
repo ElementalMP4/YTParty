@@ -29,6 +29,11 @@ public class HttpRestController {
 		return fileReader.getTextFileContents("html/index.html");
 	}
 	
+	@RequestMapping(value = "/index.html")
+	public String indexHtmlRoute() {
+		return fileReader.getTextFileContents("html/index.html");
+	}
+	
 	@RequestMapping(value = "/terms.html")
 	public String termsRoute() {
 		return fileReader.getTextFileContents("html/terms.html");
