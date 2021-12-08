@@ -111,6 +111,10 @@ p.msg-nickname {
     background: red;
 }
 
+button.action-complete {
+    background-color: green;
+}
+
 p.typing-message {
     padding: 0%;
     color: grey;
