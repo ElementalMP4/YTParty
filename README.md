@@ -22,6 +22,14 @@ cache.TextIsEnabled=true
 cache.BinaryIsEnabled=true
 #reCaptcha Token
 captcha.Token=n0_h1dd3n_m355ag35
+#Mail Options
+mail.User=noreply
+mail.Address=noreply@ytparty.voidtech.de
+mail.Password=v3ry_5tr0ng_P4SSw0rd
+mail.Host=smtp.gmail.com
+mail.Port=465
+#Particles options
+particles.Mode=regular
 ```
 
-As well as a PostgreSQL server. PGAdmin is recommended for database management.
+As well as a PostgreSQL server. Ensure that the database used in the connection URL exists on the PostgreSQL server. PGAdmin is recommended for database management.
