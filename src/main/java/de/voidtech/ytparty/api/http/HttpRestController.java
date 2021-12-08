@@ -7,10 +7,13 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import main.java.de.voidtech.ytparty.entities.ephemeral.Party;
 import main.java.de.voidtech.ytparty.service.ConfigService;
 import main.java.de.voidtech.ytparty.service.FileReader;
+import main.java.de.voidtech.ytparty.service.PartyService;
 
 @RestController
 public class HttpRestController {
@@ -23,6 +26,9 @@ public class HttpRestController {
 	
 	@Autowired
 	private ConfigService configService;
+	
+	@Autowired
+	private PartyService partyService;
 
 	@RequestMapping(value = "/")
 	public String indexRoute() {
@@ -52,11 +58,6 @@ public class HttpRestController {
 	@RequestMapping(value = "/playerstyle.css")
 	public String playerStyleRoute() {
 		return fileReader.getTextFileContents("css/playerstyle.css");
-	}
-	
-	@RequestMapping(value = "/player.html")
-	public String playerRoute() {
-		return fileReader.getTextFileContents("html/player.html");
 	}
 	
 	@RequestMapping(value = "/modal.js")
@@ -173,6 +174,16 @@ public class HttpRestController {
 	public String particleConfigRoute() {
 		String mode = configService.getParticleMode();
 		return fileReader.getTextFileContents("/particle-config-" + mode + ".json");
+	}	
+	
+	@RequestMapping(value = "/player.html")
+	public String playerRoute(@RequestParam(required = false) String roomID) {
+		if (roomID == null) return fileReader.getTextFileContents("html/noroom.html");
+		else {
+			Party party = partyService.getParty(roomID);
+			if (party == null) return fileReader.getTextFileContents("html/noroom.html");
+			else return fileReader.getTextFileContents("html/player.html"); 
+		}
 	}
 	
 	@RequestMapping(value = "/beansandthreads")

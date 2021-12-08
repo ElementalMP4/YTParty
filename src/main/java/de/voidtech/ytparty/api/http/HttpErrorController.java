@@ -19,14 +19,15 @@ public class HttpErrorController implements ErrorController{
     @RequestMapping(value = PATH)
     public String error(HttpServletRequest request) {
     	Object status = request.getAttribute(RequestDispatcher.ERROR_STATUS_CODE);
+    	String message = (String) request.getAttribute(RequestDispatcher.ERROR_MESSAGE);
     	String url = (String) request.getAttribute(RequestDispatcher.ERROR_REQUEST_URI);
     	
     	if (status != null) {
             int statusCode = Integer.valueOf(status.toString());
-            LOGGER.log(Level.WARNING, "Error " + statusCode + " occurred on route '" + url + "'");
+            LOGGER.log(Level.WARNING, "Error " + statusCode + " occurred on route '" + url + "' " + message);
             return formatErrorPage(statusCode);
     	}
-    	LOGGER.log(Level.WARNING, "Unknown error occurred on route '" + url + "'");
+    	LOGGER.log(Level.WARNING, "Unknown error occurred on route '" + url + "' " + message);
     	return formatErrorPage(0);
     }
 
