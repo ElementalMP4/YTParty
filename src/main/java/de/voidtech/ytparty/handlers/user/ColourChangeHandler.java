@@ -48,4 +48,9 @@ public class ColourChangeHandler extends AbstractHandler {
 	public String getHandlerType() {
 		return "user-changecolour";
 	}
+	
+	@Override
+	public boolean requiresRateLimit() {
+		return true;
+	}
 }

@@ -56,4 +56,9 @@ public class GetQueueHandler extends AbstractHandler {
 	public String getHandlerType() {
 		return "party-getqueue";
 	}
+	
+	@Override
+	public boolean requiresRateLimit() {
+		return false;
+	}
 }

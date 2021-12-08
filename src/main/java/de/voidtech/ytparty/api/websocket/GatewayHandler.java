@@ -1,7 +1,7 @@
 package main.java.de.voidtech.ytparty.api.websocket;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -22,21 +22,23 @@ public class GatewayHandler extends AbstractWebSocketHandler {
 	@Autowired
 	private PartyService partyService;
 	
-	List<WebSocketSession> sessions = new ArrayList<WebSocketSession>();
+	private static final Logger LOGGER = Logger.getLogger(MessageHandler.class.getName());
 
 	@Override
-	public void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
-			messageHandler.handleMessage(session, message.getPayload());			
+	public void handleTextMessage(WebSocketSession socketSession, TextMessage message) throws Exception {
+		messageHandler.handleMessage(socketSession, message.getPayload());			
 	}
 
 	@Override
-	public void afterConnectionEstablished(WebSocketSession session) throws Exception {
-		sessions.add(session);
+	public void afterConnectionEstablished(WebSocketSession socketSession) throws Exception {
+		String address = socketSession.getRemoteAddress().getAddress().getHostAddress();
+		LOGGER.log(Level.INFO, "New session from " + address);
 	}
 	
 	@Override
 	public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
 		partyService.removeSessionFromParty(session);
-		sessions.remove(session);
+		String address = session.getRemoteAddress().getAddress().getHostAddress();
+		LOGGER.log(Level.INFO, "Session at " + address + " has terminated");
 	}
 }

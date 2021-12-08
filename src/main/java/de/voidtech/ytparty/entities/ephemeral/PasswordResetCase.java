@@ -14,7 +14,7 @@ public class PasswordResetCase {
 	
 	private static final String LEXICON_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz12345674890";
 	private static final List<String> LEXICON = Arrays.asList(LEXICON_CHARS.split(""));
-	private static final long EXPIRY_DURATION = 900000; //15 Minutes 
+	private static final long EXPIRY_DURATION = 900; //15 Minutes 
 	
 	public PasswordResetCase(String user) {
 		this.creationTime = Instant.now().getEpochSecond();

@@ -68,4 +68,9 @@ public class PasswordUpdateHandler extends AbstractHandler {
 	public String getHandlerType() {
 		return "user-changepassword";
 	}
+	
+	@Override
+	public boolean requiresRateLimit() {
+		return true;
+	}
 }

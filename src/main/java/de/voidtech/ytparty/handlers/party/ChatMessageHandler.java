@@ -60,4 +60,9 @@ public class ChatMessageHandler extends AbstractHandler {
 	public String getHandlerType() {
 		return "party-chatmessage";
 	}
+	
+	@Override
+	public boolean requiresRateLimit() {
+		return false;
+	}
 }

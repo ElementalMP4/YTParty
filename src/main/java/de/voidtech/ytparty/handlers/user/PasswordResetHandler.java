@@ -68,5 +68,10 @@ public class PasswordResetHandler extends AbstractHandler {
 	public String getHandlerType() {
 		return "user-resetpassword";
 	}
+	
+	@Override
+	public boolean requiresRateLimit() {
+		return true;
+	}
 
 }

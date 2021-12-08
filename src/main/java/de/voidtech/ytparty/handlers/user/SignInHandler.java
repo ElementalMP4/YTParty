@@ -47,4 +47,9 @@ public class SignInHandler extends AbstractHandler {
 	public String getHandlerType() {
 		return "user-signin";
 	}
+	
+	@Override
+	public boolean requiresRateLimit() {
+		return true;
+	}
 }

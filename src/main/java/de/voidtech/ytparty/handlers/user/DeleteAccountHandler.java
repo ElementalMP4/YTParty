@@ -51,5 +51,10 @@ public class DeleteAccountHandler extends AbstractHandler {
 	public String getHandlerType() {
 		return "user-deleteaccount";
 	}
+	
+	@Override
+	public boolean requiresRateLimit() {
+		return true;
+	}
 
 }

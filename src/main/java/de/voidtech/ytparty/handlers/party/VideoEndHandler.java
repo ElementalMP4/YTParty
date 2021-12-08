@@ -44,5 +44,10 @@ public class VideoEndHandler extends AbstractHandler {
 	public String getHandlerType() {
 		return "party-videoend";
 	}
+	
+	@Override
+	public boolean requiresRateLimit() {
+		return false;
+	}
 
 }

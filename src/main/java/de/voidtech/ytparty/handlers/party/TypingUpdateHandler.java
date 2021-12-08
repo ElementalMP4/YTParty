@@ -50,4 +50,9 @@ public class TypingUpdateHandler extends AbstractHandler {
 	public String getHandlerType() {
 		return "party-typingupdate";
 	}	
+	
+	@Override
+	public boolean requiresRateLimit() {
+		return false;
+	}
 }

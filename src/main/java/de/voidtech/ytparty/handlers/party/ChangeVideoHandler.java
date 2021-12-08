@@ -60,4 +60,9 @@ public class ChangeVideoHandler extends AbstractHandler {
 	public String getHandlerType() {
 		return "party-changevideo";
 	}
+
+	@Override
+	public boolean requiresRateLimit() {
+		return false;
+	}
 }

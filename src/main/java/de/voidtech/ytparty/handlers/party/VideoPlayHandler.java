@@ -50,4 +50,9 @@ public class VideoPlayHandler extends AbstractHandler {
 	public String getHandlerType() {
 		return "party-playvideo";
 	}
+	
+	@Override
+	public boolean requiresRateLimit() {
+		return false;
+	}
 }

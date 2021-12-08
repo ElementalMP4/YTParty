@@ -63,5 +63,10 @@ public class PasswordForgottenHandler extends AbstractHandler {
 	public String getHandlerType() {
 		return "user-forgottenpassword";
 	}
+	
+	@Override
+	public boolean requiresRateLimit() {
+		return true;
+	}
 
 }

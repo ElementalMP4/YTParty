@@ -50,4 +50,9 @@ public class GetProfileHandler extends AbstractHandler {
 	public String getHandlerType() {
 		return "user-getprofile";
 	}
+	
+	@Override
+	public boolean requiresRateLimit() {
+		return true;
+	}
 }

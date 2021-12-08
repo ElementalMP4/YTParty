@@ -57,5 +57,10 @@ public class SignupHandler extends AbstractHandler {
 	public String getHandlerType() {
 		return "user-signup";
 	}
+	
+	@Override
+	public boolean requiresRateLimit() {
+		return true;
+	}
 
 }

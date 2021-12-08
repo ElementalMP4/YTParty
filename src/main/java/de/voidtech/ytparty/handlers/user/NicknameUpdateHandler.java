@@ -49,4 +49,9 @@ public class NicknameUpdateHandler extends AbstractHandler {
 	public String getHandlerType() {
 		return "user-changenickname";
 	}
+	
+	@Override
+	public boolean requiresRateLimit() {
+		return true;
+	}
 }

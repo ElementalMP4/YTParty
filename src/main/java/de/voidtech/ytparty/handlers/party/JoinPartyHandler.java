@@ -81,4 +81,9 @@ public class JoinPartyHandler extends AbstractHandler{
 	public String getHandlerType() {
 		return "party-joinparty";
 	}
+	
+	@Override
+	public boolean requiresRateLimit() {
+		return true;
+	}
 }

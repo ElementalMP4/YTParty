@@ -47,4 +47,9 @@ public class VideoPauseHandler extends AbstractHandler {
 	public String getHandlerType() {
 		return "party-pausevideo";
 	}
+	
+	@Override
+	public boolean requiresRateLimit() {
+		return false;
+	}
 }

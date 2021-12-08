@@ -60,5 +60,10 @@ public class SkipQueuedVideoHandler extends AbstractHandler {
 	public String getHandlerType() {
 		return "party-skipvideo";
 	}
+	
+	@Override
+	public boolean requiresRateLimit() {
+		return false;
+	}
 
 }

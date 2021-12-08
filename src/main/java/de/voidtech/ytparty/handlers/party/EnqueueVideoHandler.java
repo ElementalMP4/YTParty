@@ -57,4 +57,9 @@ public class EnqueueVideoHandler extends AbstractHandler {
 	public String getHandlerType() {
 		return "party-queuevideo";
 	}
+	
+	@Override
+	public boolean requiresRateLimit() {
+		return false;
+	}
 }

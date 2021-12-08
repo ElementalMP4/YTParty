@@ -50,4 +50,9 @@ public class CreatePartyHandler extends AbstractHandler{
 	public String getHandlerType() {
 		return "party-createparty";
 	}
+	
+	@Override
+	public boolean requiresRateLimit() {
+		return true;
+	}
 }

@@ -56,4 +56,9 @@ public class ClearQueueHandler extends AbstractHandler {
 	public String getHandlerType() {
 		return "party-clearqueue";
 	}
+	
+	@Override
+	public boolean requiresRateLimit() {
+		return false;
+	}
 }
