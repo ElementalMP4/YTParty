@@ -12,7 +12,7 @@
     const GatewayServerURL = (location.protocol == "https:" ? "wss://" : "ws://") + location.host + "/gateway";
     var Gateway = new WebSocket(GatewayServerURL);
 
-    function sendLoginData() {
+    function sendPingData() {
         requestData = {
             "type": "system-ping",
             "data": {
@@ -20,11 +20,12 @@
             }
         }
         Gateway.send(JSON.stringify(requestData));
+        console.log("Pinging...");
     }
 
     Gateway.onopen = function() {
         console.log("Connected To Gateway");
-        sendLoginData();
+        setInterval(sendPingData, 1000);
     }
 
     Gateway.onclose = function() {
@@ -33,11 +34,10 @@
 
     Gateway.onmessage = function(message) {
         const response = JSON.parse(message.data);
-        const times = JSON.parse(response.response);
-        const timeToServer = times.received - times.start;
-        const timeToRespond = new Date().getTime() - times.received;
-        let results = "Client -> Server: " + timeToServer + "ms<br>Client <- Server: " + timeToRespond + "ms<br>Total Time: " + (timeToServer + timeToRespond) + "ms";
+        const startTime = JSON.parse(response.response).start;
+        let results = "Client -> Server -> Client: " + (new Date().getTime() - startTime) + "ms";
         document.getElementById("ping-result").innerHTML = results;
+        console.log(results);
     }
 </script>
 

@@ -1,7 +1,5 @@
 package main.java.de.voidtech.ytparty.handlers;
 
-import java.time.Instant;
-
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.socket.WebSocketSession;
@@ -18,11 +16,9 @@ public class PingHandler extends AbstractHandler {
 	@Override
 	public void execute(WebSocketSession session, JSONObject data) {
 		long startTime = data.getLong("start");
-		long receptionTime = Instant.now().toEpochMilli();
 		
 		String pingData = new JSONObject()
 				.put("start", startTime)
-				.put("received", receptionTime)
 			.toString();
 		
 		responder.sendSuccess(session, pingData, getHandlerType());
