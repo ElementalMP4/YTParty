@@ -26,6 +26,8 @@ public class LogService {
 	private static final Logger LOGGER = Logger.getLogger(LogService.class.getName());
 	
 	private void sendNotification(String message) {
+		String webhookUrl = configService.getLogWebhookURL();
+		if (webhookUrl == null) return;
 		JSONObject webhookPayload = new JSONObject();
         webhookPayload.put("content", message);
         webhookPayload.put("username", "YTParty Status");
@@ -33,7 +35,7 @@ public class LogService {
         webhookPayload.put("tts", false);
         try {              			
         	
-            URL url = new URL(configService.getLogWebhookURL());
+            URL url = new URL(webhookUrl);
             HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
             
             connection.addRequestProperty("Content-Type", "application/json");
