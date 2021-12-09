@@ -11,7 +11,6 @@ import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Service;
 
 @Service
-@Order(1)
 public class ConfigService {
 	private static final Logger LOGGER = Logger.getLogger(ConfigService.class.getName());
 
@@ -104,5 +103,9 @@ public class ConfigService {
 	public String getParticleMode() {
 		String mode = config.getProperty("particles.Mode");
 		return (mode == null ? "regular" : mode);
+	}
+
+	public String getLogWebhookURL() {
+		return config.getProperty("logging.Webhook");
 	}
 }
