@@ -14,7 +14,7 @@ import main.java.de.voidtech.ytparty.entities.persistent.ChatMessage;
 import main.java.de.voidtech.ytparty.handlers.AbstractHandler;
 import main.java.de.voidtech.ytparty.service.GatewayAuthService;
 import main.java.de.voidtech.ytparty.service.GatewayResponseService;
-import main.java.de.voidtech.ytparty.service.MessageService;
+import main.java.de.voidtech.ytparty.service.ChatMessageService;
 import main.java.de.voidtech.ytparty.service.PartyService;
 import main.java.de.voidtech.ytparty.service.UserService;
 import main.java.de.voidtech.ytparty.service.UserTokenService;
@@ -38,7 +38,7 @@ public class JoinPartyHandler extends AbstractHandler{
 	private UserService userService;
 	
 	@Autowired
-	private MessageService messageService;
+	private ChatMessageService messageService;
 	
 	@Override
 	public void execute(WebSocketSession session, JSONObject data) {

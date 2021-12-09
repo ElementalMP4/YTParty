@@ -20,7 +20,7 @@ import main.java.de.voidtech.ytparty.entities.persistent.ChatMessage;
 public class GatewayResponseService {
 	
 	@Autowired
-	private MessageService messageService;
+	private ChatMessageService messageService;
 	
 	private static final Logger LOGGER = Logger.getLogger(GatewayResponseService.class.getName());
 

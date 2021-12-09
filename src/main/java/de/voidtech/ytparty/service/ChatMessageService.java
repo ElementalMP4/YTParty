@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import main.java.de.voidtech.ytparty.entities.persistent.ChatMessage;
 
 @Service
-public class MessageService {
+public class ChatMessageService {
 
 	@Autowired
 	private SessionFactory sessionFactory;
