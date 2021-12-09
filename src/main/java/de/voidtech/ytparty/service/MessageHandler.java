@@ -59,7 +59,7 @@ public class MessageHandler {
 				LOGGER.log(Level.INFO, "Session at address " + address + " has expired");
 			}
 		}
-		LOGGER.log(Level.INFO, "Session cleanup complete - Scanned " + sessions.size() + " sessions");
+		if (sessions.size() > 0) LOGGER.log(Level.INFO, "Session cleanup complete - Scanned " + sessions.size() + " sessions");
 	}
 	
 	private void incrementSessionRequestAllowance() {
