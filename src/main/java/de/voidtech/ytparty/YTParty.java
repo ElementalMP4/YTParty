@@ -19,19 +19,20 @@ public class YTParty {
 		Properties properties = new Properties();
 		
 		configService = new ConfigService();
-		
-		properties.put("server.port", configService.getHttpPort());
-		properties.put("server.error.whitelabel.enabled", false);
-		properties.put("server.error.path", "/error");
-		properties.put("spring.datasource.username", configService.getDBUser());
-		properties.put("spring.datasource.password", configService.getDBPassword());
-		properties.put("spring.datasource.url", configService.getConnectionURL());
-		properties.put("spring.jpa.properties.hibernate.dialect", configService.getHibernateDialect());
-		properties.put("jdbc.driver", configService.getDriver());
-		properties.put("spring.jpa.hibernate.ddl-auto", "update");
-		
-		springApp.setDefaultProperties(properties);		
-		springApp.run(args);
+		if (configService.configLoaded()) {
+			properties.put("server.port", configService.getHttpPort());
+			properties.put("server.error.whitelabel.enabled", false);
+			properties.put("server.error.path", "/error");
+			properties.put("spring.datasource.username", configService.getDBUser());
+			properties.put("spring.datasource.password", configService.getDBPassword());
+			properties.put("spring.datasource.url", configService.getConnectionURL());
+			properties.put("spring.jpa.properties.hibernate.dialect", configService.getHibernateDialect());
+			properties.put("jdbc.driver", configService.getDriver());
+			properties.put("spring.jpa.hibernate.ddl-auto", "update");
+			
+			springApp.setDefaultProperties(properties);		
+			springApp.run(args);	
+		}
 	}
 	
 	@Bean

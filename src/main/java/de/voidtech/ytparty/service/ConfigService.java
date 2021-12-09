@@ -11,12 +11,14 @@ public class ConfigService {
 	private static final Logger LOGGER = Logger.getLogger(ConfigService.class.getName());
 
 	private final Properties config = new Properties();
+	private boolean loadedSuccessfully;
 
 	public ConfigService() {
-
+		loadedSuccessfully = false;
 		File configFile = new File("config.properties");
 		if (configFile.exists()) {
 			try (FileInputStream fis = new FileInputStream(configFile)){
+				loadedSuccessfully = true;
 				config.load(fis);
 			} catch (IOException e) {
 				LOGGER.log(Level.SEVERE, "an error has occurred while reading the config\n" + e.getMessage());
@@ -24,6 +26,10 @@ public class ConfigService {
 		} else {
 			LOGGER.log(Level.SEVERE, "There is no config file. You need a file called config.properties at the root of the project!");
 		}
+	}
+	
+	public boolean configLoaded() {
+		return loadedSuccessfully;
 	}
 
 	public String getHibernateDialect()
