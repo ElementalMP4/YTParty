@@ -7,10 +7,6 @@ import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.springframework.core.annotation.Order;
-import org.springframework.stereotype.Service;
-
-@Service
 public class ConfigService {
 	private static final Logger LOGGER = Logger.getLogger(ConfigService.class.getName());
 

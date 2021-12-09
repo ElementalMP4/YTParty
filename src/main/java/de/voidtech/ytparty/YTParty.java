@@ -12,10 +12,13 @@ import main.java.de.voidtech.ytparty.service.ConfigService;
 @SpringBootApplication
 public class YTParty {
 	
+	private static ConfigService configService;
+	
 	public static void main(String[] args) {
 		SpringApplication springApp = new SpringApplication(YTParty.class);
-		ConfigService configService = new ConfigService();
 		Properties properties = new Properties();
+		
+		configService = new ConfigService();
 		
 		properties.put("server.port", configService.getHttpPort());
 		properties.put("server.error.whitelabel.enabled", false);
@@ -29,6 +32,11 @@ public class YTParty {
 		
 		springApp.setDefaultProperties(properties);		
 		springApp.run(args);
+	}
+	
+	@Bean
+	public ConfigService getConfigService() {
+		return configService;
 	}
 	
 	@Bean

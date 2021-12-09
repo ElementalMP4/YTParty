@@ -75,6 +75,11 @@ public class HttpRestController {
 		return fileReader.getBinaryFileContents("img/favicon.png");
 	}
 	
+	@RequestMapping(value = "/favicon.ico", produces = {"image/png"})
+	public byte[] alternateFaviconRoute() {
+		return fileReader.getBinaryFileContents("img/favicon.png");
+	}
+	
 	@RequestMapping(value = "/waves.svg", produces = {"image/svg+xml"})
 	public byte[] wavesRoute() {
 		return fileReader.getBinaryFileContents("img/waves.svg");
@@ -133,16 +138,6 @@ public class HttpRestController {
 	@RequestMapping(value = "/createroom.html")
 	public String createRoomRoute() {
 		return fileReader.getTextFileContents("html/createroom.html");
-	}
-	
-	@RequestMapping(value = "/joinroom.js")
-	public String joinRoomScriptRoute() {
-		return fileReader.getTextFileContents("js/joinroom.js");
-	}
-	
-	@RequestMapping(value = "/joinroom.html")
-	public String joinRoomRoute() {
-		return fileReader.getTextFileContents("html/joinroom.html");
 	}
 	
 	@RequestMapping(value = "/doesonestillequalone.html")
