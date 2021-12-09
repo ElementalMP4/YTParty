@@ -95,6 +95,11 @@ public class HttpRestController {
 		return fileReader.getTextFileContents("html/login.html");
 	}
 	
+	@RequestMapping(value = "/ping.html")
+	public String pingRoute() {
+		return fileReader.getTextFileContents("html/ping.html");
+	}
+	
 	@RequestMapping(value = "/signup.html")
 	public String signupRoute() {
 		return fileReader.getTextFileContents("html/signup.html");

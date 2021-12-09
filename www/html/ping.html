@@ -1,0 +1,44 @@
+<html>
+
+<head>
+    <title>YTParty Diagnostics</title>
+</head>
+
+<body>
+    <p id="ping-result">Pinging Gateway...</p>
+</body>
+
+<script>
+    const GatewayServerURL = (location.protocol == "https:" ? "wss://" : "ws://") + location.host + "/gateway";
+    var Gateway = new WebSocket(GatewayServerURL);
+
+    function sendLoginData() {
+        requestData = {
+            "type": "system-ping",
+            "data": {
+                "start": new Date().getTime()
+            }
+        }
+        Gateway.send(JSON.stringify(requestData));
+    }
+
+    Gateway.onopen = function() {
+        console.log("Connected To Gateway");
+        sendLoginData();
+    }
+
+    Gateway.onclose = function() {
+        console.log("Connection Lost");
+    }
+
+    Gateway.onmessage = function(message) {
+        const response = JSON.parse(message.data);
+        const times = JSON.parse(response.response);
+        const timeToServer = times.received - times.start;
+        const timeToRespond = new Date().getTime() - times.received;
+        let results = "Client -> Server: " + timeToServer + "ms<br>Client <- Server: " + timeToRespond + "ms<br>Total Time: " + (timeToServer + timeToRespond) + "ms";
+        document.getElementById("ping-result").innerHTML = results;
+    }
+</script>
+
+</html>
