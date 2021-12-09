@@ -148,10 +148,10 @@ input[type=color] {
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: #1a1a1a;
-    transition: .4s;
+    background-color: red;
+    transition: .2s;
     border-radius: 34px;
-    border: solid 2px grey;
+    border: solid 2px red;
 }
 
 .slider:before {
@@ -162,12 +162,13 @@ input[type=color] {
     left: 2px;
     bottom: 2px;
     background-color: white;
-    transition: .4s;
+    transition: .2s;
     border-radius: 50%;
 }
 
 input:checked+.slider {
-    border: solid 2px #960303;
+    border: solid 2px #00d607;
+    background-color: #00d607;
 }
 
 input:checked+.slider:before {
