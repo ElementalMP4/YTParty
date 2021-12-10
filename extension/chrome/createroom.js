@@ -26,13 +26,13 @@ function createRoom() {
     chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
         var tab = tabs[0];
         const url = new URL(tab.url);
-        const roomHasOwner = !document.getElementById("owner-checkbox").checked;
+        const ownerControlsOnly = !document.getElementById("owner-controls-checkbox").checked;
         const theme = document.getElementById("room-colour-picker").value;
         const payload = {
             "type": "party-createparty",
             "data": {
                 "token": window.localStorage.getItem("token"),
-                "roomHasOwner": roomHasOwner,
+                "ownerControlsOnly": ownerControlsOnly,
                 "theme": theme,
                 "videoID": url.searchParams.get("v")
             }

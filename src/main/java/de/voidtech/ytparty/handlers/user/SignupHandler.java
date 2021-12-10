@@ -36,6 +36,8 @@ public class SignupHandler extends AbstractHandler {
 		
 		if (data.getString("username").equals(""))
 			responder.sendError(session, "That username is not valid!", this.getHandlerType());
+		else if (data.getString("username").length() > 32)
+			responder.sendError(session, "That username is too long! It must be less than 32 characters.", this.getHandlerType());
 		else if (!data.getString("password").equals(data.get("password-confirm")))
 			responder.sendError(session, "The passwords you entered do not match!", this.getHandlerType());
 		else if (!PASSWORD_PATTERN.matcher(data.getString("password")).matches())

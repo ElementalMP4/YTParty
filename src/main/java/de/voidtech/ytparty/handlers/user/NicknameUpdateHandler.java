@@ -34,7 +34,7 @@ public class NicknameUpdateHandler extends AbstractHandler {
 		String token = data.getString("token");
 		AuthResponse tokenResponse = authService.validateToken(token); 
 		
-		if (nickname.equals("") || nickname.length() > 40) responder.sendError(session, "That nickname is not valid!", this.getHandlerType());
+		if (nickname.equals("") || nickname.length() > 32) responder.sendError(session, "That nickname is too long! It must be less than 32 characters.!", this.getHandlerType());
 		else if (!tokenResponse.isSuccessful()) responder.sendError(session, tokenResponse.getMessage(), this.getHandlerType());
 		else {
 			String username = tokenService.getUsernameFromToken(token);
