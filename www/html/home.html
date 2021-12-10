@@ -24,7 +24,7 @@
     <h1 class="centre-align header header-main">YTParty</h1>
     <h3 class="centre-align header header-sub">Watch YouTube with friends!</h3>
     <div class="menu centre-align">
-        <h3 class="centre-align header header-sub">Home</h3>
+        <h3 class="centre-align header header-sub" id="welcome-banner">Good to see you!</h3>
         <a href="/createroom.html" class="link"><button class="button hover-animation"><p class="button-text">Create a room</p></button></a>
         <a href="/about.html" class="link"><button class="button hover-animation"><p class="button-text">How to use YTParty</p></button></a>
         <a href="/accountsettings.html" class="link"><button class="button hover-animation"><p class="button-text">Change your settings</p></button></a>
@@ -34,12 +34,8 @@
     <img class="waves" src="/waves.svg">
 </body>
 
+<script src="/home.js"></script>
 <script>
-    function logout() {
-        window.localStorage.removeItem("token");
-        window.location.href = location.protocol + "//" + location.host;
-    }
-
     particlesJS.load('particles-js', "/particle-config.json", function() {
         console.log('Particles loaded');
     });

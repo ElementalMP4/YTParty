@@ -179,10 +179,12 @@ function handleSystemMessage(response) {
 }
 
 function initialiseParty(response) {
-    let options = JSON.parse(response);
+    const options = JSON.parse(response);
     loadVideo(options.video);
     Globals.CAN_CONTROL_PLAYER = options.canControl;
     Globals.ROOM_COLOUR = options.theme;
+
+    document.getElementsByTagName("title")[0].text = options.owner + "'s room!";
 
     let chatInput = document.getElementById("chat-input");
     chatInput.addEventListener("focus", function() {

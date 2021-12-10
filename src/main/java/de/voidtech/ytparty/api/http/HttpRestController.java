@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -115,6 +117,11 @@ public class HttpRestController {
 		return fileReader.getTextFileContents("js/signup.js");
 	}
 
+	@RequestMapping(value = "/home.js")
+	public String homeScriptRoute() {
+		return fileReader.getTextFileContents("js/home.js");
+	}
+	
 	@RequestMapping(value = "/login.js")
 	public String signInScriptRoute() {
 		return fileReader.getTextFileContents("js/login.js");
@@ -176,13 +183,20 @@ public class HttpRestController {
 		return fileReader.getTextFileContents("/particle-config-" + mode + ".json");
 	}	
 	
+	private String editPartyMetaTag(Party party) {
+		String partyPage = fileReader.getTextFileContents("html/player.html");
+		Document partyDoc = Jsoup.parse(partyPage);
+		partyDoc.select("head > meta:nth-child(11)").attr("content", party.getOwnerName() + "'s room!");
+		return partyDoc.toString();
+	}
+	
 	@RequestMapping(value = "/player.html")
 	public String playerRoute(@RequestParam(required = false) String roomID) {
 		if (roomID == null) return fileReader.getTextFileContents("html/noroom.html");
 		else {
 			Party party = partyService.getParty(roomID);
 			if (party == null) return fileReader.getTextFileContents("html/noroom.html");
-			else return fileReader.getTextFileContents("html/player.html"); 
+			else return editPartyMetaTag(party); 
 		}
 	}
 	

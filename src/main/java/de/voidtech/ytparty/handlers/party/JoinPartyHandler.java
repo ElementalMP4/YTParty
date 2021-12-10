@@ -55,8 +55,9 @@ public class JoinPartyHandler extends AbstractHandler{
 				Party party = partyService.getParty(roomID);
 				responder.sendSuccess(session, new JSONObject()
 						.put("video", party.getVideoID())
-						.put("canControl", (party.getOwnerName() == null ? true : party.getOwnerName().equals(username)))
+						.put("canControl", party.canControlRoom(username))
 						.put("theme", party.getRoomColour())
+						.put("owner", party.getOwnerName())
 						.toString(), this.getHandlerType());
 				
 				ChatMessage joinMessage = new MessageBuilder()

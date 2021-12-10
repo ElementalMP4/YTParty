@@ -26,19 +26,20 @@ public class Party {
 	private List<WebSocketSession> sessions;
 	private BlockingQueue<String> videoQueue;
 	private boolean hasBeenVisited;
+	private boolean ownerOnlyControlsEnabled;
 	private int finishedCount;
 	
 	private static final Logger LOGGER = Logger.getLogger(Party.class.getName());
 	
-	public Party(String partyID, String ownerName, String roomColour, String videoID)
-	{
-	  this.partyID = partyID;
-	  this.roomColour = roomColour;
-	  this.ownerName = ownerName;
-	  this.currentVideoID = videoID;
-	  this.sessions = new ArrayList<WebSocketSession>();
-	  this.videoQueue = new LinkedBlockingQueue<String>();
-	  this.finishedCount = 0;
+	public Party(String partyID, String ownerName, String roomColour, String videoID, boolean ownerOnlyControls) {
+		this.partyID = partyID;
+		this.roomColour = roomColour;
+		this.ownerName = ownerName;
+		this.currentVideoID = videoID;
+		this.sessions = new ArrayList<WebSocketSession>();
+		this.videoQueue = new LinkedBlockingQueue<String>();
+		this.finishedCount = 0;
+		this.ownerOnlyControlsEnabled = ownerOnlyControls;
 	}
 	
 	public void incrementFinishedCount() {
@@ -89,7 +90,7 @@ public class Party {
 	}
 	
 	public boolean canControlRoom(String username) {
-		return this.ownerName == null ? true : this.ownerName.equals(username);
+		return (ownerOnlyControlsEnabled ? this.ownerName.equals(username) : true);
 	}
 	
 	public String getVideoID() {

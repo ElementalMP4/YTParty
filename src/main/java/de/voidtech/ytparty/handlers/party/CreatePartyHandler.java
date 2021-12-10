@@ -31,7 +31,7 @@ public class CreatePartyHandler extends AbstractHandler{
 	@Override
 	public void execute(WebSocketSession session, JSONObject data) {
 		String token = data.getString("token");
-		boolean roomHasOwner = data.getBoolean("roomHasOwner");
+		boolean ownerControlsOnly = data.getBoolean("ownerControlsOnly");
 		String videoID = data.getString("videoID");
 		String roomThemeColour = data.getString("theme");
 		
@@ -39,8 +39,8 @@ public class CreatePartyHandler extends AbstractHandler{
 		
 		if (!tokenResponse.isSuccessful()) responder.sendError(session, tokenResponse.getMessage(), this.getHandlerType());
 		else {
-			String ownerUsername = roomHasOwner ? tokenService.getUsernameFromToken(token) : null;
-			Party party = new Party(partyService.generateRoomID(), ownerUsername, roomThemeColour, videoID);
+			String ownerUsername = tokenService.getUsernameFromToken(token);
+			Party party = new Party(partyService.generateRoomID(), ownerUsername, roomThemeColour, videoID, ownerControlsOnly);
 			partyService.saveParty(party);
 			responder.sendSuccess(session, party.getPartyID(), this.getHandlerType());
 		}
