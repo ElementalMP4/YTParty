@@ -31,7 +31,7 @@ public class HttpRestController {
 	
 	@Autowired
 	private PartyService partyService;
-
+	
 	@RequestMapping(value = "/")
 	public String indexRoute() {
 		return fileReader.getTextFileContents("html/index.html");

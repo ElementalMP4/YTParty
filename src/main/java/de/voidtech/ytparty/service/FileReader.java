@@ -59,4 +59,9 @@ public class FileReader {
 	    	return binaryFileCache.get(fileName);	
 		} else return readBinaryFile(fileName);
 	}
+	
+	public void clearCache() {
+		textFileCache.clear();
+		binaryFileCache.clear();
+	}
 }

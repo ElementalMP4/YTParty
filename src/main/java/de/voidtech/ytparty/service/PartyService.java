@@ -77,4 +77,8 @@ public class PartyService {
 			parties.remove(key);
 		};
 	}
+	
+	public int getPartyCount() {
+		return parties.size();
+	}
 }

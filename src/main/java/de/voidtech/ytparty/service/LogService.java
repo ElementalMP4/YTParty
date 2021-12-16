@@ -25,7 +25,7 @@ public class LogService {
 	private static final SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");  
 	private static final Logger LOGGER = Logger.getLogger(LogService.class.getName());
 	
-	private void sendNotification(String message) {
+	public void sendNotification(String message) {
 		String webhookUrl = configService.getLogWebhookURL();
 		if (webhookUrl == null) return;
 		JSONObject webhookPayload = new JSONObject();
