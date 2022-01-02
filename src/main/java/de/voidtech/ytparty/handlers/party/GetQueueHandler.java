@@ -33,7 +33,6 @@ public class GetQueueHandler extends AbstractHandler {
 	public void execute(WebSocketSession session, JSONObject data) {
 		String token = data.getString("token");
 		String roomID = data.getString("roomID");
-		String displayMode = data.getString("display");
 		
 		AuthResponse tokenResponse = authService.validateToken(token); 
 		AuthResponse partyIDResponse = authService.validatePartyID(roomID);
@@ -46,7 +45,7 @@ public class GetQueueHandler extends AbstractHandler {
 			
 			SystemMessage queueMessage = new MessageBuilder()
 					.type("getqueue")
-					.data(new JSONObject().put("videos", videos.toArray()).put("display", displayMode))
+					.data(new JSONObject().put("videos", videos.toArray()))
 					.buildToSystemMessage();
 			responder.sendSingleMessage(session, queueMessage);
 		}

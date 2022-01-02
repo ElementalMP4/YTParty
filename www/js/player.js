@@ -147,10 +147,6 @@ function handleChatMessage(data) {
     addChatMessage(data);
 }
 
-function showQueueInChat(videos) {
-    displayLocalMessage("Queued Videos:<br><br>" + convertVideoList(videos));
-}
-
 function refreshModalQueueData(videos) {
     let message = convertVideoList(videos);
     document.getElementById("queue-items").innerHTML = message + "<br><br>";
@@ -172,8 +168,7 @@ function handleSystemMessage(response) {
             updateTyping(response.data);
             break;
         case "getqueue":
-            if (response.data.display == "chat") showQueueInChat(response.data.videos);
-            else refreshModalQueueData(response.data.videos);
+            refreshModalQueueData(response.data.videos);
 
     }
 }
@@ -400,7 +395,7 @@ document.getElementById("chat-input").addEventListener("keyup", function(event) 
 //GUI Listeners
 window.addEventListener("keydown", function(event) {
     if (event.code == "KeyM" && event.ctrlKey) {
-        sendGatewayMessage({ "type": "party-getqueue", "data": { "token": Globals.TOKEN, "roomID": Globals.ROOM_ID, "display": "modal" } });
+        sendGatewayMessage({ "type": "party-getqueue", "data": { "token": Globals.TOKEN, "roomID": Globals.ROOM_ID } });
         showModalMenu();
     }
 });
@@ -425,7 +420,7 @@ document.getElementById("queue-input").addEventListener("keyup", function(event)
         let videoID = videoURLClass.searchParams.get("v");
         if (videoID) {
             sendGatewayMessage({ "type": "party-queuevideo", "data": { "token": Globals.TOKEN, "roomID": Globals.ROOM_ID, "video": videoID } });
-            sendGatewayMessage({ "type": "party-getqueue", "data": { "token": Globals.TOKEN, "roomID": Globals.ROOM_ID, "display": "modal" } });
+            sendGatewayMessage({ "type": "party-getqueue", "data": { "token": Globals.TOKEN, "roomID": Globals.ROOM_ID } });
         }
     }
 });
@@ -438,12 +433,12 @@ function setVideo(video) {
 
 function skipVideo() {
     sendGatewayMessage({ "type": "party-skipvideo", "data": { "token": Globals.TOKEN, "roomID": Globals.ROOM_ID } });
-    sendGatewayMessage({ "type": "party-getqueue", "data": { "token": Globals.TOKEN, "roomID": Globals.ROOM_ID, "display": "modal" } });
+    sendGatewayMessage({ "type": "party-getqueue", "data": { "token": Globals.TOKEN, "roomID": Globals.ROOM_ID } });
 }
 
 function clearQueue() {
     sendGatewayMessage({ "type": "party-clearqueue", "data": { "token": Globals.TOKEN, "roomID": Globals.ROOM_ID } });
-    sendGatewayMessage({ "type": "party-getqueue", "data": { "token": Globals.TOKEN, "roomID": Globals.ROOM_ID, "display": "modal" } });
+    sendGatewayMessage({ "type": "party-getqueue", "data": { "token": Globals.TOKEN, "roomID": Globals.ROOM_ID } });
 }
 
 function copyRoomURL() {
