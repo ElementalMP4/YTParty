@@ -211,6 +211,10 @@ function handleGatewayMessage(packet) {
             break;
         case "party-getqueue":
             refreshModalQueueData(packet.response.videos);
+            break;
+        case "system-ping":
+            displayLocalMessage("API response time: " + (new Date().getTime() - packet.response.start) + "ms");
+            break;
     }
 }
 
@@ -259,7 +263,8 @@ function handleHelpCommand() {
 /cc [message] - cHaNgEs YoUr TeXt LiKe ThIs<br><br>
 /big [message] - makes your message big<br><br>
 /r - reloads your session<br><br>
-/tts - send a text-to-speech message`);
+/tts - send a text-to-speech message<br><br>
+/ping - get the API response time`);
 }
 
 function toCrazyCase(body) {
