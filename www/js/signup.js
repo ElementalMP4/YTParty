@@ -1,6 +1,6 @@
 "use strict";
 const GatewayServerURL = (location.protocol == "https:" ? "wss://" : "ws://") + location.host + "/gateway";
-var Gateway = new WebSocket(GatewayServerURL);
+let Gateway = new WebSocket(GatewayServerURL);
 
 Gateway.onopen = function() {
     console.log("Connected To Gateway");
@@ -23,8 +23,8 @@ Gateway.onmessage = function(message) {
 }
 
 function sendSignupData() {
-    var formData = new FormData(document.getElementById("signup-form"));
-    var values = [];
+    let formData = new FormData(document.getElementById("signup-form"));
+    let values = [];
     formData.forEach(item => values.push(item));
     finalData = {
         "type": "user-signup",

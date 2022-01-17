@@ -1,9 +1,9 @@
 "use strict";
 const YOUTUBE_URL = "https://youtube.com/watch?v=";
 const GATEWAY_URL = (location.protocol == "https:" ? "wss://" : "ws://") + location.host + "/gateway";
-var Gateway = new WebSocket(GATEWAY_URL);
+let Gateway = new WebSocket(GATEWAY_URL);
 
-var Globals = {
+let Globals = {
     USER_PROPERTIES: {},
     TOKEN: "",
     PLAYER: {},
@@ -277,6 +277,16 @@ function toCrazyCase(body) {
     return final;
 }
 
+function handlePingCommand() {
+    let requestData = {
+        "type": "system-ping",
+        "data": {
+            "start": new Date().getTime()
+        }
+    }
+    Gateway.send(JSON.stringify(requestData));
+}
+
 function sendTypingStop() {
     if (Globals.TYPING) {
         Globals.TYPING = false;
@@ -317,6 +327,7 @@ document.getElementById("chat-input").addEventListener("keyup", function(event) 
                     break;
                 case "cc":
                     message = toCrazyCase(message);
+                    break;
                 case "i":
                     modifiers = "italic";
                     message = args.join(" ");
@@ -348,6 +359,10 @@ document.getElementById("chat-input").addEventListener("keyup", function(event) 
                 case "tts":
                     modifiers = "tts";
                     message = args.join(" ");
+                case "ping":
+                    handlePingCommand();
+                    sendChatMessage = false;
+                    break;
             }
         }
         if (sendChatMessage) {

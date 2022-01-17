@@ -1,8 +1,8 @@
 "use strict";
 const GatewayServerURL = (location.protocol == "https:" ? "wss://" : "ws://") + location.host + "/gateway";
-var Gateway = new WebSocket(GatewayServerURL);
+let Gateway = new WebSocket(GatewayServerURL);
 
-var TOKEN;
+let TOKEN;
 
 Gateway.onopen = function() {
     console.log("Connected To Gateway");
@@ -24,7 +24,7 @@ function handleNicknameChange(response) {
 
 function handleProfileResponse(response) {
     if (response.success) {
-        var userProfile = response.response;
+        let userProfile = response.response;
         document.getElementById("name-colour-picker").value = userProfile.colour;
         document.getElementById("nickname-entry").value = userProfile.effectiveName;
     } else {
@@ -75,8 +75,8 @@ function getToken() {
 }
 
 function updateColour() {
-    var hexColour = document.getElementById("name-colour-picker").value;
-    var payload = {
+    let hexColour = document.getElementById("name-colour-picker").value;
+    let payload = {
         "type": "user-changecolour",
         "data": {
             "colour": hexColour,
@@ -87,8 +87,8 @@ function updateColour() {
 }
 
 function updateNickname() {
-    var nickname = document.getElementById("nickname-entry").value;
-    var payload = {
+    let nickname = document.getElementById("nickname-entry").value;
+    let payload = {
         "type": "user-changenickname",
         "data": {
             "nickname": nickname,
@@ -99,10 +99,10 @@ function updateNickname() {
 }
 
 function updatePassword() {
-    var password = document.getElementById("new-password-entry").value;
-    var passwordMatch = document.getElementById("password-match-entry").value;
-    var originalPassword = document.getElementById("original-password-entry").value;
-    var payload = {
+    let password = document.getElementById("new-password-entry").value;
+    let passwordMatch = document.getElementById("password-match-entry").value;
+    let originalPassword = document.getElementById("original-password-entry").value;
+    let payload = {
         "type": "user-changepassword",
         "data": {
             "new-password": password,
@@ -115,10 +115,10 @@ function updatePassword() {
 }
 
 function deleteAccount() {
-    var deleteMessageAccepted = window.confirm("Are you sure you want to delete your account? This action cannot be undone!");
+    let deleteMessageAccepted = window.confirm("Are you sure you want to delete your account? This action cannot be undone!");
     let password = document.getElementById("delete-password-entry").value;
     if (deleteMessageAccepted) {
-        var payload = {
+        let payload = {
             "type": "user-deleteaccount",
             "data": {
                 "password": password,
@@ -130,7 +130,7 @@ function deleteAccount() {
 }
 
 function getUserProfile() {
-    var payload = {
+    let payload = {
         "type": "user-getprofile",
         "data": {
             "token": TOKEN

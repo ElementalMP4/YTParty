@@ -1,8 +1,8 @@
 "use strict";
 const GatewayServerURL = (location.protocol == "https:" ? "wss://" : "ws://") + location.host + "/gateway";
-var Gateway = new WebSocket(GatewayServerURL);
+let Gateway = new WebSocket(GatewayServerURL);
 
-var TOKEN;
+let TOKEN;
 
 Gateway.onopen = function() {
     console.log("Connected To Gateway");

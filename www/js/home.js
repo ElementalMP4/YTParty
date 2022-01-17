@@ -1,8 +1,8 @@
 "use strict";
 const GatewayServerURL = (location.protocol == "https:" ? "wss://" : "ws://") + location.host + "/gateway";
-var Gateway = new WebSocket(GatewayServerURL);
+let Gateway = new WebSocket(GatewayServerURL);
 
-var TOKEN;
+let TOKEN;
 
 function logout() {
     window.localStorage.removeItem("token");
@@ -14,7 +14,7 @@ Gateway.onclose = function() {
 }
 
 function handleProfileResponse(response) {
-    var userProfile = response.response;
+    let userProfile = response.response;
     document.getElementById("welcome-banner").innerHTML = "Good to see you, " + userProfile.username + "!";
 }
 
@@ -31,7 +31,7 @@ function getToken() {
 }
 
 function getUserProfile() {
-    var payload = {
+    let payload = {
         "type": "user-getprofile",
         "data": {
             "token": TOKEN

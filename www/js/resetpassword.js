@@ -1,6 +1,6 @@
 "use strict";
 const GatewayServerURL = (location.protocol == "https:" ? "wss://" : "ws://") + location.host + "/gateway";
-var Gateway = new WebSocket(GatewayServerURL);
+let Gateway = new WebSocket(GatewayServerURL);
 
 Gateway.onopen = function() {
     console.log("Connected To Gateway");
@@ -18,8 +18,8 @@ Gateway.onmessage = function(message) {
 }
 
 function sendResetData() {
-    var formData = new FormData(document.getElementById("reset-form"));
-    var values = [];
+    let formData = new FormData(document.getElementById("reset-form"));
+    let values = [];
 
     let url = new URL(location.href);
     let resetToken = url.searchParams.get("token");

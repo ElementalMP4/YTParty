@@ -1,7 +1,7 @@
 "use strict";
-var modal = document.getElementById("modal");
-var openButton = document.getElementById("open-modal");
-var closeButton = document.getElementById("close");
+let modal = document.getElementById("modal");
+let openButton = document.getElementById("open-modal");
+let closeButton = document.getElementById("close");
 
 function showModalMessage(title, message) {
     document.getElementById("modal-title").innerHTML = title;
