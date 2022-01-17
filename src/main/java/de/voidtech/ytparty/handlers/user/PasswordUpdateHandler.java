@@ -58,7 +58,7 @@ public class PasswordUpdateHandler extends AbstractHandler {
 				userService.saveUser(user);
 				tokenService.removeToken(username);
 				String newToken = tokenService.getToken(username);
-				responder.sendSuccess(session, newToken, this.getHandlerType());
+				responder.sendSuccess(session, new JSONObject().put("token", newToken), this.getHandlerType());
 				mailService.sendPasswordResetMessage(user.getEmail());
 			}
 		}

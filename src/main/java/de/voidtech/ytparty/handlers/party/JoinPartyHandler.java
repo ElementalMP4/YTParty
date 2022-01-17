@@ -57,8 +57,7 @@ public class JoinPartyHandler extends AbstractHandler{
 						.put("video", party.getVideoID())
 						.put("canControl", party.canControlRoom(username))
 						.put("theme", party.getRoomColour())
-						.put("owner", party.getOwnerName())
-						.toString(), this.getHandlerType());
+						.put("owner", party.getOwnerName()), this.getHandlerType());
 				
 				ChatMessage joinMessage = new MessageBuilder()
 						.partyID(roomID)
@@ -75,7 +74,7 @@ public class JoinPartyHandler extends AbstractHandler{
 
 	private void deliverMessageHistory(WebSocketSession session, String roomID) {
 		List<ChatMessage> messageHistory = messageService.getMessageHistory(roomID);
-		for (ChatMessage message : messageHistory) responder.sendSingleMessage(session, message);
+		responder.sendChatHistory(session, messageHistory);
 	}
 
 	@Override

@@ -2,7 +2,7 @@ package main.java.de.voidtech.ytparty.entities.message;
 
 import org.json.JSONObject;
 
-public class SystemMessage extends AbstractMessage {
+public class SystemMessage {
 	
 	private String type;
 	
@@ -13,17 +13,11 @@ public class SystemMessage extends AbstractMessage {
 	  this.type = builder.getSystemMessageType();
 	  this.data = builder.getSystemMessageData();
 	}
-	
-	@Override
-	public JSONObject getMessageData() {
+
+	public String convertToJson() {
 		JSONObject data = new JSONObject()
 				.put("type", this.type)
 				.put("data", this.data);
-		return data;
-	}
-
-	@Override
-	public MessageType getMessageType() {
-		return MessageType.SYSTEM;
+		return data.toString();
 	}
 }

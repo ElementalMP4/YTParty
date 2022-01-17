@@ -1,3 +1,4 @@
+"use strict";
 const GatewayServerURL = (location.protocol == "https:" ? "wss://" : "ws://") + location.host + "/gateway";
 var Gateway = new WebSocket(GatewayServerURL);
 
@@ -20,7 +21,7 @@ function sendResetRequestData() {
     var formData = new FormData(document.getElementById("reset-form"));
     var values = [];
     formData.forEach(item => values.push(item));
-    finalData = {
+    var finalData = {
         "type": "user-forgottenpassword",
         "data": {
             "username": values[0],

@@ -32,57 +32,57 @@ public class HttpRestController {
 	@Autowired
 	private PartyService partyService;
 	
-	@RequestMapping(value = "/")
+	@RequestMapping(value = "/", produces = "text/html")
 	public String indexRoute() {
 		return fileReader.getTextFileContents("html/index.html");
 	}
 	
-	@RequestMapping(value = "/index.html")
+	@RequestMapping(value = "/index.html", produces = "text/html")
 	public String indexHtmlRoute() {
 		return fileReader.getTextFileContents("html/index.html");
 	}
 	
-	@RequestMapping(value = "/terms.html")
+	@RequestMapping(value = "/terms.html", produces = "text/html")
 	public String termsRoute() {
 		return fileReader.getTextFileContents("html/terms.html");
 	}
   
-	@RequestMapping(value = "/primarystyle.css")
+	@RequestMapping(value = "/primarystyle.css", produces = "text/css")
 	public String primaryStyleRoute() {
 		return fileReader.getTextFileContents("css/primarystyle.css");
 	}
 	
-	@RequestMapping(value = "/modal.css")
+	@RequestMapping(value = "/modal.css", produces = "text/css")
 	public String modalStyleRoute() {
 		return fileReader.getTextFileContents("css/modal.css");
 	}
 	
-	@RequestMapping(value = "/playerstyle.css")
+	@RequestMapping(value = "/playerstyle.css", produces = "text/css")
 	public String playerStyleRoute() {
 		return fileReader.getTextFileContents("css/playerstyle.css");
 	}
 	
-	@RequestMapping(value = "/modal.js")
+	@RequestMapping(value = "/modal.js", produces = "application/javascript")
 	public String modalScriptRoute() {
 		return fileReader.getTextFileContents("js/modal.js");
 	}
 	
-	@RequestMapping(value = "/player.js")
+	@RequestMapping(value = "/player.js", produces = "application/javascript")
 	public String playerScriptRoute() {
 		return fileReader.getTextFileContents("js/player.js");
 	}
 	
-	@RequestMapping(value = "/favicon.png", produces = {"image/png"})
+	@RequestMapping(value = "/favicon.png", produces = "image/png")
 	public byte[] faviconRoute() {
 		return fileReader.getBinaryFileContents("img/favicon.png");
 	}
 	
-	@RequestMapping(value = "/favicon.ico", produces = {"image/png"})
+	@RequestMapping(value = "/favicon.ico", produces = "image/png")
 	public byte[] alternateFaviconRoute() {
 		return fileReader.getBinaryFileContents("img/favicon.png");
 	}
 	
-	@RequestMapping(value = "/waves.svg", produces = {"image/svg+xml"})
+	@RequestMapping(value = "/waves.svg", produces = "image/svg+xml")
 	public byte[] wavesRoute() {
 		return fileReader.getBinaryFileContents("img/waves.svg");
 	}
@@ -92,87 +92,87 @@ public class HttpRestController {
 		return fileReader.getBinaryFileContents("img/deadcat.gif");
 	}
 	
-	@RequestMapping(value = "/login.html")
+	@RequestMapping(value = "/login.html", produces = "text/html")
 	public String loginRoute() {
 		return fileReader.getTextFileContents("html/login.html");
 	}
 	
-	@RequestMapping(value = "/ping.html")
+	@RequestMapping(value = "/ping.html", produces = "text/html")
 	public String pingRoute() {
 		return fileReader.getTextFileContents("html/ping.html");
 	}
 	
-	@RequestMapping(value = "/signup.html")
+	@RequestMapping(value = "/signup.html", produces = "text/html")
 	public String signupRoute() {
 		return fileReader.getTextFileContents("html/signup.html");
 	}
 	
-	@RequestMapping(value = "/about.html")
+	@RequestMapping(value = "/about.html", produces = "text/html")
 	public String aboutRoute() {
 		return fileReader.getTextFileContents("html/about.html");
 	}
 	
-	@RequestMapping(value = "/signup.js")
+	@RequestMapping(value = "/signup.js", produces = "application/javascript")
 	public String signupScriptRoute() {
 		return fileReader.getTextFileContents("js/signup.js");
 	}
 
-	@RequestMapping(value = "/home.js")
+	@RequestMapping(value = "/home.js", produces = "application/javascript")
 	public String homeScriptRoute() {
 		return fileReader.getTextFileContents("js/home.js");
 	}
 	
-	@RequestMapping(value = "/login.js")
+	@RequestMapping(value = "/login.js", produces = "application/javascript")
 	public String signInScriptRoute() {
 		return fileReader.getTextFileContents("js/login.js");
 	}
 	
-	@RequestMapping(value = "/accountsettings.html")
+	@RequestMapping(value = "/accountsettings.html", produces = "text/html")
 	public String accountRoute() {
 		return fileReader.getTextFileContents("html/accountsettings.html");
 	}
 	
-	@RequestMapping(value = "/settings.js")
+	@RequestMapping(value = "/settings.js", produces = "application/javascript")
 	public String settingsScriptRoute() {
 		return fileReader.getTextFileContents("js/settings.js");
 	}
 	
-	@RequestMapping(value = "/home.html")
+	@RequestMapping(value = "/home.html", produces = "text/html")
 	public String homeRoute() {
 		return fileReader.getTextFileContents("html/home.html");
 	}
 	
-	@RequestMapping(value = "/createroom.js")
+	@RequestMapping(value = "/createroom.js", produces = "application/javascript")
 	public String createRoomScriptRoute() {
 		return fileReader.getTextFileContents("js/createroom.js");
 	}
 	
-	@RequestMapping(value = "/createroom.html")
+	@RequestMapping(value = "/createroom.html", produces = "text/html")
 	public String createRoomRoute() {
 		return fileReader.getTextFileContents("html/createroom.html");
 	}
 	
-	@RequestMapping(value = "/doesonestillequalone.html")
+	@RequestMapping(value = "/doesonestillequalone.html", produces = "text/html")
 	public String easterEggRoute() {
 		return fileReader.getTextFileContents("/html/doesonestillequalone.html");
 	}
 	
-	@RequestMapping(value = "/resetpassword.html")
+	@RequestMapping(value = "/resetpassword.html", produces = "text/html")
 	public String passwordResetRoute() {
 		return fileReader.getTextFileContents("/html/resetpassword.html");
 	}
 	
-	@RequestMapping(value = "/forgotpassword.html")
+	@RequestMapping(value = "/forgotpassword.html", produces = "text/html")
 	public String forgotPasswordRoute() {
 		return fileReader.getTextFileContents("/html/forgotpassword.html");
 	}
 	
-	@RequestMapping(value = "/resetpassword.js")
+	@RequestMapping(value = "/resetpassword.js", produces = "application/javascript")
 	public String passwordResetScriptRoute() {
 		return fileReader.getTextFileContents("/js/resetpassword.js");
 	}
 	
-	@RequestMapping(value = "/forgotpassword.js")
+	@RequestMapping(value = "/forgotpassword.js", produces = "application/javascript")
 	public String forgotPasswordScriptRoute() {
 		return fileReader.getTextFileContents("/js/forgotpassword.js");
 	}
@@ -190,7 +190,7 @@ public class HttpRestController {
 		return partyDoc.toString();
 	}
 	
-	@RequestMapping(value = "/player.html")
+	@RequestMapping(value = "/player.html", produces = "text/html")
 	public String playerRoute(@RequestParam(required = false) String roomID) {
 		if (roomID == null) return fileReader.getTextFileContents("html/noroom.html");
 		else {
@@ -200,7 +200,7 @@ public class HttpRestController {
 		}
 	}
 	
-	@RequestMapping(value = "/beansandthreads")
+	@RequestMapping(value = "/beansandthreads", produces = "text/html")
 	public String statsRoute() {
 		Set<Thread> threadSet = Thread.getAllStackTraces().keySet();
 		List<String> threadList = new ArrayList<String>();

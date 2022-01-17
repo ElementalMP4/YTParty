@@ -1,3 +1,4 @@
+"use strict";
 const GatewayServerURL = (location.protocol == "https:" ? "wss://" : "ws://") + location.host + "/gateway";
 var Gateway = new WebSocket(GatewayServerURL);
 
@@ -12,12 +13,12 @@ Gateway.onclose = function() {
 }
 
 Gateway.onmessage = function(message) {
-    const response = JSON.parse(message.data);
-    console.log(response);
-    if (response.success) {
-        window.location.href = location.protocol + "//" + location.host + "/player.html?roomID=" + response.response;
+    const serverMessage = JSON.parse(message.data);
+    console.log(serverMessage);
+    if (serverMessage.success) {
+        window.location.href = location.protocol + "//" + location.host + "/player.html?roomID=" + serverMessage.response.partyID;
     } else {
-        showModalMessage("Error", response.response);
+        showModalMessage("Error", serverMessage.response);
     }
 }
 

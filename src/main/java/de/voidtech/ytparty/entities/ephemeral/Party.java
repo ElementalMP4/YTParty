@@ -13,8 +13,8 @@ import org.json.JSONObject;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 
-import main.java.de.voidtech.ytparty.entities.message.AbstractMessage;
 import main.java.de.voidtech.ytparty.entities.message.MessageBuilder;
+import main.java.de.voidtech.ytparty.entities.message.SystemMessage;
 import main.java.de.voidtech.ytparty.entities.persistent.ChatMessage;
 
 public class Party {
@@ -133,7 +133,16 @@ public class Party {
 		return this.hasBeenVisited;
 	}
 	
-	public void broadcastMessage(AbstractMessage message) {
+	public void broadcastMessage(ChatMessage message) {
+		List<WebSocketSession> invalidSessions = new ArrayList<WebSocketSession>();
+		for (WebSocketSession session : sessions) {
+			if (session.isOpen()) sendMessage(message.convertToJson(), session);
+			else invalidSessions.add(session);
+		}
+		if (!invalidSessions.isEmpty()) for (WebSocketSession session : invalidSessions) sessions.remove(session);
+	}
+	
+	public void broadcastMessage(SystemMessage message) {
 		List<WebSocketSession> invalidSessions = new ArrayList<WebSocketSession>();
 		for (WebSocketSession session : sessions) {
 			if (session.isOpen()) sendMessage(message.convertToJson(), session);

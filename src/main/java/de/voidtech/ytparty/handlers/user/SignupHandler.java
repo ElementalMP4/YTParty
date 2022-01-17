@@ -51,7 +51,7 @@ public class SignupHandler extends AbstractHandler {
 			User newUser = new User(data.getString("username"), null, data.getString("password"), "#FF0000",
 					(data.getString("email").equals("") ? null : data.getString("email")));
 			userService.saveUser(newUser);
-			responder.sendSuccess(session, tokenService.getToken(data.getString("username")), this.getHandlerType());
+			responder.sendSuccess(session, new JSONObject().put("token", tokenService.getToken(data.getString("username"))), this.getHandlerType());
 		}
 	}
 

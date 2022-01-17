@@ -41,7 +41,7 @@ public class TypingUpdateHandler extends AbstractHandler {
 			Party party = partyService.getParty(roomID);
 			if (!mode.equals("start") && !mode.equals("stop")) 
 				responder.sendError(session, "An invalid typing mode was provided", this.getHandlerType());
-			else responder.sendSystemMessage(party, new MessageBuilder().type("typingupdate").data(new JSONObject()
+			else responder.sendSystemMessage(party, new MessageBuilder().type("party-typingupdate").data(new JSONObject()
 					.put("mode", mode).put("user", user)).buildToSystemMessage());
 		}	
 	}

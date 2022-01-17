@@ -36,12 +36,11 @@ public class GetProfileHandler extends AbstractHandler {
 		if (!tokenResponse.isSuccessful()) responder.sendError(session, tokenResponse.getMessage(), this.getHandlerType());
 		else{
 			User user = userService.getUser(tokenService.getUsernameFromToken(token));
-			String userData = new JSONObject()
+			JSONObject userData = new JSONObject()
 					.put("nickname", user.getNickname())
 					.put("colour", user.getHexColour())
 					.put("effectiveName", user.getEffectiveName())
-					.put("username", user.getUsername())
-				.toString();
+					.put("username", user.getUsername());
 			responder.sendSuccess(session, userData, this.getHandlerType());
 		}
 	}

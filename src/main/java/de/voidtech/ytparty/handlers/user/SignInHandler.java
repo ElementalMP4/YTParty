@@ -37,7 +37,7 @@ public class SignInHandler extends AbstractHandler {
 		if (captchaService.validateCaptcha(captchaToken)) {
 			if (user == null) responder.sendError(session, "Username or Password incorrect", this.getHandlerType());
 			else {
-				if (user.checkPassword(enteredPassword)) responder.sendSuccess(session, tokenService.getToken(username), this.getHandlerType());
+				if (user.checkPassword(enteredPassword)) responder.sendSuccess(session, new JSONObject().put("token", tokenService.getToken(username)), this.getHandlerType());
 				else responder.sendError(session, "Username or Password incorrect", this.getHandlerType());
 			}	
 		} else responder.sendError(session, "You need to pass the captcha!", this.getHandlerType());

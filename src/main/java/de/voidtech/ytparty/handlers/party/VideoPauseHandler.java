@@ -38,7 +38,7 @@ public class VideoPauseHandler extends AbstractHandler {
 		else {
 			Party party = partyService.getParty(roomID);
 			if (party.canControlRoom(tokenResponse.getActingString()))
-				responder.sendSystemMessage(party, new MessageBuilder().type("pausevideo").data(MessageBuilder.EMPTY_JSON).buildToSystemMessage());
+				responder.sendSystemMessage(party, new MessageBuilder().type("party-pausevideo").data(MessageBuilder.EMPTY_JSON).buildToSystemMessage());
 			else responder.sendError(session, "You do not have permission to do that!", this.getHandlerType());
 		}
 	}

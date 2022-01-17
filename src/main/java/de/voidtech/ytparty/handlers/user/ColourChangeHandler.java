@@ -40,7 +40,7 @@ public class ColourChangeHandler extends AbstractHandler {
 			User user = userService.getUser(username);
 			user.setHexColour(colour);
 			userService.saveUser(user);
-			responder.sendSuccess(session, "Colour changed!", this.getHandlerType());
+			responder.sendSuccess(session, new JSONObject().put("message", "Colour changed!"), this.getHandlerType());
 		}
 	}
 

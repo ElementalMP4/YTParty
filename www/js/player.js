@@ -1,3 +1,4 @@
+"use strict";
 const YOUTUBE_URL = "https://youtube.com/watch?v=";
 const GATEWAY_URL = (location.protocol == "https:" ? "wss://" : "ws://") + location.host + "/gateway";
 var Gateway = new WebSocket(GATEWAY_URL);
@@ -153,28 +154,7 @@ function refreshModalQueueData(videos) {
     document.getElementById("queue-title").innerHTML = "Queued Items (" + videos.length + ")";
 }
 
-function handleSystemMessage(response) {
-    switch (response.type) {
-        case "playvideo":
-            startVideo(response.data);
-            break;
-        case "pausevideo":
-            pauseVideo();
-            break;
-        case "changevideo":
-            loadVideo(response.data.video);
-            break;
-        case "typingupdate":
-            updateTyping(response.data);
-            break;
-        case "getqueue":
-            refreshModalQueueData(response.data.videos);
-
-    }
-}
-
-function initialiseParty(response) {
-    const options = JSON.parse(response);
+function initialiseParty(options) {
     loadVideo(options.video);
     Globals.CAN_CONTROL_PLAYER = options.canControl;
     Globals.ROOM_COLOUR = options.theme;
@@ -197,39 +177,40 @@ Gateway.onmessage = function(message) {
     const packet = JSON.parse(message.data);
     console.log(packet);
 
-    if (!packet.success) {
-        switch (packet.response) {
-            case "An invalid token was provided":
-                window.location.href = location.protocol + "//" + location.host + "/login.html?redirect=" + location.pathname + location.search;
-                break;
-            case "An invalid room ID was provided":
-                displayLocalMessage("This room does not exist! Check the room ID and try again!");
-                break;
-            case "You do not have permission to do that!":
-                displayLocalMessage(packet.response);
-        }
-    }
+    if (packet.hasOwnProperty("success")) {
+        if (!packet.success) displayLocalMessage(packet.response);
+        else handleGatewayMessage(packet);
+    } else handleGatewayMessage(packet);
+}
 
-    switch (packet.origin) {
-        case "party-joinparty":
-            initialiseParty(packet.response);
-            break;
-        case "user-getprofile":
-            Globals.USER_PROPERTIES = JSON.parse(packet.response);
-            break;
-        case "party-chatmessage":
-            if (!packet.success) displayLocalMessage(packet.response);
-            break;
-
-    }
-
+function handleGatewayMessage(packet) {
     switch (packet.type) {
         case "party-chatmessage":
             handleChatMessage(packet.data);
             break;
-        case "party-systemmessage":
-            handleSystemMessage(packet.data);
+        case "party-joinparty":
+            initialiseParty(packet.response);
             break;
+        case "user-getprofile":
+            Globals.USER_PROPERTIES = packet.response;
+            break;
+        case "party-chatmessage":
+            displayLocalMessage(packet.response);
+            break;
+        case "party-playvideo":
+            startVideo(packet.data);
+            break;
+        case "party-pausevideo":
+            pauseVideo();
+            break;
+        case "party-changevideo":
+            loadVideo(packet.response.video);
+            break;
+        case "party-typingupdate":
+            updateTyping(packet.data);
+            break;
+        case "party-getqueue":
+            refreshModalQueueData(packet.response.videos);
     }
 }
 
@@ -252,9 +233,8 @@ Gateway.onopen = function() {
     const selfURL = new URL(location.href);
     Globals.TOKEN = getToken();
 
-    if (!selfURL.searchParams.get("roomID")) {
-        window.location.href = location.protocol + "//" + location.host + "/home.html";
-    } else {
+    if (!selfURL.searchParams.get("roomID")) window.location.href = location.protocol + "//" + location.host + "/home.html";
+    else {
         Globals.ROOM_ID = selfURL.searchParams.get("roomID");
         embedPlayer();
         console.log("Ready");
@@ -391,15 +371,19 @@ document.getElementById("chat-input").addEventListener("keyup", function(event) 
     }
 });
 
+//GUI FUNCTIONS
 
-//GUI Listeners
+//Open Menu
 window.addEventListener("keydown", function(event) {
     if (event.code == "KeyM" && event.ctrlKey) {
         sendGatewayMessage({ "type": "party-getqueue", "data": { "token": Globals.TOKEN, "roomID": Globals.ROOM_ID } });
+        let copyButton = document.getElementById("copy-button");
+        if (copyButton.classList.contains("action-complete")) copyButton.classList.remove("action-complete");
         showModalMenu();
     }
 });
 
+//Change current video
 document.getElementById("current-video-input").addEventListener("keyup", function(event) {
     if (event.key == "Enter") {
         event.preventDefault();
@@ -410,6 +394,7 @@ document.getElementById("current-video-input").addEventListener("keyup", functio
     }
 });
 
+//Add to queue
 document.getElementById("queue-input").addEventListener("keyup", function(event) {
     if (event.key == "Enter") {
         event.preventDefault();

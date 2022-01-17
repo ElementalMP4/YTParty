@@ -41,7 +41,7 @@ public class NicknameUpdateHandler extends AbstractHandler {
 			User user = userService.getUser(username);
 			user.setNickname(nickname);
 			userService.saveUser(user);
-			responder.sendSuccess(session, "Nickname changed!", this.getHandlerType());
+			responder.sendSuccess(session, new JSONObject().put("message", "Nickname changed!"), this.getHandlerType());
 		}
 	}
 

@@ -1,3 +1,4 @@
+"use strict";
 var modal = document.getElementById("modal");
 var openButton = document.getElementById("open-modal");
 var closeButton = document.getElementById("close");

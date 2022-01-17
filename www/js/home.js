@@ -1,3 +1,4 @@
+"use strict";
 const GatewayServerURL = (location.protocol == "https:" ? "wss://" : "ws://") + location.host + "/gateway";
 var Gateway = new WebSocket(GatewayServerURL);
 
@@ -13,7 +14,7 @@ Gateway.onclose = function() {
 }
 
 function handleProfileResponse(response) {
-    var userProfile = JSON.parse(response.response);
+    var userProfile = response.response;
     document.getElementById("welcome-banner").innerHTML = "Good to see you, " + userProfile.username + "!";
 }
 

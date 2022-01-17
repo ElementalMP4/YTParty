@@ -59,7 +59,7 @@ public class PasswordResetHandler extends AbstractHandler {
 			user.setPassword(password);
 			userService.saveUser(user);
 			passwordService.closePasswordCase(passwordService.getCaseFromResetToken(resetToken));
-			responder.sendSuccess(session, "Password reset successfully!", this.getHandlerType());
+			responder.sendSuccess(session, new JSONObject().put("message", "Password reset successfully!"), this.getHandlerType());
 			mailService.sendPasswordResetMessage(user.getEmail());
 		}
 	}

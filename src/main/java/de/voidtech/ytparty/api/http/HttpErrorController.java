@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-public class HttpErrorController implements ErrorController{
+public class HttpErrorController implements ErrorController {
 
 	private static final Logger LOGGER = Logger.getLogger(HttpErrorController.class.getName());
     private static final String PATH = "/error";

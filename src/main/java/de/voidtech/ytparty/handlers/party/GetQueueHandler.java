@@ -10,8 +10,6 @@ import org.springframework.web.socket.WebSocketSession;
 import main.java.de.voidtech.ytparty.annotations.Handler;
 import main.java.de.voidtech.ytparty.entities.ephemeral.AuthResponse;
 import main.java.de.voidtech.ytparty.entities.ephemeral.Party;
-import main.java.de.voidtech.ytparty.entities.message.MessageBuilder;
-import main.java.de.voidtech.ytparty.entities.message.SystemMessage;
 import main.java.de.voidtech.ytparty.handlers.AbstractHandler;
 import main.java.de.voidtech.ytparty.service.GatewayAuthService;
 import main.java.de.voidtech.ytparty.service.GatewayResponseService;
@@ -42,12 +40,7 @@ public class GetQueueHandler extends AbstractHandler {
 		else {
 			Party party = partyService.getParty(roomID);
 			List<String> videos = new ArrayList<String>(party.getQueueAsList());
-			
-			SystemMessage queueMessage = new MessageBuilder()
-					.type("getqueue")
-					.data(new JSONObject().put("videos", videos.toArray()))
-					.buildToSystemMessage();
-			responder.sendSingleMessage(session, queueMessage);
+			responder.sendSuccess(session, new JSONObject().put("videos", videos.toArray()), this.getHandlerType());
 		}
 	}
 

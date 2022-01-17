@@ -1,3 +1,4 @@
+"use strict";
 const GatewayServerURL = (location.protocol == "https:" ? "wss://" : "ws://") + location.host + "/gateway";
 var Gateway = new WebSocket(GatewayServerURL);
 
@@ -23,7 +24,7 @@ function handleNicknameChange(response) {
 
 function handleProfileResponse(response) {
     if (response.success) {
-        var userProfile = JSON.parse(response.response);
+        var userProfile = response.response;
         document.getElementById("name-colour-picker").value = userProfile.colour;
         document.getElementById("nickname-entry").value = userProfile.effectiveName;
     } else {
@@ -48,7 +49,7 @@ function handleAccountDeleteResponse(response) {
 Gateway.onmessage = function(message) {
     const response = JSON.parse(message.data);
     console.log(response);
-    switch (response.origin) {
+    switch (response.type) {
         case "user-changecolour":
             handleColourChange(response);
             break;

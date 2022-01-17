@@ -39,7 +39,7 @@ public class VideoPlayHandler extends AbstractHandler {
 		else {
 			Party party = partyService.getParty(roomID);
 			if (party.canControlRoom(tokenResponse.getActingString()))
-				responder.sendSystemMessage(party, new MessageBuilder().type("playvideo").data(new JSONObject()
+				responder.sendSystemMessage(party, new MessageBuilder().type("party-playvideo").data(new JSONObject()
 						.put("time", timestamp)).buildToSystemMessage());
 			else responder.sendError(session, "You do not have permission to do that!", this.getHandlerType());
 		}

@@ -11,13 +11,11 @@ import javax.persistence.Table;
 import org.hibernate.annotations.Type;
 import org.json.JSONObject;
 
-import main.java.de.voidtech.ytparty.entities.message.AbstractMessage;
 import main.java.de.voidtech.ytparty.entities.message.MessageBuilder;
-import main.java.de.voidtech.ytparty.entities.message.MessageType;
 
 @Entity(name = "Messages")
 @Table(name = "Messages", indexes = @Index(columnList = "partyID", name = "index_message"))
-public class ChatMessage extends AbstractMessage {
+public class ChatMessage {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
@@ -91,18 +89,13 @@ public class ChatMessage extends AbstractMessage {
 		this.messageModifiers = newModifiers;
 	}
 
-	@Override
-	public MessageType getMessageType() {
-		return MessageType.CHAT;
-	}
-
-	@Override
-	public JSONObject getMessageData() {
-		JSONObject data = new JSONObject()
-				.put("author", this.author)
-				.put("colour", this.colour)
-				.put("content", this.content)
-				.put("modifiers", this.messageModifiers);
-		return data;
+	public String convertToJson() {
+		JSONObject data = new JSONObject().put("type", "party-chatmessage")
+				.put("data", new JSONObject()
+						.put("author", this.author)
+						.put("colour", this.colour)
+						.put("content", this.content)
+						.put("modifiers", this.messageModifiers));
+		return data.toString();
 	}
 }

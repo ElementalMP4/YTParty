@@ -17,9 +17,8 @@ public class PingHandler extends AbstractHandler {
 	public void execute(WebSocketSession session, JSONObject data) {
 		long startTime = data.getLong("start");
 		
-		String pingData = new JSONObject()
-				.put("start", startTime)
-			.toString();
+		JSONObject pingData = new JSONObject()
+				.put("start", startTime);
 		
 		responder.sendSuccess(session, pingData, getHandlerType());
 	}

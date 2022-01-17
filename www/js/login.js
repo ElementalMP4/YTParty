@@ -1,3 +1,4 @@
+"use strict";
 const GatewayServerURL = (location.protocol == "https:" ? "wss://" : "ws://") + location.host + "/gateway";
 var Gateway = new WebSocket(GatewayServerURL);
 
@@ -17,7 +18,7 @@ Gateway.onmessage = function(message) {
     if (response.success) {
         let url = new URL(location.href);
         let redirect = url.searchParams.get("redirect");
-        window.localStorage.setItem("token", response.response);
+        window.localStorage.setItem("token", response.response.token);
         window.location.href = location.protocol + "//" + location.host + (redirect == null ? "/home.html" : redirect);
     } else {
         grecaptcha.reset();
@@ -29,7 +30,7 @@ function sendLoginData() {
     var formData = new FormData(document.getElementById("signin-form"));
     var values = [];
     formData.forEach(item => values.push(item));
-    finalData = {
+    var finalData = {
         "type": "user-signin",
         "data": {
             "username": values[0],
