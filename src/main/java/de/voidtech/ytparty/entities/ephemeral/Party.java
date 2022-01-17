@@ -53,7 +53,7 @@ public class Party {
 
 	private void setNextVideo(String nextVideo) {
 		this.currentVideoID = nextVideo;
-		broadcastMessage(new MessageBuilder().type("changevideo").data(new JSONObject().put("video", nextVideo)).buildToSystemMessage());
+		broadcastMessage(new MessageBuilder().type("party-changevideo").data(new JSONObject().put("video", nextVideo)).buildToSystemMessage());
 	}
 	
 	public void enqueueVideo(String id) {
@@ -61,7 +61,7 @@ public class Party {
 	}
 	
 	public void skipVideo() {
-		broadcastMessage(new MessageBuilder().type("changevideo").data(new JSONObject().put("video", this.videoQueue.poll()))
+		broadcastMessage(new MessageBuilder().type("party-changevideo").data(new JSONObject().put("video", this.videoQueue.poll()))
 				.buildToSystemMessage());
 	}
 	
