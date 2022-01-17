@@ -204,7 +204,8 @@ function handleGatewayMessage(packet) {
             pauseVideo();
             break;
         case "party-changevideo":
-            loadVideo(packet.response.video);
+            if (packet.hasOwnProperty("response")) loadVideo(packet.response.video);
+            else loadVideo(packet.data.video);
             break;
         case "party-typingupdate":
             updateTyping(packet.data);
