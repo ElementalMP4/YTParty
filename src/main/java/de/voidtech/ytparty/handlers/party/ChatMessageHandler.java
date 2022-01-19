@@ -42,7 +42,7 @@ public class ChatMessageHandler extends AbstractHandler {
 		else if (!partyIDResponse.isSuccessful()) responder.sendError(session, partyIDResponse.getMessage(), this.getHandlerType());
 		else {
 			Party party = partyService.getParty(roomID);
-			if (content.length() > 800) responder.sendError(session, "Your message is too long! Messages cannot be longer than 800 characters.", this.getHandlerType());
+			if (content.length() > 2000) responder.sendError(session, "Your message is too long! Messages cannot be longer than 2000 characters.", this.getHandlerType());
 			else {
 				ChatMessage userMessage = new MessageBuilder()
 						.partyID(roomID)

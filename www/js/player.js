@@ -314,8 +314,8 @@ document.getElementById("chat-input").addEventListener("keyup", function(event) 
         event.preventDefault();
         let message = document.getElementById("chat-input").value.trim();
         if (message == "") return;
-        if (message.length > 800) {
-            displayLocalMessage("Your message is too long! Messages cannot be longer than 800 characters.");
+        if (message.length > 2000) {
+            displayLocalMessage("Your message is too long! Messages cannot be longer than 2000 characters.");
             return;
         }
 
