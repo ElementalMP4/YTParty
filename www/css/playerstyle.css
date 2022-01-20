@@ -92,8 +92,18 @@ p {
 p.msg-nickname {
     font-size: 16px;
     font-family: 'Paytone One', sans-serif;
-    display: inline-block;
     vertical-align: middle;
+    overflow-wrap: break-word;
+    display: inline;
+}
+
+img.user-image {
+    border-radius: 50%;
+    height: 30px;
+    width: 30px;
+    vertical-align: middle;
+    padding-right: 5px;
+    display: inline;
 }
 
 .player {
@@ -151,13 +161,4 @@ p.cursive {
 
 p.big {
     font-size: 35px;
-}
-
-img.user-image {
-    border-radius: 50%;
-    height: 30px;
-    width: 30px;
-    display: inline-block;
-    vertical-align: middle;
-    padding-right: 5px;
 }
