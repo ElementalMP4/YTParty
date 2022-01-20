@@ -8,6 +8,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -187,6 +188,11 @@ public class HttpRestController {
 	}
 	
 	// # # # # Miscellaneous # # # # 
+	
+	@RequestMapping(value = "/avatar/{image}", produces = "image/png", method = RequestMethod.GET)
+	public byte[] avatarRoute(@PathVariable String image) {
+		return fileReader.getBinaryFileContents("/img/avatars/" + image + ".png");
+	}	
 	
 	@RequestMapping(value = "/particle-config.json", produces = "text/json", method = RequestMethod.GET)
 	public String particleConfigRoute() {

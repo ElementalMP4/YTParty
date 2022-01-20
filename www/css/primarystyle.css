@@ -29,7 +29,8 @@ a {
 }
 
 p,
-li {
+li,
+label {
     color: white;
     font-family: Arial, Helvetica, sans-serif;
     line-height: 1.5;
@@ -72,7 +73,8 @@ a.link {
 
 input[type=text],
 input[type=email],
-input[type=password] {
+input[type=password],
+select {
     background-color: #111111;
     border: solid 2px grey;
     border-radius: 50px;
@@ -186,4 +188,10 @@ input:checked+.slider:before {
 
  ::-webkit-scrollbar-thumb:hover {
     background: #d80000;
+}
+
+img.user-image {
+    border-radius: 50%;
+    height: 150px;
+    width: 150px;
 }

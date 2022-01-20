@@ -11,48 +11,44 @@ import main.java.de.voidtech.ytparty.handlers.AbstractHandler;
 import main.java.de.voidtech.ytparty.service.GatewayAuthService;
 import main.java.de.voidtech.ytparty.service.GatewayResponseService;
 import main.java.de.voidtech.ytparty.service.UserService;
-import main.java.de.voidtech.ytparty.service.UserTokenService;
 
 @Handler
-public class GetProfileHandler extends AbstractHandler {
+public class ChangeAvatarHandler extends AbstractHandler {
 
+	@Autowired
+	private GatewayAuthService authService;
+	
 	@Autowired
 	private UserService userService;
 	
 	@Autowired
 	private GatewayResponseService responder;
-
-	@Autowired
-	private UserTokenService tokenService;
-	
-	@Autowired
-	private GatewayAuthService authService;
 	
 	@Override
 	public void execute(WebSocketSession session, JSONObject data) {
 		String token = data.getString("token");
+		String avatar = data.getString("avatar");
+		
 		AuthResponse tokenResponse = authService.validateToken(token); 
 		
 		if (!tokenResponse.isSuccessful()) responder.sendError(session, tokenResponse.getMessage(), this.getHandlerType());
-		else{
-			User user = userService.getUser(tokenService.getUsernameFromToken(token));
-			JSONObject userData = new JSONObject()
-					.put("nickname", user.getNickname())
-					.put("colour", user.getHexColour())
-					.put("effectiveName", user.getEffectiveName())
-					.put("avatar", user.getProfilePicture())
-					.put("username", user.getUsername());
-			responder.sendSuccess(session, userData, this.getHandlerType());
+		else {
+			String username = tokenResponse.getActingString();
+			User user = userService.getUser(username);
+			user.setProfilePicture(avatar);
+			userService.saveUser(user);
+			responder.sendSuccess(session, new JSONObject().put("message", "Avatar changed!"), this.getHandlerType());
 		}
 	}
 
 	@Override
 	public String getHandlerType() {
-		return "user-getprofile";
+		return "user-changeavatar";
 	}
-	
+
 	@Override
 	public boolean requiresRateLimit() {
 		return true;
 	}
+
 }

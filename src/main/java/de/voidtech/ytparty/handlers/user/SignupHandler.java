@@ -10,6 +10,7 @@ import main.java.de.voidtech.ytparty.annotations.Handler;
 import main.java.de.voidtech.ytparty.entities.persistent.User;
 import main.java.de.voidtech.ytparty.handlers.AbstractHandler;
 import main.java.de.voidtech.ytparty.service.CaptchaAuthService;
+import main.java.de.voidtech.ytparty.service.FileReader;
 import main.java.de.voidtech.ytparty.service.GatewayResponseService;
 import main.java.de.voidtech.ytparty.service.UserService;
 import main.java.de.voidtech.ytparty.service.UserTokenService;
@@ -31,6 +32,9 @@ public class SignupHandler extends AbstractHandler {
 	@Autowired
 	private CaptchaAuthService captchaService;
 	
+	@Autowired
+	private FileReader fileService;
+	
 	@Override
 	public void execute(WebSocketSession session, JSONObject data) {
 		
@@ -49,7 +53,7 @@ public class SignupHandler extends AbstractHandler {
 			responder.sendError(session, "You need to complete the captcha!", this.getHandlerType());
 		else {
 			User newUser = new User(data.getString("username"), null, data.getString("password"), "#FF0000",
-					(data.getString("email").equals("") ? null : data.getString("email")));
+					(data.getString("email").equals("") ? null : data.getString("email")), fileService.getRandomAvatar());
 			userService.saveUser(newUser);
 			responder.sendSuccess(session, new JSONObject().put("token", tokenService.getToken(data.getString("username"))), this.getHandlerType());
 		}

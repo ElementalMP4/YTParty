@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
+import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -63,5 +64,12 @@ public class FileReader {
 	public void clearCache() {
 		textFileCache.clear();
 		binaryFileCache.clear();
+	}
+	
+	public String getRandomAvatar() {
+		File folder = new File(FILE_BASE_URL + "img/avatar");
+		File[] listOfFiles = folder.listFiles();
+		File chosenAvatarFile = listOfFiles[new Random().nextInt(listOfFiles.length)];
+		return chosenAvatarFile.getName().split(".")[0];
 	}
 }

@@ -34,6 +34,7 @@ public class ChatMessageHandler extends AbstractHandler {
 		String colour = data.getString("colour");
 		String modifiers = data.getString("modifiers");
 		String author = data.getString("author");
+		String avatar = data.getString("avatar");
 		
 		AuthResponse tokenResponse = authService.validateToken(token); 
 		AuthResponse partyIDResponse = authService.validatePartyID(roomID);
@@ -50,6 +51,7 @@ public class ChatMessageHandler extends AbstractHandler {
 						.colour(colour)
 						.modifiers(modifiers)
 						.author(author)
+						.avatar(avatar)
 						.buildToChatMessage();
 				responder.sendChatMessage(party, userMessage);	
 			}

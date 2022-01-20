@@ -43,9 +43,13 @@ function addChatMessage(data) {
     let colour = data.colour;
     let content = data.content;
     let modifiers = data.modifiers !== "" ? `class="${data.modifiers}"` : "";
+    let avatar = data.avatar;
 
     let newMessage = `<div class="chat-message">`;
-    if (Globals.LAST_MESSAGE_AUTHOR !== author) newMessage += `<p class="msg-nickname" style="color:${colour}">${author}</p><br>`;
+    if (Globals.LAST_MESSAGE_AUTHOR !== author) {
+        newMessage += `<img class="user-image" src="${modifiers.includes("system") ? avatar : ("/avatar/" + avatar)}">`;
+        newMessage += `<p class="msg-nickname" style="color:${colour}">${author}</p><br>`;
+    }
     newMessage += `<p ${modifiers}>${content}</p></div>`;
     if (Globals.LAST_MESSAGE_AUTHOR !== author) newMessage += "<br>";
 
@@ -63,7 +67,7 @@ function speakMessage(message) {
 }
 
 function displayLocalMessage(message) {
-    addChatMessage({ "author": "System", "colour": Globals.ROOM_COLOUR, "content": message, "modifiers": "system" });
+    addChatMessage({ "author": "System", "colour": Globals.ROOM_COLOUR, "content": message, "modifiers": "system", "avatar": "/favicon.png" });
 }
 
 function sendPlayingMessage() {
@@ -380,6 +384,7 @@ document.getElementById("chat-input").addEventListener("keyup", function(event) 
                     "content": message,
                     "colour": Globals.USER_PROPERTIES.colour,
                     "author": Globals.USER_PROPERTIES.effectiveName,
+                    "avatar": Globals.USER_PROPERTIES.avatar,
                     "modifiers": modifiers
                 }
             });

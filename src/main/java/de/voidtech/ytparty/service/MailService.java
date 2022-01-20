@@ -24,17 +24,22 @@ public class MailService {
 	private static final String RESET_URL = "https://ytparty.voidtech.de/forgotpassword.html";
 	
 	public void sendMessage(String recipient, String message, String subject) {
-		try {
-			MimeMessage mimeMessage = mailSender.createMimeMessage();
-			mimeMessage.addRecipients(RecipientType.TO, recipient);
-			mimeMessage.setContent(message, "text/plain");
-			mimeMessage.setSubject(subject);
-			mimeMessage.setFrom(configService.getMailAddress());
-			mailSender.send(mimeMessage);
-			LOGGER.log(Level.INFO, "Sent e-mail");
-		} catch (MessagingException e) {
-			LOGGER.log(Level.SEVERE, "Error occurred during ServiceExecution: " + e.getMessage());
-		}
+		Thread mailThread = new Thread("MailSender") {
+			public void run() {
+				try {
+					MimeMessage mimeMessage = mailSender.createMimeMessage();
+					mimeMessage.addRecipients(RecipientType.TO, recipient);
+					mimeMessage.setContent(message, "text/plain");
+					mimeMessage.setSubject(subject);
+					mimeMessage.setFrom(configService.getMailAddress());
+					mailSender.send(mimeMessage);
+					LOGGER.log(Level.INFO, "Sent e-mail");
+				} catch (MessagingException e) {
+					LOGGER.log(Level.SEVERE, "Error occurred during ServiceExecution: " + e.getMessage());
+				}	
+			}
+		};
+		mailThread.run();
 	}
 	
 	public void sendPasswordResetMessage(String recipient) {

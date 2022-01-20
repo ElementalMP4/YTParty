@@ -12,6 +12,10 @@ Gateway.onclose = function() {
     console.log("Connection Lost");
 }
 
+function setAvatarUrl(avatar) {
+    document.getElementById("avatar-preview").src = "/avatar/" + avatar;
+}
+
 function handleColourChange(response) {
     if (response.success) showModalMessage("Success!", "Colour changed!");
     else showModalMessage("Error", response.response);
@@ -27,6 +31,8 @@ function handleProfileResponse(response) {
         let userProfile = response.response;
         document.getElementById("name-colour-picker").value = userProfile.colour;
         document.getElementById("nickname-entry").value = userProfile.effectiveName;
+        document.getElementById("avatar-selector").value = userProfile.avatar;
+        setAvatarUrl(userProfile.avatar);
     } else {
         window.location.href = location.protocol + "//" + location.host + "/login.html";
     }
@@ -44,6 +50,11 @@ function handleAccountDeleteResponse(response) {
         window.localStorage.removeItem("token");
         window.location.href = location.protocol + "//" + location.host;
     } else showModalMessage("Error", response.response);
+}
+
+function handleAvatarChangeResponse(response) {
+    if (response.success) showModalMessage("Success!", "Avatar changed!");
+    else showModalMessage("Error", response.response);
 }
 
 Gateway.onmessage = function(message) {
@@ -64,6 +75,9 @@ Gateway.onmessage = function(message) {
             break;
         case "user-deleteaccount":
             handleAccountDeleteResponse(response);
+            break;
+        case "user-changeavatar":
+            handleAvatarChangeResponse(response);
             break;
     }
 }
@@ -137,6 +151,22 @@ function getUserProfile() {
         }
     }
     Gateway.send(JSON.stringify(payload));
+}
+
+function updateAvatar() {
+    let avatar = document.getElementById("avatar-selector").value;
+    let payload = {
+        "type": "user-changeavatar",
+        "data": {
+            "avatar": avatar,
+            "token": TOKEN
+        }
+    }
+    Gateway.send(JSON.stringify(payload));
+}
+
+document.getElementById("avatar-selector").onchange = function() {
+    setAvatarUrl(document.getElementById("avatar-selector").value);
 }
 
 Gateway.onopen = function() {

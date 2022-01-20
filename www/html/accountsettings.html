@@ -40,6 +40,34 @@
 
     <div class="menu centre-align">
         <h3 class="centre-align header header-sub">Change your settings!</h3>
+        <br>
+        <img src="/favicon.png" id="avatar-preview" class="user-image">
+        <br>
+        <label for="avatar-options" class="">Choose an avatar:</label><br><br>
+        <select name="avatar-options" id="avatar-selector">
+            <option value="beagle">Beagle</option>
+            <option value="bernese">Bernese</option>
+            <option value="bichon">Bichon</option>
+            <option value="birb">Birb</option>
+            <option value="corgi">Corgi</option>
+            <option value="hedgehog">Hedgehog</option>
+            <option value="maincoon">Maincoon</option>
+            <option value="mutt">Mutt</option>
+            <option value="otter">Otter</option>
+            <option value="persian">Persian</option>
+            <option value="pom">Pom</option>
+            <option value="pug">Pug</option>
+            <option value="quokka">Quokka</option>
+            <option value="siamese">Siamese</option>
+            <option value="sloth">Sloth</option>
+            <option value="tabby">Tabby</option>
+            <option value="toad">Toad</option>
+            <option value="tuxedo">Tuxedo</option>
+        </select>
+        <br>
+        <button class="button hover-animation" onclick="updateAvatar()"><p class="button-text">Change my avatar!</p></button>
+        <br>
+        <hr><br>
         <p>Choose a custom name colour!</p>
         <input type="color" value="#ff0000" id="name-colour-picker">
         <p />

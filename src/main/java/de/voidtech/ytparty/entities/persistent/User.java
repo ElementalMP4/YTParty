@@ -31,22 +31,30 @@ public class User {
 	@Column
 	private String email;
 	
+	@Column
+	private String profilePicture;
+	
 	@Deprecated
 	//ONLY FOR HIBERNATE, DO NOT USE
 	User() {
 	}
 	
-	public User(String username, String nickname, String password, String hexColour, String email)
+	public User(String username, String nickname, String password, String hexColour, String email, String avatar)
 	{
 	  this.username = username;
 	  this.nickname = nickname;
 	  this.passwordHash = BCrypt.hashpw(password, BCrypt.gensalt());
 	  this.hexColour = hexColour;
 	  this.email = email;
+	  this.profilePicture = null;
 	}
 
 	public boolean checkPassword(String enteredPassword) {
 		return BCrypt.checkpw(enteredPassword, this.passwordHash);
+	}
+	
+	public String getProfilePicture() {
+		return this.profilePicture;
 	}
 	
 	public String getUsername() {
@@ -83,6 +91,10 @@ public class User {
 	
 	public void setEmail(String email) {
 		this.email = email;
+	}
+	
+	public void setProfilePicture(String profilePicture) {
+		this.profilePicture = profilePicture;
 	}
 	
 	public String getEffectiveName() {

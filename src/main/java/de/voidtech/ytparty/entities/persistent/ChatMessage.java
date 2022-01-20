@@ -36,6 +36,9 @@ public class ChatMessage {
 	@Column
 	private String messageModifiers;
 	
+	@Column
+	private String avatar;
+	
 	@Deprecated
 	ChatMessage() {
 	}
@@ -47,6 +50,7 @@ public class ChatMessage {
 	  this.colour = builder.getChatMessageColour();
 	  this.content = builder.getChatMessageContent();
 	  this.messageModifiers = builder.getChatMessageMessageModifiers();
+	  this.avatar = builder.getChatMessageAvatar();
 	}
 
 	public String getPartyID() {
@@ -67,6 +71,14 @@ public class ChatMessage {
 	
 	public String getMessageModifiers() {
 		return this.messageModifiers;
+	}
+	
+	public String getAvatar() {
+		return this.avatar;
+	}
+	
+	public void setAvatar(String avatar) {
+		this.avatar = avatar;
 	}
 	
 	public void setPartyID(String newPartyID) {
@@ -95,6 +107,7 @@ public class ChatMessage {
 						.put("author", this.author)
 						.put("colour", this.colour)
 						.put("content", this.content)
+						.put("avatar", this.avatar)
 						.put("modifiers", this.messageModifiers));
 		return data.toString();
 	}
