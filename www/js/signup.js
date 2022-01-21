@@ -26,7 +26,7 @@ function sendSignupData() {
     let formData = new FormData(document.getElementById("signup-form"));
     let values = [];
     formData.forEach(item => values.push(item));
-    finalData = {
+    let finalData = {
         "type": "user-signup",
         "data": {
             "username": values[0],
