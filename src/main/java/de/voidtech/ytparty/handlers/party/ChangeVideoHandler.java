@@ -47,6 +47,7 @@ public class ChangeVideoHandler extends AbstractHandler {
 						.colour(party.getRoomColour())
 						.content(String.format("Video Changed by %s!", tokenResponse.getActingString()))
 						.modifiers(MessageBuilder.SYSTEM_MODIFIERS)
+						.avatar(MessageBuilder.SYSTEM_AVATAR)
 						.buildToChatMessage();
 				party.setVideoID(newVideoID);
 				responder.sendChatMessage(party, videoMessage);

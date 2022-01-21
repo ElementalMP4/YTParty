@@ -49,6 +49,7 @@ public class SkipQueuedVideoHandler extends AbstractHandler {
 							.colour(party.getRoomColour())
 							.content(String.format("Video skipped by %s!", tokenResponse.getActingString()))
 							.modifiers(MessageBuilder.SYSTEM_MODIFIERS)
+							.avatar(MessageBuilder.SYSTEM_AVATAR)
 							.buildToChatMessage();
 					responder.sendChatMessage(party, skipMessage);
 				}

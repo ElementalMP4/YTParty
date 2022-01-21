@@ -46,6 +46,7 @@ public class EnqueueVideoHandler extends AbstractHandler {
 						.colour(party.getRoomColour())
 						.content(String.format("Video queued by %s!", tokenResponse.getActingString()))
 						.modifiers(MessageBuilder.SYSTEM_MODIFIERS)
+						.avatar(MessageBuilder.SYSTEM_AVATAR)
 						.buildToChatMessage();
 				party.enqueueVideo(newVideoID);
 				responder.sendChatMessage(party, videoMessage);

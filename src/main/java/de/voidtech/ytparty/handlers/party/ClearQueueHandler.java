@@ -46,6 +46,7 @@ public class ClearQueueHandler extends AbstractHandler {
 						.colour(party.getRoomColour())
 						.content(String.format("Queue cleared by %s!", tokenResponse.getActingString()))
 						.modifiers(MessageBuilder.SYSTEM_MODIFIERS)
+						.avatar(MessageBuilder.SYSTEM_AVATAR)
 						.buildToChatMessage();
 				responder.sendChatMessage(party, clearMessage);
 			} else responder.sendError(session, "You do not have permission to do that!", this.getHandlerType());
