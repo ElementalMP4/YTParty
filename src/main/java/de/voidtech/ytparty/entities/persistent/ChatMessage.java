@@ -5,7 +5,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Index;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.Type;
@@ -14,7 +13,7 @@ import org.json.JSONObject;
 import main.java.de.voidtech.ytparty.entities.message.MessageBuilder;
 
 @Entity(name = "Messages")
-@Table(name = "Messages", indexes = @Index(columnList = "partyID", name = "index_message"))
+@Table(name = "Messages")
 public class ChatMessage {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
