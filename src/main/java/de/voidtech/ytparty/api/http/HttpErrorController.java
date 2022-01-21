@@ -31,7 +31,6 @@ public class HttpErrorController implements ErrorController {
     	return formatErrorPage(0);
     }
 
-    @Override
     public String getErrorPath() {
         return PATH;
     }
