@@ -177,15 +177,7 @@ function initialiseParty(options) {
     displayLocalMessage("Use /help to see some chat commands! Use ctrl + m to open the player menu!");
 }
 
-Gateway.onmessage = function(message) {
-    const packet = JSON.parse(message.data);
-    console.log(packet);
 
-    if (packet.hasOwnProperty("success")) {
-        if (!packet.success) displayLocalMessage(packet.response);
-        else handleGatewayMessage(packet);
-    } else handleGatewayMessage(packet);
-}
 
 function handleGatewayMessage(packet) {
     switch (packet.type) {
@@ -236,27 +228,6 @@ function embedPlayer() {
     firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 }
 
-Gateway.onopen = function() {
-    console.log("Connected To Gateway");
-    hideTypingMessage();
-    const selfURL = new URL(location.href);
-    Globals.TOKEN = getToken();
-
-    if (!selfURL.searchParams.get("roomID")) window.location.href = location.protocol + "//" + location.host + "/home.html";
-    else {
-        Globals.ROOM_ID = selfURL.searchParams.get("roomID");
-        embedPlayer();
-        console.log("Ready");
-        sendGatewayMessage({ "type": "party-joinparty", "data": { "token": Globals.TOKEN, "roomID": Globals.ROOM_ID } });
-        sendGatewayMessage({ "type": "user-getprofile", "data": { "token": Globals.TOKEN } });
-    }
-}
-
-Gateway.onclose = function() {
-    console.log("Connection Lost");
-    displayLocalMessage("You lost connection to the server! Use /r to reconnect");
-}
-
 function handleHelpCommand() {
     displayLocalMessage(`Chat Command Help:<br>
 /help - shows this message<br><br>
@@ -294,7 +265,7 @@ function handlePingCommand() {
             "start": new Date().getTime()
         }
     }
-    Gateway.send(JSON.stringify(requestData));
+    sendGatewayMessage(requestData);
 }
 
 function sendTypingStop() {
@@ -460,4 +431,35 @@ function copyRoomURL() {
         console.error('Could not copy room URL: ', err);
     });
     document.getElementById("copy-button").classList.add("action-complete");
+}
+
+Gateway.onopen = function() {
+    console.log("Connected To Gateway");
+    hideTypingMessage();
+    const selfURL = new URL(location.href);
+    Globals.TOKEN = getToken();
+
+    if (!selfURL.searchParams.get("roomID")) window.location.href = location.protocol + "//" + location.host + "/home.html";
+    else {
+        Globals.ROOM_ID = selfURL.searchParams.get("roomID");
+        embedPlayer();
+        console.log("Ready");
+        sendGatewayMessage({ "type": "party-joinparty", "data": { "token": Globals.TOKEN, "roomID": Globals.ROOM_ID } });
+        sendGatewayMessage({ "type": "user-getprofile", "data": { "token": Globals.TOKEN } });
+    }
+}
+
+Gateway.onclose = function(event) {
+    console.log(`Gateway Disconnected\n\nCode: ${event.code}\nReason: ${event.reason}\nClean?: ${event.wasClean}`);
+    displayLocalMessage("You lost connection to the server! Use /r to reconnect");
+}
+
+Gateway.onmessage = function(message) {
+    const packet = JSON.parse(message.data);
+    console.log(packet);
+
+    if (packet.hasOwnProperty("success")) {
+        if (!packet.success) displayLocalMessage(packet.response);
+        else handleGatewayMessage(packet);
+    } else handleGatewayMessage(packet);
 }
