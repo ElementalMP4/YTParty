@@ -25,7 +25,7 @@ public class PartyService {
 	@Autowired
 	private SessionFactory sessionFactory;
 	
-	@EventListener(ApplicationReadyEvent.class)
+	//@EventListener(ApplicationReadyEvent.class)
 	private void cleanDatabase() {
 		try(Session session = sessionFactory.openSession())	{
 			session.getTransaction().begin();
