@@ -12,8 +12,8 @@ import org.json.JSONObject;
 
 import main.java.de.voidtech.ytparty.entities.message.MessageBuilder;
 
-@Entity(name = "Messages")
-@Table(name = "Messages")
+@Entity(name = "ChatMessages")
+@Table(name = "ChatMessages")
 public class ChatMessage {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
