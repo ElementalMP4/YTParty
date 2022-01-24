@@ -31,9 +31,6 @@ public class GatewayHandler extends AbstractWebSocketHandler {
 	@Override
 	public void afterConnectionEstablished(WebSocketSession session) throws Exception {
 		sessionService.createSession(session);
-		System.out.println(session.getLocalAddress().getAddress());
-		System.out.println(session.getRemoteAddress().getAddress());
-		System.out.println(session.getUri().toString());
 	}
 	
 	@Override
