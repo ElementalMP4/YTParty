@@ -312,7 +312,7 @@ document.getElementById("chat-input").addEventListener("keyup", function(event) 
                     sendChatMessage = false;
                     break;
                 case "cc":
-                    message = toCrazyCase(message);
+                    message = toCrazyCase(args.join(" "));
                     break;
                 case "i":
                     modifiers = "italic";
@@ -345,6 +345,7 @@ document.getElementById("chat-input").addEventListener("keyup", function(event) 
                 case "tts":
                     modifiers = "tts";
                     message = args.join(" ");
+                    break;
                 case "ping":
                     handlePingCommand();
                     sendChatMessage = false;
