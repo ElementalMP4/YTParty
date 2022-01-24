@@ -2,9 +2,9 @@ package main.java.de.voidtech.ytparty.handlers;
 
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.socket.WebSocketSession;
 
 import main.java.de.voidtech.ytparty.annotations.Handler;
+import main.java.de.voidtech.ytparty.entities.ephemeral.GatewayConnection;
 import main.java.de.voidtech.ytparty.service.GatewayResponseService;
 
 @Handler
@@ -14,7 +14,7 @@ public class PingHandler extends AbstractHandler {
 	private GatewayResponseService responder;
 	
 	@Override
-	public void execute(WebSocketSession session, JSONObject data) {
+	public void execute(GatewayConnection session, JSONObject data) {
 		long startTime = data.getLong("start");
 		
 		JSONObject pingData = new JSONObject()

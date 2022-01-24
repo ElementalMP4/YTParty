@@ -12,8 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
-import org.springframework.web.socket.WebSocketSession;
 
+import main.java.de.voidtech.ytparty.entities.ephemeral.GatewayConnection;
 import main.java.de.voidtech.ytparty.entities.ephemeral.Party;
 
 @Service
@@ -64,7 +64,7 @@ public class PartyService {
 		parties.remove(partyID);
 	}
 	
-	public synchronized void removeSessionFromParty(WebSocketSession session) {
+	public synchronized void removeSessionFromParty(GatewayConnection session) {
 		List<String> invalidParties = new ArrayList<String>();
 		for (String key : parties.keySet()) { 
 			Party party = parties.get(key);

@@ -25,17 +25,20 @@ public class GatewayHandler extends AbstractWebSocketHandler {
 	
 	@Override
 	public void handleTextMessage(WebSocketSession socketSession, TextMessage message) throws Exception {
-		messageHandler.handleMessage(socketSession, message.getPayload());			
+		messageHandler.handleMessage(sessionService.getSession(socketSession), message.getPayload());			
 	}
 
 	@Override
 	public void afterConnectionEstablished(WebSocketSession session) throws Exception {
 		sessionService.createSession(session);
+		System.out.println(session.getLocalAddress().getAddress());
+		System.out.println(session.getRemoteAddress().getAddress());
+		System.out.println(session.getUri().toString());
 	}
 	
 	@Override
 	public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
-		partyService.removeSessionFromParty(session);
+		partyService.removeSessionFromParty(sessionService.getSession(session));
 		sessionService.deleteSession(session);
 	}
 }

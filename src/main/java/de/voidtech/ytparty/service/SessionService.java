@@ -7,12 +7,12 @@ import java.util.TimerTask;
 import org.springframework.stereotype.Service;
 import org.springframework.web.socket.WebSocketSession;
 
-import main.java.de.voidtech.ytparty.entities.ephemeral.Session;
+import main.java.de.voidtech.ytparty.entities.ephemeral.GatewayConnection;
 
 @Service
 public class SessionService {
 
-	private HashMap<String, Session> sessions = new HashMap<String, Session>();
+	private HashMap<String, GatewayConnection> sessions = new HashMap<String, GatewayConnection>();
 	private static final int REQUEST_INCREMENT_TIMER_DELAY = 5000;
 	
 	public SessionService() {		
@@ -28,24 +28,21 @@ public class SessionService {
 	}
 	
 	private void incrementSessionRequestAllowance() {
-		for (Session session : sessions.values()) {
+		for (GatewayConnection session : sessions.values()) {
 			session.incrementRequestAllowance();
 		}
 	}
 	
-	public Session getSession(WebSocketSession session) {
-		String ID = session.getId();
-		return sessions.get(ID);
+	public GatewayConnection getSession(WebSocketSession session) {
+		return sessions.get(session.getId());
 	}
 	
 	public void createSession(WebSocketSession session) {
-		String ID = session.getId();
-		Session newSession =  new Session();
-		sessions.put(ID, newSession);
+		GatewayConnection newSession = new GatewayConnection(session);
+		sessions.put(session.getId(), newSession);
 	}
 	
 	public void deleteSession(WebSocketSession session) {
-		String ID = session.getId();
-		sessions.remove(ID);
+		sessions.remove(session.getId());
 	}
 }

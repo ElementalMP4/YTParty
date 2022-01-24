@@ -4,9 +4,9 @@ import java.util.regex.Pattern;
 
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.socket.WebSocketSession;
 
 import main.java.de.voidtech.ytparty.annotations.Handler;
+import main.java.de.voidtech.ytparty.entities.ephemeral.GatewayConnection;
 import main.java.de.voidtech.ytparty.entities.persistent.User;
 import main.java.de.voidtech.ytparty.handlers.AbstractHandler;
 import main.java.de.voidtech.ytparty.service.CaptchaAuthService;
@@ -32,7 +32,7 @@ public class SignupHandler extends AbstractHandler {
 	private CaptchaAuthService captchaService;
 	
 	@Override
-	public void execute(WebSocketSession session, JSONObject data) {
+	public void execute(GatewayConnection session, JSONObject data) {
 		String username = data.getString("username");
 		String password = data.getString("password");
 		String passwordConfirm = data.getString("password-confirm");
