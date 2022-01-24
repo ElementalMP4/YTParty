@@ -17,6 +17,11 @@ let Globals = {
     PLAYER_READY: false
 }
 
+function data(params) {
+    const defaultParams = { token: Globals.TOKEN, roomID: Globals.ROOM_ID };
+    return {...defaultParams, ...params };
+}
+
 function showTypingMessage() {
     document.getElementById("typing-message").style.display = "block";
 }
@@ -39,11 +44,11 @@ function sendGatewayMessage(message) {
 }
 
 function addChatMessage(data) {
-    let author = data.author;
-    let colour = data.colour;
-    let content = data.content;
-    let modifiers = data.modifiers !== "" ? `class="${data.modifiers}"` : "";
-    let avatar = data.avatar;
+    const author = data.author;
+    const colour = data.colour;
+    const content = data.content;
+    const modifiers = data.modifiers !== "" ? `class="${data.modifiers}"` : "";
+    const avatar = data.avatar;
 
     let newMessage = `<div class="chat-message">`;
     if (Globals.LAST_MESSAGE_AUTHOR !== author) {
@@ -71,18 +76,18 @@ function displayLocalMessage(message) {
 }
 
 function sendPlayingMessage() {
-    let time = Globals.PLAYER.getCurrentTime();
-    sendGatewayMessage({ "type": "party-playvideo", "data": { "token": Globals.TOKEN, "roomID": Globals.ROOM_ID, "timestamp": time } });
+    const time = Globals.PLAYER.getCurrentTime();
+    sendGatewayMessage({ "type": "party-playvideo", "data": data({ "timestamp": time }) });
     displayLocalMessage("Video playing at " + new Date(time * 1000).toISOString().substr(11, 8));
 }
 
 function sendPausedMessage() {
-    sendGatewayMessage({ "type": "party-pausevideo", "data": { "token": Globals.TOKEN, "roomID": Globals.ROOM_ID } });
+    sendGatewayMessage({ "type": "party-pausevideo", "data": data() });
     displayLocalMessage("Video paused");
 }
 
 function sendVideoEndedMessage() {
-    sendGatewayMessage({ "type": "party-videoend", "data": { "token": Globals.TOKEN, "roomID": Globals.ROOM_ID } });
+    sendGatewayMessage({ "type": "party-videoend", "data": data() });
     displayLocalMessage("Video ended!");
 }
 
@@ -271,14 +276,14 @@ function handlePingCommand() {
 function sendTypingStop() {
     if (Globals.TYPING) {
         Globals.TYPING = false;
-        sendGatewayMessage({ "type": "party-typingupdate", "data": { "token": Globals.TOKEN, "roomID": Globals.ROOM_ID, "mode": "stop", "user": Globals.USER_PROPERTIES.username } });
+        sendGatewayMessage({ "type": "party-typingupdate", "data": data({ "mode": "stop", "user": Globals.USER_PROPERTIES.username }) });
     }
 }
 
 function sendTypingStart() {
     if (!Globals.TYPING) {
         Globals.TYPING = true;
-        sendGatewayMessage({ "type": "party-typingupdate", "data": { "token": Globals.TOKEN, "roomID": Globals.ROOM_ID, "mode": "start", "user": Globals.USER_PROPERTIES.username } });
+        sendGatewayMessage({ "type": "party-typingupdate", "data": data({ "mode": "start", "user": Globals.USER_PROPERTIES.username }) });
     }
 }
 
@@ -370,10 +375,14 @@ document.getElementById("chat-input").addEventListener("keyup", function(event) 
 
 //GUI FUNCTIONS
 
+function refreshQueue() {
+    sendGatewayMessage({ "type": "party-getqueue", "data": data() });
+}
+
 //Open Menu
 window.addEventListener("keydown", function(event) {
     if (event.code == "KeyM" && event.ctrlKey) {
-        sendGatewayMessage({ "type": "party-getqueue", "data": { "token": Globals.TOKEN, "roomID": Globals.ROOM_ID } });
+        refreshQueue();
         let copyButton = document.getElementById("copy-button");
         if (copyButton.classList.contains("action-complete")) copyButton.classList.remove("action-complete");
         showModalMenu();
@@ -401,8 +410,8 @@ document.getElementById("queue-input").addEventListener("keyup", function(event)
         let videoURLClass = new URL(videoURL);
         let videoID = videoURLClass.searchParams.get("v");
         if (videoID) {
-            sendGatewayMessage({ "type": "party-queuevideo", "data": { "token": Globals.TOKEN, "roomID": Globals.ROOM_ID, "video": videoID } });
-            sendGatewayMessage({ "type": "party-getqueue", "data": { "token": Globals.TOKEN, "roomID": Globals.ROOM_ID } });
+            sendGatewayMessage({ "type": "party-queuevideo", "data": data({ "video": videoID }) });
+            refreshQueue();
         }
     }
 });
@@ -410,17 +419,17 @@ document.getElementById("queue-input").addEventListener("keyup", function(event)
 function setVideo(video) {
     let videoURL = new URL(video);
     let videoID = videoURL.searchParams.get("v");
-    if (videoID) sendGatewayMessage({ "type": "party-changevideo", "data": { "token": Globals.TOKEN, "roomID": Globals.ROOM_ID, "video": videoID } });
+    if (videoID) sendGatewayMessage({ "type": "party-changevideo", "data": data({ "video": videoID }) });
 }
 
 function skipVideo() {
-    sendGatewayMessage({ "type": "party-skipvideo", "data": { "token": Globals.TOKEN, "roomID": Globals.ROOM_ID } });
-    sendGatewayMessage({ "type": "party-getqueue", "data": { "token": Globals.TOKEN, "roomID": Globals.ROOM_ID } });
+    sendGatewayMessage({ "type": "party-skipvideo", "data": data() });
+    refreshQueue();
 }
 
 function clearQueue() {
-    sendGatewayMessage({ "type": "party-clearqueue", "data": { "token": Globals.TOKEN, "roomID": Globals.ROOM_ID } });
-    sendGatewayMessage({ "type": "party-getqueue", "data": { "token": Globals.TOKEN, "roomID": Globals.ROOM_ID } });
+    sendGatewayMessage({ "type": "party-clearqueue", "data": data() });
+    refreshQueue();
 }
 
 function copyRoomURL() {
@@ -444,7 +453,7 @@ Gateway.onopen = function() {
         Globals.ROOM_ID = selfURL.searchParams.get("roomID");
         embedPlayer();
         console.log("Ready");
-        sendGatewayMessage({ "type": "party-joinparty", "data": { "token": Globals.TOKEN, "roomID": Globals.ROOM_ID } });
+        sendGatewayMessage({ "type": "party-joinparty", "data": data() });
         sendGatewayMessage({ "type": "user-getprofile", "data": { "token": Globals.TOKEN } });
     }
 }
