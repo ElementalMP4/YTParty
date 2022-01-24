@@ -1,7 +1,6 @@
 package main.java.de.voidtech.ytparty.handlers;
 
 import org.json.JSONObject;
-import org.springframework.web.socket.WebSocketSession;
 
 import main.java.de.voidtech.ytparty.entities.ephemeral.GatewayConnection;
 
