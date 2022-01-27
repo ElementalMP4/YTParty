@@ -10,6 +10,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Paytone+One&display=swap" rel="stylesheet">
 
     <script src="//cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
 
     <meta property="og:site_name" content="Watch YouTube with friends!">
     <meta property="og:url" content="https://ytparty.voidtech.de/">
@@ -25,11 +26,28 @@
     <h3 class="centre-align header header-sub">Watch YouTube with friends!</h3>
     <div class="menu centre-align">
         <h3 class="centre-align header header-sub" id="welcome-banner">Good to see you!</h3>
-        <a href="/createroom.html" class="link"><button class="button hover-animation"><p class="button-text">Create a room</p></button></a>
-        <a href="/about.html" class="link"><button class="button hover-animation"><p class="button-text">How to use YTParty</p></button></a>
-        <a href="/accountsettings.html" class="link"><button class="button hover-animation"><p class="button-text">Change your settings</p></button></a>
-        <button class="button hover-animation" onclick="logout()"><p class="button-text">Log out</p></button>
-        <p id="colour-message"></p>
+        <a href="/createroom.html" class="link">
+            <button class="button hover-animation">
+                <i class="bi bi-plus-circle"></i>
+                <p class="button-text">Create a room</p>
+            </button>
+        </a>
+        <a href="/about.html" class="link" target="_blank" rel="noreferrer noopener">
+            <button class="button hover-animation">
+                <i class="bi bi-question-circle"></i>
+                <p class="button-text">How to use YTParty</p>
+            </button>
+        </a>
+        <a href="/accountsettings.html" class="link">
+            <button class="button hover-animation">
+                <i class="bi bi-gear"></i>
+                <p class="button-text">Change your settings</p>
+            </button>
+        </a>
+        <button class="button hover-animation" onclick="logout()">
+            <i class="bi bi-box-arrow-left"></i>
+            <p class="button-text">Log out</p>
+        </button>
     </div>
     <img class="waves" src="/waves.svg">
 </body>

@@ -37,10 +37,11 @@ label {
 }
 
 p.button-text {
-    font-family: 'Paytone One', sans-serif;
+    font-family: Arial, Helvetica, sans-serif;
     margin: none;
     border: none;
     line-height: 0;
+    display: inline-block;
 }
 
 p.danger-text {
@@ -61,6 +62,7 @@ button {
     display: block;
     margin: auto;
     width: 60%;
+    transition-duration: 0.2s;
 }
 
 button:hover {
@@ -117,16 +119,15 @@ input[type=color] {
     letter-spacing: 0.03em;
     padding: 0px;
     margin: 0px;
+    color: #d80000;
 }
 
 .header-sub {
     font-size: 30px;
-    color: #d80000;
 }
 
 .header-main {
     font-size: 80px;
-    color: #d80000;
 }
 
 .switch {
@@ -194,4 +195,31 @@ img.user-image {
     border-radius: 50%;
     height: 150px;
     width: 150px;
+}
+
+.bi {
+    display: inline-block;
+}
+
+button.back-button {
+    color: white;
+    box-shadow: 0 12px 16px 0 rgba(0, 0, 0, 0.24), 0 17px 50px 0 rgba(0, 0, 0, 0.19);
+    background-color: rgb(255, 123, 0);
+    border: none;
+    border-radius: 50%;
+    margin: auto;
+    z-index: 2;
+    width: 50px;
+    height: 50px;
+    float: left;
+    position: fixed;
+    bottom: 40px;
+    left: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+button.back-button:hover {
+    background-color: #ffac13;
 }

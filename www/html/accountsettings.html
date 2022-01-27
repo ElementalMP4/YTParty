@@ -41,6 +41,9 @@
     <div class="menu centre-align">
         <h3 class="centre-align header header-sub">Change your settings!</h3>
         <br>
+
+        <!--Change Avatar-->
+
         <img src="/favicon.png" id="avatar-preview" class="user-image">
         <br>
         <label for="avatar-options" class="">Choose an avatar:</label><br><br>
@@ -65,40 +68,59 @@
             <option value="tuxedo">Tuxedo</option>
         </select>
         <br>
-        <button class="button hover-animation" onclick="updateAvatar()"><p class="button-text">Change my avatar!</p></button>
+        <button class="button hover-animation" onclick="updateAvatar()">
+            <p class="button-text">Change my avatar!</p>
+        </button>
         <br>
         <hr><br>
+
+        <!--Change Name Colour-->
+
         <p>Choose a custom name colour!</p>
         <input type="color" value="#ff0000" id="name-colour-picker">
         <p />
-        <button class="button hover-animation" onclick="updateColour()"><p class="button-text">Change my colour!</p></button>
+        <button class="button hover-animation" onclick="updateColour()">
+            <p class="button-text">Change my colour!</p>
+        </button>
         <p id="colour-message"></p>
         <br>
         <hr><br>
+
+        <!--Change Nickname-->
+
         <p>Choose a nickname!</p>
         <input type="text" placeholder="nickname" id="nickname-entry">
         <br>
-        <button class="button hover-animation" onclick="updateNickname()"><p class="button-text">Change my nickname!</p></button>
+        <button class="button hover-animation" onclick="updateNickname()">
+            <p class="button-text">Change my nickname!</p>
+        </button>
         <p id="nickname-message"></p>
         <br>
         <hr><br>
+
+        <!--Change Password-->
+
         <p>Change your password!</p>
-        <input type="password" placeholder="Enter your current password" autocomplete="off" id="original-password-entry">
-        <br />
-        <input type="password" placeholder="Enter a new password" autocomplete="off" id="new-password-entry">
-        <br />
-        <input type="password" placeholder="Re-type new password" autocomplete="off" id="password-match-entry">
-        <br>
-        <button class="button hover-animation" onclick="updatePassword()"><p class="button-text">Change my password!</p></button>
+        <input type="password" placeholder="Enter your current password" autocomplete="off" id="original-password-entry"><br />
+        <input type="password" placeholder="Enter a new password" autocomplete="off" id="new-password-entry"><br />
+        <input type="password" placeholder="Re-type new password" autocomplete="off" id="password-match-entry"><br>
+        <button class="button hover-animation" onclick="updatePassword()">
+            <p class="button-text">Change my password!</p>
+        </button>
         <p id="password-message"></p>
         <br>
         <hr><br>
+
+        <!--Delete Account-->
+
         <p class="danger-text">Delete your account</p>
-        <input type="password" placeholder="Enter your password" autocomplete="off" id="delete-password-entry">
-        <br />
-        <button class="button hover-animation" onclick="deleteAccount()"><p class="button-text">Delete my account</p></button>
+        <input type="password" placeholder="Enter your password" autocomplete="off" id="delete-password-entry"><br />
+        <button class="button hover-animation" onclick="deleteAccount()">
+            <p class="button-text">Delete my account</p>
+        </button>
         <p id="delete-message"></p>
     </div>
+    <a href="/home.html"><button class="back-button">⮜</button></a>
 </body>
 
 <script src="/settings.js"></script>
