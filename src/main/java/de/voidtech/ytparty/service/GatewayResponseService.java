@@ -10,8 +10,8 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.socket.TextMessage;
-import org.springframework.web.socket.WebSocketSession;
 
+import main.java.de.voidtech.ytparty.entities.ephemeral.GatewayConnection;
 import main.java.de.voidtech.ytparty.entities.ephemeral.Party;
 import main.java.de.voidtech.ytparty.entities.message.SystemMessage;
 import main.java.de.voidtech.ytparty.entities.persistent.ChatMessage;
@@ -24,25 +24,25 @@ public class GatewayResponseService {
 	
 	private static final Logger LOGGER = Logger.getLogger(GatewayResponseService.class.getName());
 
-	public void sendError(WebSocketSession session, String error, String origin) {
+	public void sendError(GatewayConnection session, String error, String origin) {
 		try {
-			session.sendMessage(new TextMessage(new JSONObject().put("success", false).put("response", error).put("type", origin).toString()));
+			session.getSession().sendMessage(new TextMessage(new JSONObject().put("success", false).put("response", error).put("type", origin).toString()));
 		} catch (JSONException | IOException e) {
 			LOGGER.log(Level.SEVERE, "Error during Service Execution: " + e.getMessage());
 		}
 	}
 	
-	public void sendSuccess(WebSocketSession session, JSONObject message, String origin) {
+	public void sendSuccess(GatewayConnection session, JSONObject message, String origin) {
 		try {
-			session.sendMessage(new TextMessage(new JSONObject().put("success", true).put("response", message).put("type", origin).toString()));
+			session.getSession().sendMessage(new TextMessage(new JSONObject().put("success", true).put("response", message).put("type", origin).toString()));
 		} catch (JSONException | IOException e) {
 			LOGGER.log(Level.SEVERE, "Error during Service Execution: " + e.getMessage());
 		}
 	}
 	
-	public void sendSuccess(WebSocketSession session, String message, String origin) {
+	public void sendSuccess(GatewayConnection session, String message, String origin) {
 		try {
-			session.sendMessage(new TextMessage(new JSONObject().put("success", true).put("response", message).put("type", origin).toString()));
+			session.getSession().sendMessage(new TextMessage(new JSONObject().put("success", true).put("response", message).put("type", origin).toString()));
 		} catch (JSONException | IOException e) {
 			LOGGER.log(Level.SEVERE, "Error during Service Execution: " + e.getMessage());
 		}
@@ -57,10 +57,10 @@ public class GatewayResponseService {
 		party.broadcastMessage(systemMessage);
 	}
 	
-	public void sendChatHistory(WebSocketSession session, List<ChatMessage> history) {
+	public void sendChatHistory(GatewayConnection session, List<ChatMessage> history) {
 		try {
 			for (ChatMessage message : history) {
-				session.sendMessage(new TextMessage(message.convertToJson()));
+				session.getSession().sendMessage(new TextMessage(message.convertToJson()));
 			}
 		} catch (IOException e) {
 			LOGGER.log(Level.SEVERE, "Error during Service Execution: " + e.getMessage());

@@ -9,7 +9,6 @@ import javax.persistence.Table;
 
 @Entity(name = "Tokens")
 @Table(name = "Tokens")
-
 public class TokenContainer {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

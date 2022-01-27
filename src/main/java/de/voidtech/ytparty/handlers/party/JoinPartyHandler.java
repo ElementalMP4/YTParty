@@ -4,29 +4,26 @@ import java.util.List;
 
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.socket.WebSocketSession;
 
 import main.java.de.voidtech.ytparty.annotations.Handler;
 import main.java.de.voidtech.ytparty.entities.ephemeral.AuthResponse;
+import main.java.de.voidtech.ytparty.entities.ephemeral.GatewayConnection;
 import main.java.de.voidtech.ytparty.entities.ephemeral.Party;
 import main.java.de.voidtech.ytparty.entities.message.MessageBuilder;
 import main.java.de.voidtech.ytparty.entities.persistent.ChatMessage;
+import main.java.de.voidtech.ytparty.entities.persistent.User;
 import main.java.de.voidtech.ytparty.handlers.AbstractHandler;
+import main.java.de.voidtech.ytparty.service.ChatMessageService;
 import main.java.de.voidtech.ytparty.service.GatewayAuthService;
 import main.java.de.voidtech.ytparty.service.GatewayResponseService;
-import main.java.de.voidtech.ytparty.service.ChatMessageService;
 import main.java.de.voidtech.ytparty.service.PartyService;
 import main.java.de.voidtech.ytparty.service.UserService;
-import main.java.de.voidtech.ytparty.service.UserTokenService;
 
 @Handler
-public class JoinPartyHandler extends AbstractHandler{
+public class JoinPartyHandler extends AbstractHandler {
 
 	@Autowired
 	private GatewayResponseService responder;
-	
-	@Autowired
-	private UserTokenService tokenService;
 	
 	@Autowired
 	private GatewayAuthService authService;
@@ -41,10 +38,9 @@ public class JoinPartyHandler extends AbstractHandler{
 	private ChatMessageService messageService;
 	
 	@Override
-	public void execute(WebSocketSession session, JSONObject data) {
+	public void execute(GatewayConnection session, JSONObject data) {
 		String token = data.getString("token");
 		String roomID = data.getString("roomID");
-		String username = tokenService.getUsernameFromToken(token); 
 		
 		AuthResponse tokenResponse = authService.validateToken(token); 
 		AuthResponse partyIDResponse = authService.validatePartyID(roomID);
@@ -52,7 +48,10 @@ public class JoinPartyHandler extends AbstractHandler{
 		if (!tokenResponse.isSuccessful()) responder.sendError(session, tokenResponse.getMessage(), this.getHandlerType());
 		else if (!partyIDResponse.isSuccessful()) responder.sendError(session, partyIDResponse.getMessage(), this.getHandlerType());
 			else {
+				String username = tokenResponse.getActingString();
+				User user = userService.getUser(username);
 				Party party = partyService.getParty(roomID);
+				session.setName(user.getEffectiveName());
 				responder.sendSuccess(session, new JSONObject()
 						.put("video", party.getVideoID())
 						.put("canControl", party.canControlRoom(username))
@@ -63,7 +62,7 @@ public class JoinPartyHandler extends AbstractHandler{
 						.partyID(roomID)
 						.author(MessageBuilder.SYSTEM_AUTHOR)
 						.colour(party.getRoomColour())
-						.content(String.format("%s has joined the party!", userService.getUser(username).getEffectiveName()))
+						.content(String.format("%s has joined the party!", user.getEffectiveName()))
 						.modifiers(MessageBuilder.SYSTEM_MODIFIERS)
 						.avatar(MessageBuilder.SYSTEM_AVATAR)
 						.buildToChatMessage();
@@ -73,7 +72,7 @@ public class JoinPartyHandler extends AbstractHandler{
 			}
 		}
 
-	private void deliverMessageHistory(WebSocketSession session, String roomID) {
+	private void deliverMessageHistory(GatewayConnection session, String roomID) {
 		List<ChatMessage> messageHistory = messageService.getMessageHistory(roomID);
 		responder.sendChatHistory(session, messageHistory);
 	}

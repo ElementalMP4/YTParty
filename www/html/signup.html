@@ -26,8 +26,7 @@
     <h1 class="centre-align header header-main">YTParty</h1>
     <h3 class="centre-align header header-sub">Watch YouTube with friends!</h3>
     <div class="menu centre-align">
-        <h3 class="centre-align header header-sub">Sign up!</h3>
-        <p>Please make sure your password has one capital letter, one number and is 8 characters long!</p>
+        <h3 class="centre-align header header-sub">Sign up!</h3><br>
         <iframe name="redirect-cancel" id="redirect-cancel" style="display: none;"></iframe>
 
         <button style="display:none" id="open-modal"></button>
@@ -42,12 +41,37 @@
                 </div>
             </div>
         </div>
-
+        <img src="/avatar/beagle" id="avatar-preview" class="user-image"><br>
+        <label for="avatar-options" class="">Choose an avatar:</label><br><br>
+        <select name="avatar-options" id="avatar-selector">
+            <option value="beagle" selected>Beagle</option>
+            <option value="bernese">Bernese</option>
+            <option value="bichon">Bichon</option>
+            <option value="birb">Birb</option>
+            <option value="corgi">Corgi</option>
+            <option value="hedgehog">Hedgehog</option>
+            <option value="maincoon">Maincoon</option>
+            <option value="mutt">Mutt</option>
+            <option value="otter">Otter</option>
+            <option value="persian">Persian</option>
+            <option value="pom">Pom</option>
+            <option value="pug">Pug</option>
+            <option value="quokka">Quokka</option>
+            <option value="siamese">Siamese</option>
+            <option value="sloth">Sloth</option>
+            <option value="tabby">Tabby</option>
+            <option value="toad">Toad</option>
+            <option value="tuxedo">Tuxedo</option>
+        </select>
+        <br>
         <form action="/" method="POST" target="redirect-cancel" id="signup-form" enctype="application/x-www-form-urlencoded">
+            <p>Enter a username (you can choose a nickname later!):</p>
             <input type="text" name="username" placeholder="Username" />
             <br />
+            <p>You can choose to enter your email, or leave this blank. We only use it to recover your password.</p>
             <input type="email" name="email" placeholder="Recovery Email (Optional)" />
             <br />
+            <p>Please make sure your password has one capital letter, one number and is at least 8 characters long!</p>
             <input type="password" name="password" placeholder="Password" />
             <br />
             <input type="password" name="password-confirm" placeholder="Repeat Password" />

@@ -46,7 +46,7 @@ public class User {
 	  this.passwordHash = BCrypt.hashpw(password, BCrypt.gensalt());
 	  this.hexColour = hexColour;
 	  this.email = email;
-	  this.profilePicture = null;
+	  this.profilePicture = avatar;
 	}
 
 	public boolean checkPassword(String enteredPassword) {

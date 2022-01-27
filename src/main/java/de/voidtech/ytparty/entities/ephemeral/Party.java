@@ -23,7 +23,7 @@ public class Party {
 	private String ownerName; 
 	private String currentVideoID;
 	private String roomColour;
-	private List<WebSocketSession> sessions;
+	private List<GatewayConnection> sessions;
 	private BlockingQueue<String> videoQueue;
 	private boolean hasBeenVisited;
 	private boolean ownerOnlyControlsEnabled;
@@ -36,7 +36,7 @@ public class Party {
 		this.roomColour = roomColour;
 		this.ownerName = ownerName;
 		this.currentVideoID = videoID;
-		this.sessions = new ArrayList<WebSocketSession>();
+		this.sessions = new ArrayList<GatewayConnection>();
 		this.videoQueue = new LinkedBlockingQueue<String>();
 		this.finishedCount = 0;
 		this.ownerOnlyControlsEnabled = ownerOnlyControls;
@@ -101,20 +101,20 @@ public class Party {
 		this.currentVideoID = videoID;
 	}
 	
-	public List<WebSocketSession> getAllSessions() {
+	public List<GatewayConnection> getAllSessions() {
 		return sessions;
 	}
 	
-	public void addToSessions(WebSocketSession session) {
+	public void addToSessions(GatewayConnection session) {
 		if (!hasBeenVisited) hasBeenVisited = true;
 		this.sessions.add(session);
 	}
 	
-	public void removeFromSessions(WebSocketSession session) {
+	public void removeFromSessions(GatewayConnection session) {
 		this.sessions.remove(session);
 	}
 	
-	public void checkRemoveSession(WebSocketSession session) {
+	public void checkRemoveSession(GatewayConnection session) {
 		if (sessions.contains(session)) { 
 			sessions.remove(session);
 			
@@ -122,7 +122,7 @@ public class Party {
 					.author(MessageBuilder.SYSTEM_AUTHOR)
 					.modifiers(MessageBuilder.SYSTEM_MODIFIERS)
 					.colour(this.getRoomColour())
-					.content("Someone has left the party!")
+					.content(session.getName() + " has left the party!")
 					.avatar(MessageBuilder.SYSTEM_AVATAR)
 					.partyID(this.getPartyID())
 					.buildToChatMessage();
@@ -135,21 +135,21 @@ public class Party {
 	}
 	
 	public void broadcastMessage(ChatMessage message) {
-		List<WebSocketSession> invalidSessions = new ArrayList<WebSocketSession>();
-		for (WebSocketSession session : sessions) {
-			if (session.isOpen()) sendMessage(message.convertToJson(), session);
+		List<GatewayConnection> invalidSessions = new ArrayList<GatewayConnection>();
+		for (GatewayConnection session : sessions) {
+			if (session.getSession().isOpen()) sendMessage(message.convertToJson(), session.getSession());
 			else invalidSessions.add(session);
 		}
-		if (!invalidSessions.isEmpty()) for (WebSocketSession session : invalidSessions) sessions.remove(session);
+		if (!invalidSessions.isEmpty()) for (GatewayConnection session : invalidSessions) sessions.remove(session);
 	}
 	
 	public void broadcastMessage(SystemMessage message) {
-		List<WebSocketSession> invalidSessions = new ArrayList<WebSocketSession>();
-		for (WebSocketSession session : sessions) {
-			if (session.isOpen()) sendMessage(message.convertToJson(), session);
+		List<GatewayConnection> invalidSessions = new ArrayList<GatewayConnection>();
+		for (GatewayConnection session : sessions) {
+			if (session.getSession().isOpen()) sendMessage(message.convertToJson(), session.getSession());
 			else invalidSessions.add(session);
 		}
-		if (!invalidSessions.isEmpty()) for (WebSocketSession session : invalidSessions) sessions.remove(session);
+		if (!invalidSessions.isEmpty()) for (GatewayConnection session : invalidSessions) sessions.remove(session);
 	}
 	
 	public void sendMessage(String message, WebSocketSession session) {

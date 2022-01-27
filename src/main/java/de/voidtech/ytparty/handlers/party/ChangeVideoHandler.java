@@ -2,10 +2,10 @@ package main.java.de.voidtech.ytparty.handlers.party;
 
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.socket.WebSocketSession;
 
 import main.java.de.voidtech.ytparty.annotations.Handler;
 import main.java.de.voidtech.ytparty.entities.ephemeral.AuthResponse;
+import main.java.de.voidtech.ytparty.entities.ephemeral.GatewayConnection;
 import main.java.de.voidtech.ytparty.entities.ephemeral.Party;
 import main.java.de.voidtech.ytparty.entities.message.MessageBuilder;
 import main.java.de.voidtech.ytparty.entities.persistent.ChatMessage;
@@ -27,7 +27,7 @@ public class ChangeVideoHandler extends AbstractHandler {
 	private GatewayAuthService authService;
 	
 	@Override
-	public void execute(WebSocketSession session, JSONObject data) {
+	public void execute(GatewayConnection session, JSONObject data) {
 		String token = data.getString("token");
 		String roomID = data.getString("roomID");
 		String newVideoID = data.getString("video");
@@ -47,6 +47,7 @@ public class ChangeVideoHandler extends AbstractHandler {
 						.colour(party.getRoomColour())
 						.content(String.format("Video Changed by %s!", tokenResponse.getActingString()))
 						.modifiers(MessageBuilder.SYSTEM_MODIFIERS)
+						.avatar(MessageBuilder.SYSTEM_AVATAR)
 						.buildToChatMessage();
 				party.setVideoID(newVideoID);
 				responder.sendChatMessage(party, videoMessage);

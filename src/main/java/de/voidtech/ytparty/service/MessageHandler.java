@@ -9,9 +9,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.socket.WebSocketSession;
 
-import main.java.de.voidtech.ytparty.entities.ephemeral.Session;
+import main.java.de.voidtech.ytparty.entities.ephemeral.GatewayConnection;
 import main.java.de.voidtech.ytparty.handlers.AbstractHandler;
 
 @Service
@@ -23,15 +22,11 @@ public class MessageHandler {
 	@Autowired
 	private GatewayResponseService responder;
 	
-	@Autowired
-	private SessionService sessionService;
-	
 	private static final String RESPONSE_SOURCE = "Gateway";
 	private static final Logger LOGGER = Logger.getLogger(MessageHandler.class.getName());
 	
-	public void handleMessage(WebSocketSession session, String message) {
+	public void handleMessage(GatewayConnection session, String message) {
 		try {
-			Session rateSession = sessionService.getSession(session);
 			JSONObject messageObject = new JSONObject(message);
 			if (!messageObject.has("type") || !messageObject.has("data")) {
 				responder.sendError(session, "Invalid message format", RESPONSE_SOURCE);
@@ -46,7 +41,7 @@ public class MessageHandler {
 				AbstractHandler compatibleHandler = compatibleHandlers.get(0);
 				LOGGER.log(Level.INFO, "Received Gateway Message: " + messageObject.getString("type"));
 				if (compatibleHandler.requiresRateLimit()) {
-					if (rateSession.connectionRateLimited()) {
+					if (session.connectionRateLimited()) {
 						responder.sendError(session, "You are being rate limited!", RESPONSE_SOURCE);
 						return;
 					}

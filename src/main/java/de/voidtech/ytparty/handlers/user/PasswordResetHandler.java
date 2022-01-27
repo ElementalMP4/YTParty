@@ -4,9 +4,9 @@ import java.util.regex.Pattern;
 
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.socket.WebSocketSession;
 
 import main.java.de.voidtech.ytparty.annotations.Handler;
+import main.java.de.voidtech.ytparty.entities.ephemeral.GatewayConnection;
 import main.java.de.voidtech.ytparty.entities.persistent.User;
 import main.java.de.voidtech.ytparty.handlers.AbstractHandler;
 import main.java.de.voidtech.ytparty.service.CaptchaAuthService;
@@ -36,7 +36,7 @@ public class PasswordResetHandler extends AbstractHandler {
 	private MailService mailService;
 	
 	@Override
-	public void execute(WebSocketSession session, JSONObject data) {
+	public void execute(GatewayConnection session, JSONObject data) {
 		String resetToken = data.getString("reset-token");
 		String password = data.getString("password");
 		String passwordRepeat = data.getString("password-confirm");	
