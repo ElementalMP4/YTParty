@@ -61,8 +61,7 @@ public class Party {
 	}
 	
 	public void skipVideo() {
-		broadcastMessage(new MessageBuilder().type("party-changevideo").data(new JSONObject().put("video", this.videoQueue.poll()))
-				.buildToSystemMessage());
+		setNextVideo(this.videoQueue.poll());
 	}
 	
 	public void clearQueue() {

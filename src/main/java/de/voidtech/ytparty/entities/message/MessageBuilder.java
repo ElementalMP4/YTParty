@@ -23,6 +23,7 @@ public class MessageBuilder {
 	public static final String SYSTEM_MODIFIERS = "system";
 	public static final String SYSTEM_AVATAR = "/favicon.png";
 	
+	//System Message constants
 	public static final JSONObject EMPTY_JSON = new JSONObject();
 	
 	public String getChatMessagePartyID() {

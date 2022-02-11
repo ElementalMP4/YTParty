@@ -15,6 +15,7 @@ import main.java.de.voidtech.ytparty.entities.message.MessageBuilder;
 
 @Entity(name = "Messages")
 @Table(name = "Messages", indexes = @Index(columnList = "partyID", name = "index_message"))
+//Create an index for this table, indexed by party ID to increase searching efficiency
 public class ChatMessage {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,6 +32,7 @@ public class ChatMessage {
 	
 	@Column
 	@Type(type = "org.hibernate.type.TextType")
+	//Set the message content type to Text. this removes the character limit so we can set our own
 	private String content;
 	
 	@Column
@@ -43,8 +45,9 @@ public class ChatMessage {
 	ChatMessage() {
 	}
 	
-	public ChatMessage(MessageBuilder builder)
+	public ChatMessage(MessageBuilder builder) //Take a message builder as an argument
 	{
+	  //Take all the necessary fields from the builder
 	  this.partyID = builder.getChatMessagePartyID();
 	  this.author = builder.getChatMessageAuthor();
 	  this.colour = builder.getChatMessageColour();
@@ -53,62 +56,14 @@ public class ChatMessage {
 	  this.avatar = builder.getChatMessageAvatar();
 	}
 
-	public String getPartyID() {
-		return this.partyID;
-	}
-	
-	public String getAuthor() {
-		return this.author;
-	}
-	
-	public String getColour() {
-		return this.colour;
-	}
-	
-	public String getContent() {
-		return this.content;
-	}
-	
-	public String getMessageModifiers() {
-		return this.messageModifiers;
-	}
-	
-	public String getAvatar() {
-		return this.avatar;
-	}
-	
-	public void setAvatar(String avatar) {
-		this.avatar = avatar;
-	}
-	
-	public void setPartyID(String newPartyID) {
-		this.partyID = newPartyID;
-	}
-	
-	public void setAuthor(String newAuthor) {
-		this.author = newAuthor;
-	}
-	
-	public void setColour(String newColour) {
-		this.colour = newColour;
-	}
-	
-	public void setContent(String newContent) {
-		this.content = newContent;
-	}
-	
-	public void setMessageModifiers(String newModifiers) {
-		this.messageModifiers = newModifiers;
-	}
-
-	public String convertToJson() {
-		JSONObject data = new JSONObject().put("type", "party-chatmessage")
-				.put("data", new JSONObject()
+	public String convertToJson() { //Create a JSON representation of this entity
+		JSONObject data = new JSONObject().put("type", "party-chatmessage") //Set the gateway message type
+				.put("data", new JSONObject() //Set the gateway message data
 						.put("author", this.author)
 						.put("colour", this.colour)
 						.put("content", this.content)
 						.put("avatar", this.avatar)
 						.put("modifiers", this.messageModifiers));
-		return data.toString();
+		return data.toString(); //Convert it to a String before sending
 	}
 }

@@ -20,50 +20,50 @@ import main.java.de.voidtech.ytparty.entities.persistent.ChatMessage;
 public class GatewayResponseService {
 	
 	@Autowired
-	private ChatMessageService messageService;
+	private ChatMessageService messageService; //Import the chat message service so that chat messages can be persisted.
 	
-	private static final Logger LOGGER = Logger.getLogger(GatewayResponseService.class.getName());
+	private static final Logger LOGGER = Logger.getLogger(GatewayResponseService.class.getName()); //Get the logger for this class
 
 	public void sendError(GatewayConnection session, String error, String origin) {
 		try {
-			session.getSession().sendMessage(new TextMessage(new JSONObject().put("success", false).put("response", error).put("type", origin).toString()));
+			session.getSession().sendMessage(new TextMessage(new JSONObject() //Get the session, send a TextMessage:
+					.put("success", false) //Response is not successful
+					.put("response", error) //Return the error that occurred
+					.put("type", origin) //Say where it came from
+					.toString())); //Convert this Java Object to a human-readable JSON string
 		} catch (JSONException | IOException e) {
-			LOGGER.log(Level.SEVERE, "Error during Service Execution: " + e.getMessage());
+			LOGGER.log(Level.SEVERE, "Error during Service Execution: " + e.getMessage()); //If the message could not send, log an error
 		}
 	}
 	
 	public void sendSuccess(GatewayConnection session, JSONObject message, String origin) {
 		try {
-			session.getSession().sendMessage(new TextMessage(new JSONObject().put("success", true).put("response", message).put("type", origin).toString()));
+			session.getSession().sendMessage(new TextMessage(new JSONObject() //Get the session, send a TextMessage:
+					.put("success", true) //Response IS successful
+					.put("response", message) //Return the handler response (in JSON format)
+					.put("type", origin) //Say where it came from
+					.toString())); //Convert this Java Object to a human-readable JSON string
 		} catch (JSONException | IOException e) {
-			LOGGER.log(Level.SEVERE, "Error during Service Execution: " + e.getMessage());
-		}
-	}
-	
-	public void sendSuccess(GatewayConnection session, String message, String origin) {
-		try {
-			session.getSession().sendMessage(new TextMessage(new JSONObject().put("success", true).put("response", message).put("type", origin).toString()));
-		} catch (JSONException | IOException e) {
-			LOGGER.log(Level.SEVERE, "Error during Service Execution: " + e.getMessage());
+			LOGGER.log(Level.SEVERE, "Error during Service Execution: " + e.getMessage()); //If the message could not send, log an error
 		}
 	}
 	
 	public void sendChatMessage(Party party, ChatMessage message) {
-		party.broadcastMessage(message);
-		messageService.saveMessage(message);
+		party.broadcastMessage(message); //Send the message to a party
+		messageService.saveMessage(message); //Persist it to the database
 	}
 	
 	public void sendSystemMessage(Party party, SystemMessage systemMessage) {
-		party.broadcastMessage(systemMessage);
+		party.broadcastMessage(systemMessage); //Send the message to a party
 	}
 	
 	public void sendChatHistory(GatewayConnection session, List<ChatMessage> history) {
 		try {
-			for (ChatMessage message : history) {
-				session.getSession().sendMessage(new TextMessage(message.convertToJson()));
+			for (ChatMessage message : history) { //Message history will be provided
+				session.getSession().sendMessage(new TextMessage(message.convertToJson())); //Send each message individually
 			}
 		} catch (IOException e) {
-			LOGGER.log(Level.SEVERE, "Error during Service Execution: " + e.getMessage());
+			LOGGER.log(Level.SEVERE, "Error during Service Execution: " + e.getMessage()); //If an error occurs, log it.
 		}
 	}
 }

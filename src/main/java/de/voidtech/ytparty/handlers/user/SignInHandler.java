@@ -16,31 +16,38 @@ import main.java.de.voidtech.ytparty.service.UserTokenService;
 public class SignInHandler extends AbstractHandler {
 	
 	@Autowired
-	private UserService userService;
+	private UserService userService; //User service is needed to get the user object for a username
 	
 	@Autowired
-	private GatewayResponseService responder;
+	private GatewayResponseService responder; //Responder is needed to reply to the request
 
 	@Autowired
-	private UserTokenService tokenService;
+	private UserTokenService tokenService; //Token service is needed to get the token of a user 
 	
 	@Autowired
-	private CaptchaAuthService captchaService;
+	private CaptchaAuthService captchaService; //Captcha service is needed to authenticate recaptcha token
 	
 	@Override
 	public void execute(GatewayConnection session, JSONObject data) {
-		String username = data.getString("username");
-		String enteredPassword = data.getString("password");
-		String captchaToken = data.getString("captcha-token");
-		User user = userService.getUser(username);
+		String username = data.getString("username"); //Get the entered username
+		String enteredPassword = data.getString("password"); //Get the entered password
+		String captchaToken = data.getString("captcha-token"); //Get the captcha token
+		User user = userService.getUser(username); //Retrieve the user with the given username
 		
-		if (captchaService.validateCaptcha(captchaToken)) {
-			if (user == null) responder.sendError(session, "Username or Password incorrect", this.getHandlerType());
+		if (captchaService.validateCaptcha(captchaToken)) { //Check the captcha token first to prevent automated username checking
+			if (user == null) responder.sendError(session, "Username or Password incorrect", this.getHandlerType()); 
+			//Check if user exists, if not then return an error
 			else {
-				if (user.checkPassword(enteredPassword)) responder.sendSuccess(session, new JSONObject().put("token", tokenService.getToken(username)), this.getHandlerType());
-				else responder.sendError(session, "Username or Password incorrect", this.getHandlerType());
+				if (user.checkPassword(enteredPassword)) 
+					responder.sendSuccess(session, new JSONObject().put("token", tokenService.getToken(username)), this.getHandlerType());
+					//Check password, if correct then send token to the user
+				else
+					responder.sendError(session, "Username or Password incorrect", this.getHandlerType());
+					//Otherwise report error to user
 			}	
-		} else responder.sendError(session, "You need to pass the captcha!", this.getHandlerType());
+		} else
+			responder.sendError(session, "You need to pass the captcha!", this.getHandlerType());
+			//If captcha token is not valid or not present, report error to user
 	}
 
 	@Override

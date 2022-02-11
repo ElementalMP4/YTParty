@@ -7,9 +7,11 @@ import java.lang.annotation.Target;
 
 import org.springframework.stereotype.Component;
 
-@Component
-@Target({ElementType.TYPE})
-@Retention(RetentionPolicy.RUNTIME)
-public @interface Handler {
+@Component //Tells spring that our new annotation will be a Component stereotype.
+@Target({ElementType.TYPE}) //This allows the annotation to be used by types (Classes!)
+@Retention(RetentionPolicy.RUNTIME) //This tells the compiler to
+									//record annotations in the class file so they can be found by spring. 
+public @interface Handler { //This tells the java compiler that this is an annotation, not a class.
 
 }
+

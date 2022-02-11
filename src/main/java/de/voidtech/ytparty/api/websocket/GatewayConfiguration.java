@@ -11,10 +11,13 @@ import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry
 public class GatewayConfiguration implements WebSocketConfigurer {
 	
 	@Autowired
-	private GatewayHandler socketHandler;
+	private GatewayHandler socketHandler; //Inject the Gateway Handler ()
 	
-	@Override
+	@Override //Override the default registry method with our own method
 	public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-		registry.addHandler(socketHandler, "/gateway").setAllowedOrigins("*");
+		registry.addHandler(socketHandler, "/gateway").setAllowedOrigins("*"); 
+		//The handler will accept connections from /gateway, from any origin 
 	}
 }
+
+

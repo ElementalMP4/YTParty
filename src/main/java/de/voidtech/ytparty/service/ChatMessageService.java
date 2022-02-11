@@ -13,25 +13,27 @@ import main.java.de.voidtech.ytparty.entities.persistent.ChatMessage;
 public class ChatMessageService {
 
 	@Autowired
-	private SessionFactory sessionFactory;
+	private SessionFactory sessionFactory; //Get the database session factory
 	
 	public void saveMessage(ChatMessage message) {
 		try(Session session = sessionFactory.openSession())
 		{
 			session.getTransaction().begin();			
-			session.saveOrUpdate(message);
+			session.saveOrUpdate(message); //Save a message to the database
 			session.getTransaction().commit();
 		}
 	}
 	
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("unchecked") //Hibernate cannot ensure the type of the entities it is returning.
+	//We can tell java to ignore this warning as we will only be returning ChatMessage objects. 
 	public List<ChatMessage> getMessageHistory(String partyID) {
-		try(Session session = sessionFactory.openSession())
+		try(Session session = sessionFactory.openSession()) //Create a session
 		{
 			List<ChatMessage> messages = (List<ChatMessage>) session.createQuery("FROM Messages WHERE partyID = :partyID")
-                    .setParameter("partyID", partyID)
-                    .list();
-			return (List<ChatMessage>) messages;
+					//Get all the messages from a party
+                    .setParameter("partyID", partyID) //Set the party ID parameter
+                    .list(); //Return a list of entities, not a singular entity.
+			return (List<ChatMessage>) messages; //return this list to the calling method.
 		}
 	}
 }

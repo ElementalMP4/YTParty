@@ -1,4 +1,5 @@
-"use strict";
+"use strict"; //Strict mode creates better code practices
+
 const YOUTUBE_URL = "https://youtube.com/watch?v=";
 const GATEWAY_URL = (location.protocol == "https:" ? "wss://" : "ws://") + location.host + "/gateway";
 let Gateway = new WebSocket(GATEWAY_URL);
@@ -181,8 +182,6 @@ function initialiseParty(options) {
 
     displayLocalMessage("Use /help to see some chat commands! Use ctrl + m to open the player menu!");
 }
-
-
 
 function handleGatewayMessage(packet) {
     switch (packet.type) {

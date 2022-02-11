@@ -30,18 +30,25 @@ public class DeleteAccountHandler extends AbstractHandler {
 	
 	@Override
 	public void execute(GatewayConnection session, JSONObject data) {
-		String token = data.getString("token");
-		String password = data.getString("password");
-		AuthResponse tokenResponse = authService.validateToken(token); 
+		String token = data.getString("token"); //Get the user's token
+		String password = data.getString("password"); //Get the user's password
 		
+		AuthResponse tokenResponse = authService.validateToken(token); //Validate the user's token 
+		
+		//If the token is invalid, reject it.
 		if (!tokenResponse.isSuccessful()) responder.sendError(session, tokenResponse.getMessage(), this.getHandlerType());
 		else {
-			String username = tokenResponse.getActingString();
-			User user = userService.getUser(username);
-			if (!user.checkPassword(password)) responder.sendError(session, "The password you entered is not correct!", this.getHandlerType());
+			//Otherwise, get the user's account and token from the database and erase them.
+			String username = tokenResponse.getActingString(); //get username
+			User user = userService.getUser(username); //get user
+			//Validate user password. If the password is incorrect, reject it.
+			if (!user.checkPassword(password)) responder.sendError(session, 
+					"The password you entered is not correct!", this.getHandlerType());
 			else {
-				tokenService.removeToken(username);
-				userService.removeUser(username);
+				//Otherwise...
+				tokenService.removeToken(username); //Delete the user's active token
+				userService.removeUser(username); //Delete the user's account
+				//Send a success message
 				responder.sendSuccess(session, new JSONObject().put("message", "Account deleted!"), this.getHandlerType());	
 			}
 		}

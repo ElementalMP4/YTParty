@@ -13,7 +13,8 @@ Gateway.onclose = function() {
 Gateway.onmessage = function(message) {
     const response = JSON.parse(message.data);
     console.log(response);
-    showModalMessage(response.success ? "Success!" : "Error", response.response);
+    if (response.success) showModalMessage("Success!", "Password reset! You can now log back into your account.");
+    else showModalMessage("Error", response.response);
     if (!response.success) grecaptcha.reset();
 }
 
@@ -26,7 +27,7 @@ function sendResetData() {
     let username = url.searchParams.get("user");
 
     formData.forEach(item => values.push(item));
-    finalData = {
+    let finalData = {
         "type": "user-resetpassword",
         "data": {
             "password": values[0],

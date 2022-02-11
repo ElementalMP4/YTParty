@@ -57,6 +57,10 @@ function handleAvatarChangeResponse(response) {
     else showModalMessage("Error", response.response);
 }
 
+function handleGatewayMessage(response) {
+    if (!response.success) showModalMessage("Error", response.response);
+}
+
 Gateway.onmessage = function(message) {
     const response = JSON.parse(message.data);
     console.log(response);
@@ -79,6 +83,8 @@ Gateway.onmessage = function(message) {
         case "user-changeavatar":
             handleAvatarChangeResponse(response);
             break;
+        case "Gateway":
+            handleGatewayMessage(response);
     }
 }
 
@@ -102,14 +108,17 @@ function updateColour() {
 
 function updateNickname() {
     let nickname = document.getElementById("nickname-entry").value;
-    let payload = {
-        "type": "user-changenickname",
-        "data": {
-            "nickname": nickname,
-            "token": TOKEN
+    if (nickname == "") showModalMessage("Error", "That nickname is too short!");
+    else {
+        let payload = {
+            "type": "user-changenickname",
+            "data": {
+                "nickname": nickname,
+                "token": TOKEN
+            }
         }
+        Gateway.send(JSON.stringify(payload));
     }
-    Gateway.send(JSON.stringify(payload));
 }
 
 function updatePassword() {

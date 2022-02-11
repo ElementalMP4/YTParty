@@ -18,27 +18,28 @@ import main.java.de.voidtech.ytparty.service.UserTokenService;
 public class SignupHandler extends AbstractHandler {
 	
 	private static final Pattern PASSWORD_PATTERN = Pattern.compile("(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{8,}");
+	//Password must be a minimum of 8 characters, must contain one number, must contain both lowercase and uppercase characters.
 
 	@Autowired
-	private UserTokenService tokenService;
+	private UserTokenService tokenService; //Required to make a new token for the new user
 	
 	@Autowired
-	private UserService userService;
+	private UserService userService; //Required to persist the user to the database
 	
 	@Autowired
-	private GatewayResponseService responder;
+	private GatewayResponseService responder; //Required to send responses to the user
 	
 	@Autowired
-	private CaptchaAuthService captchaService;
+	private CaptchaAuthService captchaService; //Required to authenticate the captcha token
 	
 	@Override
 	public void execute(GatewayConnection session, JSONObject data) {
-		String username = data.getString("username");
-		String password = data.getString("password");
-		String passwordConfirm = data.getString("password-confirm");
-		String avatar = data.getString("avatar");
-		String captchaToken = data.getString("captcha-token");
-		String email = data.getString("email");
+		String username = data.getString("username"); //Get username 
+		String password = data.getString("password"); //Get password
+		String passwordConfirm = data.getString("password-confirm"); //Get the second password entry
+		String avatar = data.getString("avatar"); //Get the avatar selection
+		String captchaToken = data.getString("captcha-token"); //Get the recaptcha token
+		String email = data.getString("email"); //Get the email (optional)
 		
 		//Check username is valid
 		if (username.equals(""))
@@ -63,9 +64,10 @@ public class SignupHandler extends AbstractHandler {
 		//Create user
 		else {
 			User newUser = new User(username, null, password, "#FF0000",
-					(email.equals("") ? null : email), avatar);
-			userService.saveUser(newUser);
+					(email.equals("") ? null : email), avatar); //Create a new user with the parameters provided
+			userService.saveUser(newUser); //Save the new user
 			responder.sendSuccess(session, new JSONObject().put("token", tokenService.getToken(username)), this.getHandlerType());
+			//Send the user their authentication token
 		}
 	}
 

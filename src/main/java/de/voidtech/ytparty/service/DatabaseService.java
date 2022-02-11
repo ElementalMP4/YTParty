@@ -22,18 +22,18 @@ import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-@Service
+@Service //Tell spring that this bean is a Service
 @EnableTransactionManagement
 @org.springframework.context.annotation.Configuration
-@Order(1)
+@Order(1) //Initialise this Service before all others
 public class DatabaseService 
 {
-	private static final Logger LOGGER = Logger.getLogger(DatabaseService.class.getName());
+	private static final Logger LOGGER = Logger.getLogger(DatabaseService.class.getName()); //Get the logger for this class
 	
 	@Autowired
-	private ConfigService config;
+	private ConfigService config; //Inject the configuration
 	
-	@Bean("sessionFactory")
+	@Bean("sessionFactory") //Tell spring that this bean is called "sessionFactory"
 	public SessionFactory getSessionFactory() 
 	{
 		SessionFactory sessionFactory = null;
@@ -41,43 +41,48 @@ public class DatabaseService
 				exportSchema();
 				Properties hibernateProperties = getHibernateProperties();
 				Configuration hibernateConfig = new Configuration();
-				getAllEntities().forEach(hibernateConfig::addAnnotatedClass);
+				getAllEntities().forEach(hibernateConfig::addAnnotatedClass); //Get all the database entities. 
+																			  //Add all the entities to the hibernate config
 				hibernateConfig.setProperties(hibernateProperties);
-				sessionFactory = hibernateConfig.buildSessionFactory();
+				sessionFactory = hibernateConfig.buildSessionFactory(); //Create the SessionFactory
 			} catch (Exception e) {
 				LOGGER.log(Level.SEVERE, "An error occurred while setting up Hibernate SessionFactory:\n" + e.getMessage());
 			}
 
-		return sessionFactory;
+		return sessionFactory; //When we use this bean, the sessionFactory from before will be returned.
 	}
 	
 	private void exportSchema() {
 		Properties hbnProperties = getHibernateProperties();
+		MetadataSources metadataSources = new MetadataSources(
+				new StandardServiceRegistryBuilder()
+					.applySettings(hbnProperties)
+					.build()
+				); //Pass the database properties into Hibernate
 		
-		MetadataSources metadataSources = new MetadataSources(new StandardServiceRegistryBuilder().applySettings(hbnProperties).build());
-		
-		Set<Class<?>> annotated = getAllEntities();
-		annotated.forEach(metadataSources::addAnnotatedClass);
+		Set<Class<?>> annotated = getAllEntities(); //Get all the database entities
+		annotated.forEach(metadataSources::addAnnotatedClass); //Add all the entities into Hibernate
 		
 		new SchemaUpdate()
 			.setFormat(true)
-			.execute(EnumSet.of(TargetType.DATABASE), metadataSources.buildMetadata());
+			.execute(EnumSet.of(TargetType.DATABASE), metadataSources.buildMetadata()); //Configure the Schema
 	}
 	
 	private Properties getHibernateProperties()
 	{
 		Properties properties = new Properties();
-		properties.put(Environment.DRIVER, config.getDriver());
-		properties.put(Environment.URL, config.getConnectionURL());
-		properties.put(Environment.USER, config.getDBUser());
-		properties.put(Environment.PASS, config.getDBPassword());
-		properties.put(Environment.DIALECT, config.getHibernateDialect());
+		properties.put(Environment.DRIVER, config.getDriver()); //Set the database driver (which database we are using)
+		properties.put(Environment.URL, config.getConnectionURL()); //Set the Connection URL
+		properties.put(Environment.USER, config.getDBUser()); //Set the Username
+		properties.put(Environment.PASS, config.getDBPassword()); //Set the Password
+		properties.put(Environment.DIALECT, config.getHibernateDialect()); //Set the dialect (what type of SQL should be produced)
 		
 		return properties;
 	}
 	
 	private Set<Class<?>> getAllEntities()
 	{
-		return new Reflections("main.java.de.voidtech.ytparty").getTypesAnnotatedWith(Entity.class);
+		return new Reflections("main.java.de.voidtech.ytparty").getTypesAnnotatedWith(Entity.class); 
+		//Get every class in the project which is a database entity 
 	}
 }

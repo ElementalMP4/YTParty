@@ -23,16 +23,16 @@ import main.java.de.voidtech.ytparty.service.PartyService;
 public class HttpRestController {
 	
 	@Autowired
-	private FileReader fileReader;
+	private FileReader fileReader; //Inject the file reader bean (to get file contents off disk/from cache)
 	
 	@Autowired
-	private ApplicationContext context;
+	private ApplicationContext context; //Inject the application context (to view thread use and beans)
 	
 	@Autowired
-	private ConfigService configService;
+	private ConfigService configService; //Inject the configuration (to get configurations for the site appearance)
 	
 	@Autowired
-	private PartyService partyService;
+	private PartyService partyService; //Inject the party service (to personalise room URLs)
 	
 	// # # # # Stylesheets # # # # 
 	
