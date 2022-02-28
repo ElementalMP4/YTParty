@@ -237,5 +237,5 @@ p.big {
     border-radius: 50%;
     border: 6px solid #fff;
     border-color: #fff transparent #fff transparent;
-    animation: lds-loading-ring 1.2s linear infinite;
+    animation: loading 1.2s linear infinite;
 }
