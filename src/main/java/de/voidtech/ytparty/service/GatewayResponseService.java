@@ -13,6 +13,7 @@ import org.springframework.web.socket.TextMessage;
 
 import main.java.de.voidtech.ytparty.entities.ephemeral.GatewayConnection;
 import main.java.de.voidtech.ytparty.entities.ephemeral.Party;
+import main.java.de.voidtech.ytparty.entities.message.MessageBuilder;
 import main.java.de.voidtech.ytparty.entities.message.SystemMessage;
 import main.java.de.voidtech.ytparty.entities.persistent.ChatMessage;
 
@@ -65,5 +66,6 @@ public class GatewayResponseService {
 		} catch (IOException e) {
 			LOGGER.log(Level.SEVERE, "Error during Service Execution: " + e.getMessage()); //If an error occurs, log it.
 		}
+		sendSuccess(session, MessageBuilder.EMPTY_JSON, "party-partyready");
 	}
 }

@@ -1,11 +1,32 @@
 @keyframes slide-up {
     0% {
         opacity: 0;
-        transform: translateY(30px);
+        transform: translatey(30px);
     }
     100% {
         opacity: 1;
-        transform: translateY(0);
+        transform: translatey(0);
+    }
+}
+
+@keyframes loading {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes blink {
+    0% {
+        opacity: .2;
+    }
+    20% {
+        opacity: 1;
+    }
+    100% {
+        opacity: .2;
     }
 }
 
@@ -74,7 +95,7 @@ div {
 .chat-message {
     background-color: #212121;
     border-radius: 5px;
-    animation: slide-up 0.4s ease;
+    animation: slide-up 0.2s ease;
     padding: 3px;
 }
 
@@ -163,18 +184,6 @@ p.big {
     font-size: 35px;
 }
 
-@keyframes blink {
-    0% {
-        opacity: .2;
-    }
-    20% {
-        opacity: 1;
-    }
-    100% {
-        opacity: .2;
-    }
-}
-
 .typing span {
     animation-name: blink;
     animation-duration: 1.4s;
@@ -188,4 +197,45 @@ p.big {
 
 .typing span:nth-child(3) {
     animation-delay: .4s;
+}
+
+.loading-screen {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+    background-color: #1a1a1a;
+    transition-duration: 0.4s;
+    position: absolute;
+    left: 0;
+    top: 0;
+}
+
+.loaded {
+    opacity: 0;
+}
+
+.hide-screen {
+    transition-delay: 0.5s;
+    display: none;
+}
+
+.loading-ring {
+    display: inline-block;
+    width: 80px;
+    height: 80px;
+    margin: auto;
+}
+
+.loading-ring:after {
+    content: " ";
+    display: block;
+    width: 64px;
+    height: 64px;
+    margin: 8px;
+    border-radius: 50%;
+    border: 6px solid #fff;
+    border-color: #fff transparent #fff transparent;
+    animation: lds-loading-ring 1.2s linear infinite;
 }

@@ -183,8 +183,17 @@ function initialiseParty(options) {
     displayLocalMessage("Use /help to see some chat commands! Use ctrl + m to open the player menu!");
 }
 
+function hideLoadingScreen() {
+    let screen = document.getElementById("loading-screen")
+    screen.classList.add("loaded");
+    setTimeout(() => { screen.style.display = "none" }, 500);
+}
+
 function handleGatewayMessage(packet) {
     switch (packet.type) {
+        case "party-partyready":
+            hideLoadingScreen();
+            break;
         case "party-chatmessage":
             handleChatMessage(packet.data);
             break;
