@@ -19,27 +19,31 @@ import main.java.de.voidtech.ytparty.service.PartyService;
 public class GetQueueHandler extends AbstractHandler {
 
 	@Autowired
-	private GatewayResponseService responder;
+	private GatewayResponseService responder; //Responds to requests
 	
 	@Autowired
-	private GatewayAuthService authService;
+	private GatewayAuthService authService; //Validates tokens and room IDs
 	
 	@Autowired
-	private PartyService partyService;
+	private PartyService partyService; //Gets parties by ID
 	
 	@Override
 	public void execute(GatewayConnection session, JSONObject data) {
-		String token = data.getString("token");
-		String roomID = data.getString("roomID");
+		String token = data.getString("token"); //Get token
+		String roomID = data.getString("roomID"); //Get room ID
 		
+		//Validate token and room ID
 		AuthResponse tokenResponse = authService.validateToken(token); 
 		AuthResponse partyIDResponse = authService.validatePartyID(roomID);
 		
+		//Reject token or room ID of they are not valid
 		if (!tokenResponse.isSuccessful()) responder.sendError(session, tokenResponse.getMessage(), this.getHandlerType());
 		else if (!partyIDResponse.isSuccessful()) responder.sendError(session, partyIDResponse.getMessage(), this.getHandlerType());
+		//Otherwise
 		else {
-			Party party = partyService.getParty(roomID);
-			List<String> videos = new ArrayList<String>(party.getQueueAsList());
+			Party party = partyService.getParty(roomID); //Get party by ID
+			List<String> videos = new ArrayList<String>(party.getQueueAsList()); //Create new list out of the video queue
+			//Convert list to a JSON array and send it to the client to be processed
 			responder.sendSuccess(session, new JSONObject().put("videos", videos.toArray()), this.getHandlerType());
 		}
 	}

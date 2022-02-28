@@ -17,32 +17,36 @@ import main.java.de.voidtech.ytparty.service.UserTokenService;
 public class CreatePartyHandler extends AbstractHandler{
 
 	@Autowired
-	private GatewayResponseService responder;
+	private GatewayResponseService responder; //Responder is needed to respond to requests
 	
 	@Autowired
-	private GatewayAuthService authService;
+	private GatewayAuthService authService; //Auth service validates tokens
 	
 	@Autowired
-	private UserTokenService tokenService;
+	private UserTokenService tokenService; //Token service gets usernames from tokens
 	
 	@Autowired
-	private PartyService partyService;
+	private PartyService partyService; //Party service stores new parties
 	
 	@Override
 	public void execute(GatewayConnection session, JSONObject data) {
-		String token = data.getString("token");
-		boolean ownerControlsOnly = data.getBoolean("ownerControlsOnly");
-		String videoID = data.getString("videoID");
-		String roomThemeColour = data.getString("theme");
+		String token = data.getString("token"); //Get token
+		boolean ownerControlsOnly = data.getBoolean("ownerControlsOnly"); //Get room permission settings
+		String videoID = data.getString("videoID"); //Get initial video ID
+		String roomThemeColour = data.getString("theme"); //Get room colour
 		
+		//Validate token
 		AuthResponse tokenResponse = authService.validateToken(token);
 		
+		//If token is invalid, reject it
 		if (!tokenResponse.isSuccessful()) responder.sendError(session, tokenResponse.getMessage(), this.getHandlerType());
 		else {
-			String ownerUsername = tokenService.getUsernameFromToken(token);
+			String ownerUsername = tokenService.getUsernameFromToken(token); //Get owner name
+			//Create new party
 			Party party = new Party(partyService.generateRoomID(), ownerUsername, roomThemeColour, videoID, ownerControlsOnly);
-			partyService.saveParty(party);
-			responder.sendSuccess(session, new JSONObject().put("partyID", party.getPartyID()), this.getHandlerType());
+			partyService.saveParty(party); //Save party
+			//Reply with room ID
+			responder.sendSuccess(session, new JSONObject().put("partyID", party.getPartyID()), this.getHandlerType()); 
 		}
 	}
 

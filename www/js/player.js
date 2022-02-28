@@ -18,6 +18,10 @@ let Globals = {
     PLAYER_READY: false
 }
 
+function sendGatewayMessage(message) {
+    Gateway.send(JSON.stringify(message));
+}
+
 function data(params) {
     const defaultParams = { token: Globals.TOKEN, roomID: Globals.ROOM_ID };
     return {...defaultParams, ...params };
@@ -39,10 +43,6 @@ function updateTyping(data) {
     if (Globals.TYPING_COUNT > 0) showTypingMessage();
     else hideTypingMessage();
 };
-
-function sendGatewayMessage(message) {
-    Gateway.send(JSON.stringify(message));
-}
 
 function addChatMessage(data) {
     const author = data.author;

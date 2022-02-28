@@ -18,29 +18,34 @@ import main.java.de.voidtech.ytparty.service.PartyService;
 public class SkipQueuedVideoHandler extends AbstractHandler {
 
 	@Autowired
-	private GatewayResponseService responder;
+	private GatewayResponseService responder; //Responds to requests
 	
 	@Autowired
-	private PartyService partyService;
+	private PartyService partyService; //Gets party by ID
 	
 	@Autowired
-	private GatewayAuthService authService;
+	private GatewayAuthService authService; //Validates tokens and room IDs
 	
 	@Override
 	public void execute(GatewayConnection session, JSONObject data) {
-		String token = data.getString("token");
-		String roomID = data.getString("roomID");
+		String token = data.getString("token"); //Get token
+		String roomID = data.getString("roomID"); //Get room ID
 		
+		//Validate token & room ID
 		AuthResponse tokenResponse = authService.validateToken(token); 
 		AuthResponse partyIDResponse = authService.validatePartyID(roomID);
 		
+		//Reject if invalid with message
 		if (!tokenResponse.isSuccessful()) responder.sendError(session, tokenResponse.getMessage(), this.getHandlerType());
 		else if (!partyIDResponse.isSuccessful()) responder.sendError(session, partyIDResponse.getMessage(), this.getHandlerType());
+		//Otherwise
 		else {
-			Party party = partyService.getParty(roomID);
-			if (party.canControlRoom(tokenResponse.getActingString())) {
-				if (party.queueIsEmpty()) responder.sendError(session, "The queue is empty! You cannot skip!", this.getHandlerType());
+			Party party = partyService.getParty(roomID); //Get party by ID
+			if (party.canControlRoom(tokenResponse.getActingString())) { //Determine whether user can control room
+				if (party.queueIsEmpty()) //Send error if queue is empty
+					responder.sendError(session, "The queue is empty! You cannot skip!", this.getHandlerType());
 				else {
+					//Otherwise skip video and send message saying who skipped the video
 					party.skipVideo();
 					
 					ChatMessage skipMessage = new MessageBuilder()
@@ -53,7 +58,8 @@ public class SkipQueuedVideoHandler extends AbstractHandler {
 							.buildToChatMessage();
 					responder.sendChatMessage(party, skipMessage);
 				}
-			} else responder.sendError(session, "You do not have permission to do that!", this.getHandlerType());
+			//Send permissions message if user cannot skip videos
+			} else responder.sendError(session, "You're not allowed to skip videos", this.getHandlerType());
 		}
 	}
 

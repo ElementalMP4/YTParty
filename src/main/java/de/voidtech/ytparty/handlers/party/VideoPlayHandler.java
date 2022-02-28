@@ -17,33 +17,39 @@ import main.java.de.voidtech.ytparty.service.PartyService;
 public class VideoPlayHandler extends AbstractHandler {
 
 	@Autowired
-	private GatewayResponseService responder;
+	private GatewayResponseService responder; //Inject the responder so we can respond to requests
 	
 	@Autowired
-	private GatewayAuthService authService;
+	private GatewayAuthService authService; //We need the auth service to validate tokens and party IDs
 	
 	@Autowired
-	private PartyService partyService;
+	private PartyService partyService; //We need the party service to locate the party to control
 	
 	@Override
 	public void execute(GatewayConnection session, JSONObject data) {
-		String token = data.getString("token");
-		String roomID = data.getString("roomID");
-		int timestamp = data.getInt("timestamp");
+		String token = data.getString("token"); //We need the user's token
+		String roomID = data.getString("roomID"); //We need the room ID
+		int timestamp = data.getInt("timestamp"); //We need the timestamp to start playing from
 		
-		AuthResponse tokenResponse = authService.validateToken(token); 
+		//Validate the room ID and the token
+		AuthResponse tokenResponse = authService.validateToken(token);
 		AuthResponse partyIDResponse = authService.validatePartyID(roomID);
 		
+		//If either the token or room ID is invalid, we can reject them with a message
 		if (!tokenResponse.isSuccessful()) responder.sendError(session, tokenResponse.getMessage(), this.getHandlerType());
 		else if (!partyIDResponse.isSuccessful()) responder.sendError(session, partyIDResponse.getMessage(), this.getHandlerType());
+		//Otherwise...
 		else {
-			Party party = partyService.getParty(roomID);
-			if (party.canControlRoom(tokenResponse.getActingString()))
-				responder.sendSystemMessage(party, new MessageBuilder().type("party-playvideo").data(new JSONObject()
-						.put("time", timestamp)).buildToSystemMessage());
-			else responder.sendError(session, "You do not have permission to do that!", this.getHandlerType());
+			Party party = partyService.getParty(roomID); //Get the room by its ID
+			if (party.canControlRoom(tokenResponse.getActingString())) //Check that this person can control the room
+				//If they can, send a system message to start playing the video
+				responder.sendSystemMessage(party, new MessageBuilder()
+						.type("party-playvideo")
+						.data(new JSONObject().put("time", timestamp))
+						.buildToSystemMessage());
+			//If not, send a permissions error message
+			else responder.sendError(session, "You're not allowed to start the video!", this.getHandlerType());
 		}
-		
 	}
 
 	@Override
