@@ -1,110 +1,125 @@
 "use strict"; //Strict mode creates better code practices
 
-const YOUTUBE_URL = "https://youtube.com/watch?v=";
+const YOUTUBE_URL = "https://youtube.com/watch?v="; //This URL is the base of all videos. We use this to reconstruct URLs from IDs
+//We automatically choose the correct protocol (WSS or WS) depending on whether the server is running in dev or prod.
 const GATEWAY_URL = (location.protocol == "https:" ? "wss://" : "ws://") + location.host + "/gateway";
+//Create the WebSocket gateway connection
 let Gateway = new WebSocket(GATEWAY_URL);
 
 let Globals = {
-    USER_PROPERTIES: {},
-    TOKEN: "",
-    PLAYER: {},
-    CURRENT_VIDEO_ID: "",
-    ROOM_ID: "",
-    LAST_MESSAGE_AUTHOR: "",
-    CAN_CONTROL_PLAYER: false,
-    ROOM_COLOUR: "",
-    TYPING_COUNT: 0,
-    TYPING: false,
-    PLAYER_READY: false
+    USER_PROPERTIES: {}, //Store the user properties (username etc)
+    TOKEN: "", //Store the user's token
+    PLAYER: {}, //Store the YouTube iFrame player
+    CURRENT_VIDEO_ID: "", //Keep track of the current video ID
+    ROOM_ID: "", //Store the room ID
+    LAST_MESSAGE_AUTHOR: "", //Store the author of the last message (to keep the chat clean)
+    CAN_CONTROL_PLAYER: false, //Permissions are set here
+    ROOM_COLOUR: "", //The room theme is stored here
+    TYPING_COUNT: 0, //We keep track of all the people typing
+    TYPING: false, //We keep track of whether we are typing
+    PLAYER_READY: false //We need to know if the player is ready so we can dissolve the loading animation
 }
 
 function sendGatewayMessage(message) {
-    Gateway.send(JSON.stringify(message));
+    Gateway.send(JSON.stringify(message)); //This method makes sending messages a little more convenient
 }
 
-function data(params) {
-    const defaultParams = { token: Globals.TOKEN, roomID: Globals.ROOM_ID };
-    return {...defaultParams, ...params };
+function data(params) { //This function automatically creates the `data` object for our messages
+    const defaultParams = { token: Globals.TOKEN, roomID: Globals.ROOM_ID }; //We have some default data parameters
+    return {...defaultParams, ...params }; //Add the default parameters to the supplied parameters
 }
 
-function showTypingMessage() {
+function showTypingMessage() { //Show the typing message
     document.getElementById("typing-message").style.display = "block";
 }
 
-function hideTypingMessage() {
+function hideTypingMessage() { //Hide the typing message
     document.getElementById("typing-message").style.display = "none";
 }
 
-function updateTyping(data) {
-    if (data.user == Globals.USER_PROPERTIES.username) return;
-    if (data.mode == "start") Globals.TYPING_COUNT = Globals.TYPING_COUNT + 1;
-    else Globals.TYPING_COUNT = Globals.TYPING_COUNT - 1;
+function updateTyping(data) { //Decide whether we should show or hide the typing message
+    if (data.user == Globals.USER_PROPERTIES.username) return; //If we receive a message saying we are typing, ignore it.
+    if (data.mode == "start") Globals.TYPING_COUNT = Globals.TYPING_COUNT + 1; //If someone has started typing, increment the typing count
+    else Globals.TYPING_COUNT = Globals.TYPING_COUNT - 1; //Otherwise, decrement it.
 
-    if (Globals.TYPING_COUNT > 0) showTypingMessage();
-    else hideTypingMessage();
+    if (Globals.TYPING_COUNT > 0) showTypingMessage(); //If people are typing, show the typing message
+    else hideTypingMessage(); //Otherwise, hide it.
 };
 
-function addChatMessage(data) {
+function addChatMessage(data) { //Add a chat message to the message history div
+    //Get some parameters from the supplied object
     const author = data.author;
     const colour = data.colour;
     const content = data.content;
-    const modifiers = data.modifiers !== "" ? `class="${data.modifiers}"` : "";
+    const modifiers = data.modifiers !== "" ? `class="${data.modifiers}"` : ""; //Modifiers are classes applied to the `p` tag
     const avatar = data.avatar;
 
-    let newMessage = `<div class="chat-message">`;
-    if (Globals.LAST_MESSAGE_AUTHOR !== author) {
+    let newMessage = `<div class="chat-message">`; //Create a new message div
+    if (Globals.LAST_MESSAGE_AUTHOR !== author) { //If this message is not from the same person as last time, add their nickname and avatar to the message.
         newMessage += `<img class="user-image" src="${modifiers.includes("system") ? avatar : ("/avatar/" + avatar)}">`;
         newMessage += `<p class="msg-nickname" style="color:${colour}">${author}</p><br>`;
     }
+    //Add the message content
     newMessage += `<p ${modifiers}>${content}</p></div>`;
     if (Globals.LAST_MESSAGE_AUTHOR !== author) newMessage += "<br>";
 
+    //Store the last author as the author of this message
     Globals.LAST_MESSAGE_AUTHOR = author;
 
+    //Append this message to the history and scroll to the bottom of the chat
     let chatHistory = document.getElementById("chat-history");
     chatHistory.insertAdjacentHTML('afterbegin', newMessage);
     chatHistory.scrollTop = chatHistory.scrollHeight;
 }
 
+//If we receive a Text To Speech message, we can use the browser's TTS feature to speak it here:
 function speakMessage(message) {
     let tts = new SpeechSynthesisUtterance();
     tts.text = message;
     window.speechSynthesis.speak(tts);
 }
 
+//If we want to show a message for the help menu, we can use this method to quickly display some text. 
+//All the necessary fields are pre-filled
 function displayLocalMessage(message) {
     addChatMessage({ "author": "System", "colour": Globals.ROOM_COLOUR, "content": message, "modifiers": "system", "avatar": "/favicon.png" });
 }
 
+//Send a playing message to the server
 function sendPlayingMessage() {
-    const time = Globals.PLAYER.getCurrentTime();
-    sendGatewayMessage({ "type": "party-playvideo", "data": data({ "timestamp": time }) });
-    displayLocalMessage("Video playing at " + new Date(time * 1000).toISOString().substr(11, 8));
+    const time = Globals.PLAYER.getCurrentTime(); //Get the current time
+    sendGatewayMessage({ "type": "party-playvideo", "data": data({ "timestamp": time }) }); //Send the time and message type to the server
+    displayLocalMessage("Video playing at " + new Date(time * 1000).toISOString().substr(11, 8)); //Show a message saying the video is playing
 }
 
+//Send a paused message to the server
 function sendPausedMessage() {
-    sendGatewayMessage({ "type": "party-pausevideo", "data": data() });
-    displayLocalMessage("Video paused");
+    sendGatewayMessage({ "type": "party-pausevideo", "data": data() }); //Send a pause message with the default data parameters
+    displayLocalMessage("Video paused"); //Tell the user the video has been paused
 }
 
+//Send a message when the video finishes
 function sendVideoEndedMessage() {
     sendGatewayMessage({ "type": "party-videoend", "data": data() });
     displayLocalMessage("Video ended!");
 }
 
+//This function is executed when the player API is ready, but not the player itself. This function is provided by Google.
 function onYouTubeIframeAPIReady() {
-    Globals.PLAYER = new YT.Player('player', {
-        height: '100%',
-        width: '80%',
-        playerVars: { 'controls': Globals.CAN_CONTROL_PLAYER ? 1 : 0 },
-        videoId: Globals.CURRENT_VIDEO_ID,
-        events: {
-            'onReady': onPlayerReady,
-            'onStateChange': onPlayerStateChange
+    Globals.PLAYER = new YT.Player('player', { //Create a new player
+        height: '100%', //Set the height
+        width: '80%', //And width
+        //Disable the controls if the permissions disallow it
+        playerVars: { 'controls': Globals.CAN_CONTROL_PLAYER ? 1 : 0, 'disablekb': Globals.CAN_CONTROL_PLAYER ? 0 : 1 },
+        videoId: Globals.CURRENT_VIDEO_ID, //Set the video ID
+        events: { //Register events
+            'onReady': onPlayerReady, //This function runs when the player is ready
+            'onStateChange': onPlayerStateChange //This function runs when the player does something eg: play/pause
         }
     });
 }
 
+//When the player is ready, set the global player ready value to true
 function onPlayerReady() {
     Globals.PLAYER_READY = true;
 }
@@ -112,128 +127,137 @@ function onPlayerReady() {
 function onPlayerStateChange(event) {
     let playerState = event.data;
     switch (playerState) {
-        case 0:
+        case 0: //0 = video ended
             sendVideoEndedMessage();
             break;
-        case 1:
+        case 1: //1 = video playing
             sendPlayingMessage();
             break;
-        case 2:
+        case 2: //2 = video paused
             sendPausedMessage();
             break;
     }
 }
 
+//This function loads a new video into the player
 function loadVideo(youTubeVideoID) {
     Globals.CURRENT_VIDEO_ID = youTubeVideoID;
     if (Globals.PLAYER_READY) Globals.PLAYER.loadVideoById(youTubeVideoID, 0);
 }
 
+//This function plays the video that has been loaded.
 function startVideo(data) {
-    if (Globals.PLAYER.getPlayerState() !== YT.PlayerState.PLAYING) {
-        Globals.PLAYER.seekTo(data.time, true);
-        Globals.PLAYER.playVideo();
+    if (Globals.PLAYER.getPlayerState() !== YT.PlayerState.PLAYING) { //If it's already palying, ignore this event.
+        Globals.PLAYER.seekTo(data.time, true); //Move to the correct timestamp
+        Globals.PLAYER.playVideo(); //Play the video
     }
 }
 
+//Pause the video
 function pauseVideo() {
-    if (Globals.PLAYER.getPlayerState() !== YT.PlayerState.PAUSED) {
-        Globals.PLAYER.pauseVideo();
+    if (Globals.PLAYER.getPlayerState() !== YT.PlayerState.PAUSED) { //If the video is already paused, ignore this event.
+        Globals.PLAYER.pauseVideo(); //Pause the video
     }
 }
 
+//This method converts a list of video IDs to a list of video anchors for the player menu
 function convertVideoList(videos) {
-    if (videos.length == 0) return "No videos queued!";
+    if (videos.length == 0) return "No videos queued!"; //Set the message if there are no videos
     else {
-        let videosFormatted = [];
-        videos.forEach(video => {
-            videosFormatted.push("<a href='" + YOUTUBE_URL + video + "'>" + video + "</a>");
+        let videosFormatted = []; //Store the formatted videos
+        videos.forEach(video => { //Iterate through each ID
+            videosFormatted.push("<a href='" + YOUTUBE_URL + video + "'>" + video + "</a>"); //Build an HTML anchor element with the ID and youtube URL
         });
-        return videosFormatted.join("<br>");
+        return videosFormatted.join("<br>"); //turn the array into a list of elements in a string
     }
 }
 
+//Handle chat messages here
 function handleChatMessage(data) {
-    if (data.modifiers.includes("tts")) speakMessage(data.content);
-    addChatMessage(data);
+    if (data.modifiers.includes("tts")) speakMessage(data.content); //If it is a TTS message, speak it
+    addChatMessage(data); //Add the message to the history
 }
 
+//Show the queued items to the user
 function refreshModalQueueData(videos) {
     let message = convertVideoList(videos);
-    document.getElementById("queue-items").innerHTML = message + "<br><br>";
-    document.getElementById("queue-title").innerHTML = "Queued Items (" + videos.length + ")";
+    document.getElementById("queue-items").innerHTML = message + "<br><br>"; //Show the list here
+    document.getElementById("queue-title").innerHTML = "Queued Items (" + videos.length + ")"; //Show the number of queued items here
 }
 
+//Initialise the room
 function initialiseParty(options) {
-    loadVideo(options.video);
-    Globals.CAN_CONTROL_PLAYER = options.canControl;
-    Globals.ROOM_COLOUR = options.theme;
+    loadVideo(options.video); //Load the current video
+    Globals.CAN_CONTROL_PLAYER = options.canControl; //Set the permissions
+    Globals.ROOM_COLOUR = options.theme; //Set the theme
 
-    document.getElementsByTagName("title")[0].text = options.owner + "'s room!";
+    document.getElementsByTagName("title")[0].text = options.owner + "'s room!"; //Set the room title
 
+    //An event listener to change the colour of the chat input box when it is clicked
     let chatInput = document.getElementById("chat-input");
     chatInput.addEventListener("focus", function() {
         this.style.borderBottom = "2px solid " + Globals.ROOM_COLOUR;
     });
 
+    //An event listener to change the colour of the chat input box when it is left
     chatInput.addEventListener("blur", function() {
         this.style.borderBottom = "2px solid grey";
     });
 
+    //Tell the user where to find commands and the player menu
     displayLocalMessage("Use /help to see some chat commands! Use ctrl + m to open the player menu!");
 }
 
+//Slowly fade away the loading screen
 function hideLoadingScreen() {
-    let screen = document.getElementById("loading-screen")
+    let screen = document.getElementById("loading-screen");
     screen.classList.add("loaded");
     setTimeout(() => { screen.style.display = "none" }, 500);
 }
 
+//Handle messages from the server
 function handleGatewayMessage(packet) {
     switch (packet.type) {
-        case "party-partyready":
+        case "party-partyready": //If the party is ready, hide the loading screen
             hideLoadingScreen();
             break;
-        case "party-chatmessage":
+        case "party-chatmessage": //If we receive a chat message, use the handler
             handleChatMessage(packet.data);
             break;
         case "party-joinparty":
-            initialiseParty(packet.response);
+            initialiseParty(packet.response); //When we join the party, handle the join party response
             break;
-        case "user-getprofile":
+        case "user-getprofile": //When we request our user profile, store the values we receive
             Globals.USER_PROPERTIES = packet.response;
             break;
-        case "party-chatmessage":
-            displayLocalMessage(packet.response);
-            break;
-        case "party-playvideo":
+        case "party-playvideo": //When the video starts playing for other people, start the player in our client
             startVideo(packet.data);
             break;
-        case "party-pausevideo":
+        case "party-pausevideo": //When the video is paused by other people, pause the video in our client
             pauseVideo();
             break;
-        case "party-changevideo":
-            if (packet.hasOwnProperty("response")) loadVideo(packet.response.video);
-            else loadVideo(packet.data.video);
+        case "party-changevideo": //When the video is changed, load the new video
+            loadVideo(packet.data.video);
             break;
-        case "party-typingupdate":
+        case "party-typingupdate": //When a typing update is received, handle it
             updateTyping(packet.data);
             break;
-        case "party-getqueue":
+        case "party-getqueue": //When we receive queue data, handle it
             refreshModalQueueData(packet.response.videos);
             break;
-        case "system-ping":
+        case "system-ping": //When we receive a server ping reply, show the ping time
             displayLocalMessage("API response time: " + (new Date().getTime() - packet.response.start) + "ms");
             break;
     }
 }
 
-function getToken() {
+function getToken() { //Get the token of the user. If they are not logged in (have no token) then we can tell them to log in
     let token = window.localStorage.getItem("token");
     if (token == null) window.location.href = location.protocol + "//" + location.host + "/login.html?redirect=" + location.pathname + location.search;
     else return token;
 }
 
+//Add the YouTube iFrame player API to the document
 function embedPlayer() {
     let tag = document.createElement('script');
     tag.src = "https://www.youtube.com/iframe_api";
@@ -241,6 +265,7 @@ function embedPlayer() {
     firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 }
 
+//Show command help
 function handleHelpCommand() {
     displayLocalMessage(`Chat Command Help:<br>
 /help - shows this message<br><br>
@@ -281,6 +306,7 @@ function handlePingCommand() {
     sendGatewayMessage(requestData);
 }
 
+//Send a typing stopped message
 function sendTypingStop() {
     if (Globals.TYPING) {
         Globals.TYPING = false;
@@ -288,6 +314,7 @@ function sendTypingStop() {
     }
 }
 
+//Send a typing started message
 function sendTypingStart() {
     if (!Globals.TYPING) {
         Globals.TYPING = true;
@@ -297,71 +324,71 @@ function sendTypingStart() {
 
 //Chat Listener
 document.getElementById("chat-input").addEventListener("keyup", function(event) {
-    if (event.key == "Enter") {
+    if (event.key == "Enter") { //If the enter key is pressed
         sendTypingStop();
-        event.preventDefault();
-        let message = document.getElementById("chat-input").value.trim();
-        if (message == "") return;
-        if (message.length > 2000) {
+        event.preventDefault(); //Prevent the default action
+        let message = document.getElementById("chat-input").value.trim(); //Get the chat input value
+        if (message == "") return; //Ignore a blank message
+        if (message.length > 2000) { //Warn that a message is too long
             displayLocalMessage("Your message is too long! Messages cannot be longer than 2000 characters.");
             return;
         }
 
-        let sendChatMessage = true;
-        let modifiers = "";
+        let sendChatMessage = true; //We use this to tell if we should send this message later
+        let modifiers = ""; //We store the modifiers here
 
-        if (message.startsWith("/")) {
-            const args = message.slice(1).split(/ +/);
-            const command = args.shift().toLowerCase();
+        if (message.startsWith("/")) { //The command prefix is / to prevent accidental command usage
+            const args = message.slice(1).split(/ +/); //Create an array of arguments
+            const command = args.shift().toLowerCase(); //Get the command from the arguments list
 
             switch (command) {
                 case "help":
                     handleHelpCommand();
-                    sendChatMessage = false;
+                    sendChatMessage = false; //Do NOT send a chat message
                     break;
                 case "cc":
-                    message = toCrazyCase(args.join(" "));
+                    message = toCrazyCase(args.join(" ")); //Convert the message to Crazy Case
                     break;
                 case "i":
                     modifiers = "italic";
-                    message = args.join(" ");
+                    message = args.join(" "); //Convert the message to italics
                     break;
                 case "u":
                     modifiers = "underline";
-                    message = args.join(" ");
+                    message = args.join(" "); //Underline the message
                     break;
                 case "b":
                     modifiers = "bold";
-                    message = args.join(" ");
+                    message = args.join(" "); //Bold the message
                     break;
                 case "s":
                     modifiers = "strikethrough";
-                    message = args.join(" ");
+                    message = args.join(" "); //Strike through the message
                     break;
                 case "c":
                     modifiers = "cursive";
-                    message = args.join(" ");
+                    message = args.join(" "); //Put the message in cursive
                     break;
                 case "big":
                     modifiers = "big";
-                    message = args.join(" ");
+                    message = args.join(" "); //Make the text larger
                     break;
                 case "r":
-                    sendChatMessage = false;
+                    sendChatMessage = false; //Rejoin the room if connection is lost
                     location.reload();
                     break;
                 case "tts":
                     modifiers = "tts";
-                    message = args.join(" ");
+                    message = args.join(" "); //Send a TTS message
                     break;
                 case "ping":
-                    handlePingCommand();
-                    sendChatMessage = false;
+                    handlePingCommand(); //Ping the server
+                    sendChatMessage = false; //Do NOT send a chat message
                     break;
             }
         }
         if (sendChatMessage) {
-            sendGatewayMessage({
+            sendGatewayMessage({ //Send a new chat message
                 "type": "party-chatmessage",
                 "data": {
                     "token": Globals.TOKEN,
@@ -374,27 +401,28 @@ document.getElementById("chat-input").addEventListener("keyup", function(event) 
                 }
             });
         }
-        document.getElementById("chat-input").value = "";
-    } else {
-        let message = document.getElementById("chat-input").value.trim();
-        if (message == "") sendTypingStop();
-        else sendTypingStart();
+        document.getElementById("chat-input").value = ""; //Clear the input box
+    } else { //If enter isn't pressed...
+        let message = document.getElementById("chat-input").value.trim(); //Get the chat value
+        if (message == "") sendTypingStop(); //Determine whether we should send a typing stop
+        else sendTypingStart(); //Or a typing start
     }
 });
 
 //GUI FUNCTIONS
 
+//Get the current queue
 function refreshQueue() {
     sendGatewayMessage({ "type": "party-getqueue", "data": data() });
 }
 
 //Open Menu
 window.addEventListener("keydown", function(event) {
-    if (event.code == "KeyM" && event.ctrlKey) {
-        refreshQueue();
+    if (event.code == "KeyM" && event.ctrlKey) { //Ctrl + M
+        refreshQueue(); //Refresh the queue
         let copyButton = document.getElementById("copy-button");
-        if (copyButton.classList.contains("action-complete")) copyButton.classList.remove("action-complete");
-        showModalMenu();
+        if (copyButton.classList.contains("action-complete")) copyButton.classList.remove("action-complete"); //Make the copy link button look unpressed
+        showModalMenu(); //Open the menu
     }
 });
 
@@ -425,22 +453,26 @@ document.getElementById("queue-input").addEventListener("keyup", function(event)
     }
 });
 
+//Set a new video
 function setVideo(video) {
-    let videoURL = new URL(video);
-    let videoID = videoURL.searchParams.get("v");
-    if (videoID) sendGatewayMessage({ "type": "party-changevideo", "data": data({ "video": videoID }) });
+    let videoURL = new URL(video); //Create a URL object
+    let videoID = videoURL.searchParams.get("v"); //ensure it has the correct URL elements
+    if (videoID) sendGatewayMessage({ "type": "party-changevideo", "data": data({ "video": videoID }) }); //Send a change video message
 }
 
+//Skip the current video
 function skipVideo() {
     sendGatewayMessage({ "type": "party-skipvideo", "data": data() });
     refreshQueue();
 }
 
+//Clear the queue
 function clearQueue() {
     sendGatewayMessage({ "type": "party-clearqueue", "data": data() });
     refreshQueue();
 }
 
+//DO this when the copy button is pressed
 function copyRoomURL() {
     if (document.getElementById("copy-button").classList.contains("action-complete")) return;
     navigator.clipboard.writeText(location.href).then(function() {
@@ -451,6 +483,7 @@ function copyRoomURL() {
     document.getElementById("copy-button").classList.add("action-complete");
 }
 
+//Handle a gateway connection
 Gateway.onopen = function() {
     console.log("Connected To Gateway");
     hideTypingMessage();
@@ -467,15 +500,18 @@ Gateway.onopen = function() {
     }
 }
 
+//Handle gateway closure
 Gateway.onclose = function(event) {
     console.log(`Gateway Disconnected\n\nCode: ${event.code}\nReason: ${event.reason}\nClean?: ${event.wasClean}`);
     displayLocalMessage("You lost connection to the server! Use /r to reconnect");
 }
 
+//Handle gateway messages
 Gateway.onmessage = function(message) {
     const packet = JSON.parse(message.data);
     console.log(packet);
 
+    //We need to handle both Type/Data messages and Type/Data/Success messages
     if (packet.hasOwnProperty("success")) {
         if (!packet.success) displayLocalMessage(packet.response);
         else handleGatewayMessage(packet);
