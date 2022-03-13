@@ -472,7 +472,7 @@ function clearQueue() {
     refreshQueue();
 }
 
-//DO this when the copy button is pressed
+//Do this when the copy button is pressed
 function copyRoomURL() {
     if (document.getElementById("copy-button").classList.contains("action-complete")) return;
     navigator.clipboard.writeText(location.href).then(function() {
@@ -488,15 +488,15 @@ Gateway.onopen = function() {
     console.log("Connected To Gateway");
     hideTypingMessage();
     const selfURL = new URL(location.href);
-    Globals.TOKEN = getToken();
+    Globals.TOKEN = getToken(); //Get token function will automatically redirect a user to the login page
 
+    //If no room ID is present, redirect the user to their home page
     if (!selfURL.searchParams.get("roomID")) window.location.href = location.protocol + "//" + location.host + "/home.html";
     else {
-        Globals.ROOM_ID = selfURL.searchParams.get("roomID");
-        embedPlayer();
-        console.log("Ready");
-        sendGatewayMessage({ "type": "party-joinparty", "data": data() });
-        sendGatewayMessage({ "type": "user-getprofile", "data": { "token": Globals.TOKEN } });
+        Globals.ROOM_ID = selfURL.searchParams.get("roomID"); //Set the room ID
+        embedPlayer(); //Embed YouTube API
+        sendGatewayMessage({ "type": "party-joinparty", "data": data() }); //Join the party to receive party messages
+        sendGatewayMessage({ "type": "user-getprofile", "data": { "token": Globals.TOKEN } }); //Get the user's profile for the chat
     }
 }
 

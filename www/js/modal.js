@@ -1,12 +1,13 @@
-"use strict";
-let modal = document.getElementById("modal");
-let openButton = document.getElementById("open-modal");
-let closeButton = document.getElementById("close");
+"use strict"; //Strict mode promotes good code practices
 
+let modal = document.getElementById("modal"); //Store the modal object
+let closeButton = document.getElementById("close"); //Store the close button
+
+//Show a modal message
 function showModalMessage(title, message) {
-    document.getElementById("modal-title").innerHTML = title;
-    document.getElementById("modal-message").innerHTML = message;
-    document.getElementById("open-modal").click();
+    document.getElementById("modal-title").innerHTML = title; //Set the title
+    document.getElementById("modal-message").innerHTML = message; //Set the content
+    showModal(); //Show the modal
 }
 
 function hideModal() {
@@ -17,14 +18,12 @@ function showModal() {
     modal.style.display = "block";
 }
 
+//Modal menus are modals with customised HTML. We should not interfere with these.
 function showModalMenu() {
-    document.getElementById("open-modal").click();
-}
-
-openButton.onclick = function() {
     showModal();
 }
 
+//Close modal when the close button is clicked
 closeButton.onclick = function() {
     hideModal();
 }
