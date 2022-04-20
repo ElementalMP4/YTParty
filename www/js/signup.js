@@ -48,6 +48,7 @@ function sendSignupData() {
     Gateway.send(JSON.stringify(finalData));
 }
 
+//Automatically update the avatar preview
 function setAvatarUrl(avatar) {
     document.getElementById("avatar-preview").src = "/avatar/" + avatar;
 }
