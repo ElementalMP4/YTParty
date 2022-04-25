@@ -215,7 +215,7 @@ public class HttpRestController {
 			if (party == null) return fileReader.getTextFileContents("html/noroom.html");
 			else return editPartyMetaTag(party); 
 		}
-	}
+	} 
 	
 	@RequestMapping(value = "/beansandthreads", produces = "text/html", method = RequestMethod.GET)
 	public String statsRoute() {
@@ -230,5 +230,27 @@ public class HttpRestController {
 		 + "<br><br>Bean Count: " + context.getBeanDefinitionCount()
 		 + "<br>Beans:<br>" + String.join("<br>", context.getBeanDefinitionNames());
 		return response;
+	}
+	
+	// # # # # Skids are the smelliest humans on earth # # # #
+	
+	@RequestMapping(value = "/wp-login.php", produces = "text/plain", method = RequestMethod.GET)
+	public String wordpressLoginMoronRoute() {
+		return "Nice try, moron";
+	}
+	
+	@RequestMapping(value = "/.env", produces = "text/plain", method = RequestMethod.GET)
+	public String envFileMoronRoute() {
+		return "Nice try, moron";
+	}
+	
+	@RequestMapping(value = "/xleet.php", produces = "text/plain", method = RequestMethod.GET)
+	public String xleetMoronRoute() {
+		return "Nice try, moron";
+	}
+	
+	@RequestMapping(value = "/xleet-shell.php", produces = "text/plain", method = RequestMethod.GET)
+	public String xleetShellMoronRoute() {
+		return "Nice try, moron";
 	}
 }
