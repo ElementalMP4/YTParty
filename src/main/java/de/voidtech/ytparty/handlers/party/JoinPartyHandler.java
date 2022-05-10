@@ -75,7 +75,7 @@ public class JoinPartyHandler extends AbstractHandler {
 				.partyID(roomID)
 				.author(MessageBuilder.SYSTEM_AUTHOR)
 				.colour(party.getRoomColour())
-				.content(String.format("%s has joined the party!", user.getEffectiveName()))
+				.content(String.format("%s has joined the party!", user.getUsername()))
 				.modifiers(MessageBuilder.SYSTEM_MODIFIERS)
 				.avatar(MessageBuilder.SYSTEM_AVATAR)
 				.buildToChatMessage();
