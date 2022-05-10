@@ -44,11 +44,13 @@ public class SessionService {
 				.filter(session -> session.getName().equals(username))
 				.collect(Collectors.toList());
 		
+		String roomID = null;
+		
 		for (GatewayConnection connection : connections) {
-			if (connection.getRoomID() != null) return connection.getRoomID();
+			if (connection.getRoomID() != null) roomID = connection.getRoomID();
 		}
 		
-		return null;
+		return roomID;
 	}
 	
 	public GatewayConnection getSession(WebSocketSession session) {
