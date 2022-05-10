@@ -38,9 +38,10 @@ public class SessionService {
 	public String getSessionRoomIDifExists(String username) {
 		List<GatewayConnection> connections = new ArrayList<GatewayConnection>();
 		
-		for (GatewayConnection connection : sessions.values()) {
-			if (connection.getName().equals(username)) connections.add(connection);
-		}
+		connections = sessions.values().stream()
+				.filter(session -> session.getName() != null)
+				.filter(session -> session.getName().equals(username))
+				.toList();
 		
 		for (GatewayConnection connection : connections) {
 			if (connection.getRoomID() != null) return connection.getRoomID();
