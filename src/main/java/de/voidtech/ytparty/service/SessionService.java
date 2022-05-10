@@ -47,6 +47,8 @@ public class SessionService {
 		String roomID = null;
 		
 		for (GatewayConnection connection : connections) {
+			System.out.println(connection.getName());
+			System.out.println(connection.getRoomID());
 			if (connection.getRoomID() != null) roomID = connection.getRoomID();
 		}
 		

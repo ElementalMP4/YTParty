@@ -58,7 +58,7 @@ public class JoinPartyHandler extends AbstractHandler {
 			//if (sessionService.getSessionRoomIDifExists(username) == null) joinParty(session, roomID, user);
 			//else if (sessionService.getSessionRoomIDifExists(username).equals(roomID)) joinParty(session, roomID, user);
 			//else responder.sendError(session, "You are already in a room! If you have connection issues, try restarting your browser.", this.getHandlerType());
-			
+			System.out.println(sessionService.getSessionRoomIDifExists(username));
 			if (sessionService.getSessionRoomIDifExists(username) != null) responder.sendError(session, "You are already in a room! If you have connection issues, try restarting your browser.", this.getHandlerType());
 			else joinParty(session, roomID, user);
 		}
