@@ -31,6 +31,7 @@ public class GetCurrentRoomIDHandler extends AbstractHandler {
 		if (!tokenResponse.isSuccessful()) responder.sendError(session, tokenResponse.getMessage(), this.getHandlerType());
 		else {
 			String roomID = sessionService.getSessionRoomIDifExists(tokenResponse.getActingString());
+			roomID = roomID == null ? "none" : roomID;
 			responder.sendSuccess(session, new JSONObject().put("roomID", roomID), this.getHandlerType());
 		}
 	}
