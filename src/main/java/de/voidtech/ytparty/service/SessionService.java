@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.web.socket.WebSocketSession;
@@ -41,7 +42,7 @@ public class SessionService {
 		connections = sessions.values().stream()
 				.filter(session -> session.getName() != null)
 				.filter(session -> session.getName().equals(username))
-				.toList();
+				.collect(Collectors.toList());
 		
 		for (GatewayConnection connection : connections) {
 			if (connection.getRoomID() != null) return connection.getRoomID();
