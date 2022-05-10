@@ -55,18 +55,15 @@ public class JoinPartyHandler extends AbstractHandler {
 			String username = tokenResponse.getActingString();
 			User user = userService.getUser(username);
 			
-			//if (sessionService.getSessionRoomIDifExists(username) == null) joinParty(session, roomID, user);
-			//else if (sessionService.getSessionRoomIDifExists(username).equals(roomID)) joinParty(session, roomID, user);
-			//else responder.sendError(session, "You are already in a room! If you have connection issues, try restarting your browser.", this.getHandlerType());
-			System.out.println(sessionService.getSessionRoomIDifExists(username));
-			if (sessionService.getSessionRoomIDifExists(username) != null) responder.sendError(session, "You are already in a room! If you have connection issues, try restarting your browser.", this.getHandlerType());
-			else joinParty(session, roomID, user);
+			if (sessionService.getSessionRoomIDifExists(username) == null) joinParty(session, roomID, user);
+			else if (sessionService.getSessionRoomIDifExists(username).equals(roomID)) joinParty(session, roomID, user);
+			else responder.sendError(session, "You are already in a room! If you have connection issues, try restarting your browser.", this.getHandlerType());
 		}
 	}
 
 	private void joinParty(GatewayConnection session, String roomID, User user) {
 		Party party = partyService.getParty(roomID);
-		session.setName(user.getEffectiveName());
+		session.setName(user.getUsername());
 		session.setRoomID(roomID);
 		responder.sendSuccess(session, new JSONObject()
 				.put("video", party.getVideoID())
