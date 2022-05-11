@@ -17,9 +17,12 @@ Gateway.onclose = function() {
 
 Gateway.onmessage = function(message) {
     const response = JSON.parse(message.data);
-    console.log(response);
-    if (response.success) showMessage("Added video successfully!");
-    else showMessage("Something went wrong: " + response.response);
+    let button = document.getElementById("queue-button");
+    if (response.success) {
+        showMessage("Added video successfully!");
+        button.classList.add("action-complete");
+    } else showMessage("Something went wrong: " + response.response);
+    button.disabled = true;
 }
 
 function queueVideo() {
