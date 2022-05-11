@@ -1,11 +1,8 @@
 package main.java.de.voidtech.ytparty.service;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.web.socket.WebSocketSession;
@@ -37,19 +34,12 @@ public class SessionService {
 	}
 	
 	public String getSessionRoomIDifExists(String username) {
-		List<GatewayConnection> connections = new ArrayList<GatewayConnection>();
-		
-		connections = sessions.values().stream()
-				.filter(session -> session.getName() != null)
-				.filter(session -> session.getName().equals(username))
-				.collect(Collectors.toList());
-		
-		String roomID = null;
-		
-		for (GatewayConnection connection : connections) {
-			if (connection.getRoomID() != null) roomID = connection.getRoomID();
-		}
-		
+		String roomID = sessions.values().stream()
+				.filter(session -> username.equals(session.getName()))
+				.map(GatewayConnection::getRoomID)
+				.filter(id -> id != null)
+				.findFirst()
+				.orElse(null);
 		return roomID;
 	}
 	
