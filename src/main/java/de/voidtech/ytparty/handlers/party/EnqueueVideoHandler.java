@@ -18,31 +18,28 @@ import main.java.de.voidtech.ytparty.service.PartyService;
 public class EnqueueVideoHandler extends AbstractHandler {
 
 	@Autowired
-	private GatewayResponseService responder; //Responder responds to requests
+	private GatewayResponseService responder;
 	
 	@Autowired
-	private PartyService partyService; //Party service gets party by ID
+	private PartyService partyService;
 	
 	@Autowired
-	private GatewayAuthService authService; //Auth service validates token and room ID
+	private GatewayAuthService authService;
 	
 	@Override
 	public void execute(GatewayConnection session, JSONObject data) {
-		String token = data.getString("token"); //Get token
-		String roomID = data.getString("roomID"); //Get room ID
-		String newVideoID = data.getString("video"); //Get video to be queued
+		String token = data.getString("token");
+		String roomID = data.getString("roomID");
+		String newVideoID = data.getString("video");
 		
-		//Validate token & room ID
 		AuthResponse tokenResponse = authService.validateToken(token); 
 		AuthResponse partyIDResponse = authService.validatePartyID(roomID);
 		
-		//If token or room ID is invalid, reject with a message
 		if (!tokenResponse.isSuccessful()) responder.sendError(session, tokenResponse.getMessage(), this.getHandlerType());
 		else if (!partyIDResponse.isSuccessful()) responder.sendError(session, partyIDResponse.getMessage(), this.getHandlerType());
-		//Otherwise
 		else {
-			Party party = partyService.getParty(roomID); //Get party
-			if (party.canControlRoom(tokenResponse.getActingString())) { //Determine whether user can control room
+			Party party = partyService.getParty(roomID);
+			if (party.canControlRoom(tokenResponse.getActingString())) {
 				ChatMessage videoMessage = new MessageBuilder()
 						.partyID(roomID)
 						.author(MessageBuilder.SYSTEM_AUTHOR)
@@ -50,10 +47,10 @@ public class EnqueueVideoHandler extends AbstractHandler {
 						.content(String.format("Video queued by %s!", tokenResponse.getActingString()))
 						.modifiers(MessageBuilder.SYSTEM_MODIFIERS)
 						.avatar(MessageBuilder.SYSTEM_AVATAR)
-						.buildToChatMessage(); //Create new message saying video has been queued by user
-				party.enqueueVideo(newVideoID); //Queue the video
-				responder.sendChatMessage(party, videoMessage); //Send the chat message
-			//If user does not have permission, send a permission message
+						.buildToChatMessage();
+				party.enqueueVideo(newVideoID);
+				responder.sendChatMessage(party, videoMessage);
+				responder.sendSuccess(session, MessageBuilder.EMPTY_JSON, this.getHandlerType());
 			} else responder.sendError(session, "You do not have permission to do that!", this.getHandlerType());
 		}
 	}
