@@ -51,7 +51,8 @@ function startPopup() {
         } else if (url.host == "www.youtube.com") {
             if (url.pathname == "/watch") {
                 if (localStorage.getItem("token") == null) showMessage("Your account is not linked! " +
-                    "Go to <a href='https://ytparty.voidtech.de' target='blank' rel='noreferrer noopener'>YTParty</a> and log in, then press the YTParty logo to link your account.");
+                    "Go to <a href='https://ytparty.voidtech.de' target='blank' rel='noreferrer noopener'>YTParty</a> and log in, " +
+                    "then press the YTParty logo to link your account.");
                 else createRoomOrQueueVideos();
             } else showMessage("Navigate to a video then press the YTParty logo to open the room creation menu!");
         }
