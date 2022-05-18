@@ -35,12 +35,17 @@
                 <p>Add a video to the queue</p><br>
                 <input type="text" id="queue-input" placeholder="Enter a YouTube video URL"><br><br>
                 <p>Set the currently playing video</p><br>
-                <input type="text" id="current-video-input" placeholder="Enter a YouTube video URL"><br>
-                <h2 id="queue-title">Queued Items (0)</h2>
+                <input type="text" id="current-video-input" placeholder="Enter a YouTube video URL"><br><br>
+                <label for="voice-options">Choose a TTS Voice:</label>
+                <select name="voice-options" id="voice-selector">
+                </select><br><br>
+                <h2 id="queue-title" class="queue-title">Queued Items (0)</h2>
                 <button id="skip-button" onclick="skipVideo()">Skip Current Video</button>
                 <button id="clear-button" onclick="clearQueue()">Clear Video Queue</button>
                 <button id="copy-button" onclick="copyRoomURL()">Copy Room URL</button><br><br>
-                <p id="queue-items"></p>
+                <div class="queue-list">
+                    <p id="queue-items"></p>
+                </div>
             </div>
         </div>
     </div>

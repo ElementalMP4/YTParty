@@ -14,7 +14,10 @@ let Globals = {
     ROOM_COLOUR: "",
     TYPING_COUNT: 0,
     TYPING: false,
-    PLAYER_READY: false
+    PLAYER_READY: false,
+    TTS_ENABLED: false,
+    TTS_VOICE: "",
+    TTS_VOICE_LIST: {}
 }
 
 function sendGatewayMessage(message) {
@@ -65,9 +68,15 @@ function addChatMessage(data) {
     chatHistory.scrollTop = chatHistory.scrollHeight;
 }
 
+function getVoiceByName() {
+    return Globals.TTS_VOICE_LIST.filter(voice => voice.name == Globals.TTS_VOICE)[0];
+}
+
 function speakMessage(message) {
+    if (!Globals.TTS_ENABLED) return;
     let tts = new SpeechSynthesisUtterance();
     tts.text = message;
+    tts.voice = getVoiceByName();
     window.speechSynthesis.speak(tts);
 }
 
@@ -184,15 +193,43 @@ function initialiseParty(options) {
 }
 
 function hideLoadingScreen() {
+    Globals.TTS_ENABLED = true;
     let screen = document.getElementById("loading-screen");
     screen.classList.add("loaded");
-    setTimeout(() => { screen.style.display = "none" }, 500);
+    setTimeout(() => {
+        screen.style.display = "none";
+    }, 500);
+}
+
+function getVoices() {
+    return new Promise(
+        function(resolve, reject) {
+            let interval;
+            interval = setInterval(() => {
+                if (window.speechSynthesis.getVoices().length !== 0) {
+                    resolve(window.speechSynthesis.getVoices());
+                    clearInterval(interval);
+                }
+            }, 10);
+        }
+    )
+}
+
+function populateVoiceList() {
+    console.log("Populating TTS voice selector list");
+    getVoices().then(voices => {
+        voices.forEach((voice, id) => {
+            document.getElementById("voice-selector").insertAdjacentHTML('afterbegin', `<option value="${voice.name}">${voice.name}</option>`);
+        });
+        Globals.TTS_VOICE_LIST = voices;
+    });
 }
 
 function handleGatewayMessage(packet) {
     switch (packet.type) {
         case "party-partyready":
             hideLoadingScreen();
+            populateVoiceList();
             break;
         case "party-chatmessage":
             handleChatMessage(packet.data);
@@ -239,16 +276,16 @@ function embedPlayer() {
 
 function handleHelpCommand() {
     displayLocalMessage(`Chat Command Help:<br>
-/help - shows this message<br><br>
-/i [message] - changes your message to italics<br><br>
-/u [message] - changes your message to underline<br><br>
-/b [message] - makes your message bold<br><br>
-/s [message] - changes your message to strikethrough<br><br>
-/c [message] - changes your message to cursive<br><br>
-/cc [message] - cHaNgEs YoUr TeXt LiKe ThIs<br><br>
-/big [message] - makes your message big<br><br>
-/r - reloads your session<br><br>
-/tts - send a text-to-speech message<br><br>
+/help - shows this message<br>
+/i [message] - changes your message to italics<br>
+/u [message] - changes your message to underline<br>
+/b [message] - makes your message bold<br>
+/s [message] - changes your message to strikethrough<br>
+/c [message] - changes your message to cursive<br>
+/cc [message] - cHaNgEs YoUr TeXt LiKe ThIs<br>
+/big [message] - makes your message big<br>
+/r - reloads your session<br>
+/tts - send a text-to-speech message<br>
 /ping - get the API response time`);
 }
 
@@ -382,6 +419,10 @@ document.getElementById("chat-input").addEventListener("keyup", function(event) 
 function refreshQueue() {
     sendGatewayMessage({ "type": "party-getqueue", "data": data() });
 }
+
+document.getElementById("voice-selector").onchange = function() {
+    Globals.TTS_VOICE = document.getElementById("voice-selector").value;
+};
 
 window.addEventListener("keydown", function(event) {
     if (event.code == "KeyM" && event.ctrlKey) { //Ctrl + M

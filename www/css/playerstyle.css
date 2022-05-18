@@ -45,7 +45,12 @@ button:hover {
     background-color: #d80000;
 }
 
-input[type=text] {
+h2.queue-title {
+    margin-bottom: 0px;
+}
+
+input[type=text],
+select {
     color: white;
     background-color: #292929;
     border: none;
@@ -55,7 +60,8 @@ input[type=text] {
     float: left;
 }
 
-input[type=text]:focus {
+input[type=text],
+select:focus {
     border-bottom: 2px solid #8f2727
 }
 
@@ -103,11 +109,16 @@ div {
     background-color: #292929;
 }
 
-p {
+p,
+label {
     color: white;
     font-family: Helvetica;
     font-size: 14px;
     display: inline;
+}
+
+label {
+    line-height: 1.5;
 }
 
 p.msg-nickname {
@@ -238,4 +249,8 @@ p.big {
     border: 6px solid #fff;
     border-color: #fff transparent #fff transparent;
     animation: loading 1.2s linear infinite;
+}
+
+.queue-list {
+    overflow-y: scroll;
 }
