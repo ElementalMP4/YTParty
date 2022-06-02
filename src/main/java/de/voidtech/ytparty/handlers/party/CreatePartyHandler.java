@@ -1,5 +1,8 @@
 package main.java.de.voidtech.ytparty.handlers.party;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -10,6 +13,7 @@ import main.java.de.voidtech.ytparty.entities.ephemeral.Party;
 import main.java.de.voidtech.ytparty.handlers.AbstractHandler;
 import main.java.de.voidtech.ytparty.service.GatewayAuthService;
 import main.java.de.voidtech.ytparty.service.GatewayResponseService;
+import main.java.de.voidtech.ytparty.service.MessageHandler;
 import main.java.de.voidtech.ytparty.service.PartyService;
 import main.java.de.voidtech.ytparty.service.UserTokenService;
 
@@ -27,6 +31,8 @@ public class CreatePartyHandler extends AbstractHandler{
 	
 	@Autowired
 	private PartyService partyService; //Party service stores new parties
+
+	private static final Logger LOGGER = Logger.getLogger(CreatePartyHandler.class.getName());
 	
 	@Override
 	public void execute(GatewayConnection session, JSONObject data) {
@@ -47,6 +53,7 @@ public class CreatePartyHandler extends AbstractHandler{
 			partyService.saveParty(party); //Save party
 			//Reply with room ID
 			responder.sendSuccess(session, new JSONObject().put("partyID", party.getPartyID()), this.getHandlerType()); 
+			LOGGER.log(Level.INFO, "Party created by " + ownerUsername);
 		}
 	}
 

@@ -17,43 +17,40 @@ import main.java.de.voidtech.ytparty.handlers.AbstractHandler;
 public class MessageHandler {
 
 	@Autowired
-	private List<AbstractHandler> handlers; //Spring will gather all of our handlers and reference them here.
+	private List<AbstractHandler> handlers;
 	
 	@Autowired
-	private GatewayResponseService responder; //We also need a standard interface for sending messages back to users.
+	private GatewayResponseService responder;
 	
 	private static final String RESPONSE_SOURCE = "Gateway";
-	//All messages from the server say where they are from. Errors from here will be from Gateway. Errors and messages from handlers
-	//will use their respective handler name.
-	private static final Logger LOGGER = Logger.getLogger(MessageHandler.class.getName()); //We should log all gateway messages
+	private static final Logger LOGGER = Logger.getLogger(MessageHandler.class.getName());
 	
-	public void handleMessage(GatewayConnection session, String message) { //This is the method referenced earlier in the GatewayHandler
+	public void handleMessage(GatewayConnection session, String message) {
 		try {
-			JSONObject messageObject = new JSONObject(message); //Try and parse the message as a JSON object
-			if (!messageObject.has("type") || !messageObject.has("data")) { //If the "type" and "data" fields are not found, reject.
+			JSONObject messageObject = new JSONObject(message);
+			if (!messageObject.has("type") || !messageObject.has("data")) {
 				responder.sendError(session, "Invalid message format", RESPONSE_SOURCE); 
 				return;
 			}
 				
 			List<AbstractHandler> compatibleHandlers = handlers.stream()
-					//Stream the handler list so we can find the necessary handler
 					.filter(handler -> handler.getHandlerType().equals(messageObject.get("type")))
-					//compare each handler type to the type specified in the message
 					.collect(Collectors.toList());
-					//collect a list of handlers
 			
-			if (!compatibleHandlers.isEmpty()) { //If we found a handler, we can run it!
-				AbstractHandler compatibleHandler = compatibleHandlers.get(0); //Get the handler
-				LOGGER.log(Level.INFO, "Received Gateway Message: " + messageObject.getString("type")); //Log the message type
-				if (compatibleHandler.requiresRateLimit()) { //If this handler needs rate limiting, check now.
-					if (session.connectionRateLimited()) { //If the connection is rate limited, stop the execution of the handler
+			if (compatibleHandlers.isEmpty()) {
+				responder.sendError(session, "Invalid message type", RESPONSE_SOURCE);
+			} else {
+				AbstractHandler compatibleHandler = compatibleHandlers.get(0);
+				LOGGER.log(Level.INFO, "Received Gateway Message: " + messageObject.getString("type"));
+				if (compatibleHandler.requiresRateLimit()) {
+					if (session.connectionRateLimited()) {
 						responder.sendError(session, "You are being rate limited!", RESPONSE_SOURCE);
 						return;
 					}
-				} //If not, run the handler and pass in the custom session and the data object.
+				}
 				compatibleHandler.execute(session, messageObject.getJSONObject("data"));
-			} else responder.sendError(session, "Invalid message type", RESPONSE_SOURCE);
-		} catch (JSONException e) { //If the message is not JSON, immediately reject it with an error.
+			}
+		} catch (JSONException e) {
 			responder.sendError(session, "Invalid message - " + e.getMessage(), RESPONSE_SOURCE);
 			LOGGER.log(Level.SEVERE, "Error during Service Execution: " + e.getMessage());
 		}
