@@ -13,7 +13,6 @@ import main.java.de.voidtech.ytparty.entities.ephemeral.Party;
 import main.java.de.voidtech.ytparty.handlers.AbstractHandler;
 import main.java.de.voidtech.ytparty.service.GatewayAuthService;
 import main.java.de.voidtech.ytparty.service.GatewayResponseService;
-import main.java.de.voidtech.ytparty.service.MessageHandler;
 import main.java.de.voidtech.ytparty.service.PartyService;
 import main.java.de.voidtech.ytparty.service.UserTokenService;
 
