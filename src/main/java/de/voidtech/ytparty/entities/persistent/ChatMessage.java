@@ -15,7 +15,7 @@ import main.java.de.voidtech.ytparty.entities.message.MessageBuilder;
 
 @Entity(name = "Messages")
 @Table(name = "Messages", indexes = @Index(columnList = "partyID", name = "index_message"))
-//Create an index for this table, indexed by party ID to increase searching efficiency
+
 public class ChatMessage {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,11 +32,8 @@ public class ChatMessage {
 	
 	@Column
 	@Type(type = "org.hibernate.type.TextType")
-	//Set the message content type to Text. this removes the character limit so we can set our own
+
 	private String content;
-	
-	@Column
-	private String messageModifiers;
 	
 	@Column
 	private String avatar;
@@ -45,14 +42,13 @@ public class ChatMessage {
 	ChatMessage() {
 	}
 	
-	public ChatMessage(MessageBuilder builder) //Take a message builder as an argument
+	public ChatMessage(MessageBuilder builder)
 	{
 	  //Take all the necessary fields from the builder
 	  this.partyID = builder.getChatMessagePartyID();
 	  this.author = builder.getChatMessageAuthor();
 	  this.colour = builder.getChatMessageColour();
 	  this.content = builder.getChatMessageContent();
-	  this.messageModifiers = builder.getChatMessageMessageModifiers();
 	  this.avatar = builder.getChatMessageAvatar();
 	}
 
@@ -62,8 +58,7 @@ public class ChatMessage {
 						.put("author", this.author)
 						.put("colour", this.colour)
 						.put("content", this.content)
-						.put("avatar", this.avatar)
-						.put("modifiers", this.messageModifiers));
+						.put("avatar", this.avatar));
 		return data.toString(); //Convert it to a String before sending
 	}
 }

@@ -7,7 +7,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-//Set the table name
+
 @Entity(name = "Tokens")
 @Table(name = "Tokens")
 public class TokenContainer {
@@ -15,10 +15,10 @@ public class TokenContainer {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
 	
-	@Column(unique = true) //Usernames MUST be unique.
+	@Column(unique = true)
 	private String username; 
 	
-	@Column(unique = true) //Tokens MUST also be unique.
+	@Column(unique = true)
 	private String token; 
 	
 	@Deprecated

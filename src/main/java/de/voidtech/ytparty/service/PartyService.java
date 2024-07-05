@@ -19,68 +19,68 @@ import main.java.de.voidtech.ytparty.entities.ephemeral.Party;
 @Service
 public class PartyService {
 	
-	//We create a list of characters which can be used to generate a room ID
+
 	private static final List<String> LEXICON = Arrays.asList("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz12345674890".split(""));
-	//We store the parties in a hashmap, which is a very efficient way of accessing a large number of items.
+
 	private HashMap<String, Party> parties = new HashMap<String, Party>();  
 	
 	@Autowired
-	private SessionFactory sessionFactory; //We need the database session factory so we can perform SQL operations
+	private SessionFactory sessionFactory;
 	
-	@EventListener(ApplicationReadyEvent.class) //This annotation tells spring to run this method when the program is ready
+	@EventListener(ApplicationReadyEvent.class)
 	private void cleanDatabase() {
-		try(Session session = sessionFactory.openSession())	{ //Create a new database session
+		try(Session session = sessionFactory.openSession())	{
 			session.getTransaction().begin();
-			session.createQuery("DELETE FROM Messages") //Delete ALL messages from the message history
-				.executeUpdate(); //Execute the statement
-			session.getTransaction().commit(); //Save the database changes
+			session.createQuery("DELETE FROM Messages")
+				.executeUpdate();
+			session.getTransaction().commit();
 		}
 	}
 	
-	public void deletePartyMessageHistory(String partyID) { //This method is used to clear the history of a single party
-		try(Session session = sessionFactory.openSession())	{ //Open a session
+	public void deletePartyMessageHistory(String partyID) {
+		try(Session session = sessionFactory.openSession())	{
 			session.getTransaction().begin();
-			session.createQuery("DELETE FROM Messages where partyID = :partyID") //Delete all messages from a single party
-				.setParameter("partyID", partyID) //Set the party ID parameter in the HQL statement
-				.executeUpdate(); //Execute the statement
-			session.getTransaction().commit(); //Save the database changes
+			session.createQuery("DELETE FROM Messages where partyID = :partyID")
+				.setParameter("partyID", partyID)
+				.executeUpdate();
+			session.getTransaction().commit();
 		}
 	}
 	
 	public String generateRoomID() {
-		String ID = ""; //Create a string to store the ID
-		Random random = new Random(); //Create a new randomiser
-		for (int i = 0; i < 8; i++) ID += LEXICON.get(random.nextInt(LEXICON.size() - 1)); //Create an 8-character long ID
-		return ID; //return this ID
+		String ID = "";
+		Random random = new Random();
+		for (int i = 0; i < 8; i++) ID += LEXICON.get(random.nextInt(LEXICON.size() - 1));
+		return ID;
 	}
 	
 	public synchronized Party getParty(String partyID) {
-		return parties.get(partyID); //Get a party by ID
+		return parties.get(partyID);
 	}
 	
 	public synchronized void saveParty(Party party) {
-		parties.put(party.getPartyID(), party); //Save a new party
+		parties.put(party.getPartyID(), party);
 	}
 	
 	public synchronized void deleteParty(String partyID) {
-		parties.remove(partyID); //Remove a party by ID
+		parties.remove(partyID);
 	}
 	
-	public synchronized void removeSessionFromParty(GatewayConnection session) { //Remove someone from a party when they disconnect
-		List<String> invalidParties = new ArrayList<String>(); //Create a list of empty parties
-		for (String key : parties.keySet()) { //Iterate through every party
-			Party party = parties.get(key); //Get a party by ID
-			party.checkRemoveSession(session); //Check the party to see if this session is within it
-			if (party.getAllSessions().isEmpty() && party.hasBeenVisited()) invalidParties.add(key); //If the party is empty, invalidate it.
+	public synchronized void removeSessionFromParty(GatewayConnection session) {
+		List<String> invalidParties = new ArrayList<String>();
+		for (String key : parties.keySet()) {
+			Party party = parties.get(key);
+			party.checkRemoveSession(session);
+			if (party.getAllSessions().isEmpty() && party.hasBeenVisited()) invalidParties.add(key);
 		}
-		if (!invalidParties.isEmpty()) for (String key : invalidParties) { //If we have empty parties, iterate through the list
-			String partyID = parties.get(key).getPartyID(); //Get the party by ID
-			deletePartyMessageHistory(partyID); //Delete its message history
-			parties.remove(key); //Close the party
+		if (!invalidParties.isEmpty()) for (String key : invalidParties) {
+			String partyID = parties.get(key).getPartyID();
+			deletePartyMessageHistory(partyID);
+			parties.remove(key);
 		};
 	}
 	
 	public int getPartyCount() {
-		return parties.size(); //Get the number of active parties
+		return parties.size();
 	}
 }

@@ -8,35 +8,35 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class ConfigService {
-	private static final Logger LOGGER = Logger.getLogger(ConfigService.class.getName()); //Get a logger so we can record errors
+	private static final Logger LOGGER = Logger.getLogger(ConfigService.class.getName());
 
-	private final Properties config = new Properties(); //Create a new "properties" to store config items
-	private boolean loadedSuccessfully; //We need to know if the config loaded correctly so we can safely handle errors
+	private final Properties config = new Properties();
+	private boolean loadedSuccessfully;
 
 	public ConfigService() {
-		loadedSuccessfully = false; //Set the load success to false to start with
-		File configFile = new File("config.properties"); //Open up the config file
-		if (configFile.exists()) { //If the file exists, we can extract data
-			try (FileInputStream fis = new FileInputStream(configFile)){ //Stream the data in from the file
-				loadedSuccessfully = true; //We have now loaded the data
-				config.load(fis); //Put the loaded properties into the Properties instance from earlier
+		loadedSuccessfully = false;
+		File configFile = new File("config.properties");
+		if (configFile.exists()) {
+			try (FileInputStream fis = new FileInputStream(configFile)){
+				loadedSuccessfully = true;
+				config.load(fis);
 			} catch (IOException e) {
-				LOGGER.log(Level.SEVERE, "an error has occurred while reading the config\n" + e.getMessage()); //Log errors
+				LOGGER.log(Level.SEVERE, "an error has occurred while reading the config\n" + e.getMessage());
 			}	
 		} else {
-			//Report if there is no config file
+
 			LOGGER.log(Level.SEVERE, "There is no config file. You need a file called config.properties at the root of the project!");
 		}
 	}
 	
 	public boolean configLoaded() {
-		return loadedSuccessfully; //Detect whether the config is loaded
+		return loadedSuccessfully;
 	}
 
 	public String getHibernateDialect()
 	{
 		String dialect = config.getProperty("hibernate.Dialect");
-		return dialect != null ? dialect : "org.hibernate.dialect.PostgreSQLDialect"; //We can set a default database dialect
+		return dialect != null ? dialect : "org.hibernate.dialect.PostgreSQLDialect";
 	}
 	
 	public String getDriver()
@@ -80,7 +80,7 @@ public class ConfigService {
 	}
 	
 	public String getCaptchaToken() {
-		return config.getProperty("captcha.Token"); //We cannot set a default reCaptcha token
+		return config.getProperty("captcha.Token");
 	}
 
 	public String getMailUser() {

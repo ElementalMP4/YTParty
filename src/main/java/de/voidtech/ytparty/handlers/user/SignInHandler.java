@@ -16,20 +16,20 @@ import main.java.de.voidtech.ytparty.service.UserTokenService;
 public class SignInHandler extends AbstractHandler {
 	
 	@Autowired
-	private UserService userService; //User service is needed to get the user object for a username
+	private UserService userService;
 	
 	@Autowired
-	private GatewayResponseService responder; //Responder is needed to reply to the request
+	private GatewayResponseService responder;
 
 	@Autowired
-	private UserTokenService tokenService; //Token service is needed to get the token of a user 
+	private UserTokenService tokenService;
 	
 	@Autowired
-	private CaptchaAuthService captchaService; //Captcha service is needed to authenticate recaptcha token
+	private CaptchaAuthService captchaService;
 	
 	@Override
 	public void execute(GatewayConnection session, JSONObject data) {
-		String username = data.getString("username"); //Get the entered username
+		String username = data.getString("username");
 		String enteredPassword = data.getString("password"); //Get the entered password
 		String captchaToken = data.getString("captcha-token"); //Get the captcha token
 		User user = userService.getUser(username); //Retrieve the user with the given username

@@ -33,7 +33,7 @@ public class DeleteAccountHandler extends AbstractHandler {
 		String token = data.getString("token"); //Get the user's token
 		String password = data.getString("password"); //Get the user's password
 		
-		AuthResponse tokenResponse = authService.validateToken(token); //Validate the user's token 
+		AuthResponse tokenResponse = authService.validateToken(token); //Validate the user's token
 		
 		//If the token is invalid, reject it.
 		if (!tokenResponse.isSuccessful()) responder.sendError(session, tokenResponse.getMessage(), this.getHandlerType());

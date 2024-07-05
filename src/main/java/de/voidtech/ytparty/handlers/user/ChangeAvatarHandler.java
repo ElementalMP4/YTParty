@@ -16,7 +16,7 @@ import main.java.de.voidtech.ytparty.service.UserService;
 public class ChangeAvatarHandler extends AbstractHandler {
 
 	@Autowired
-	private GatewayAuthService authService; //AuthService is used to validate Tokens and Room IDs
+	private GatewayAuthService authService;
 	
 	@Autowired
 	private UserService userService; //User service is needed to modify user data

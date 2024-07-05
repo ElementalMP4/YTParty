@@ -16,7 +16,7 @@ import main.java.de.voidtech.ytparty.service.UserService;
 public class GetProfileHandler extends AbstractHandler {
 
 	@Autowired
-	private UserService userService; //We need the user service to get user information
+	private UserService userService;
 	
 	@Autowired
 	private GatewayResponseService responder; //We need the responder to reply to the user
@@ -28,7 +28,7 @@ public class GetProfileHandler extends AbstractHandler {
 	public void execute(GatewayConnection session, JSONObject data) {
 		String token = data.getString("token"); //Get the token
 		
-		AuthResponse tokenResponse = authService.validateToken(token); //Validate the token 
+		AuthResponse tokenResponse = authService.validateToken(token); //Validate the token
 		
 		//If the token is invalid, reject it with a message.
 		if (!tokenResponse.isSuccessful()) responder.sendError(session, tokenResponse.getMessage(), this.getHandlerType());

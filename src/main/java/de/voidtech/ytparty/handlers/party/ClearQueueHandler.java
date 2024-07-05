@@ -21,7 +21,7 @@ public class ClearQueueHandler extends AbstractHandler {
 	private GatewayResponseService responder; //We need the responder to respond to requests
 	
 	@Autowired
-	private PartyService partyService; //We need the party service to get rooms by ID 
+	private PartyService partyService; //We need the party service to get rooms by ID
 	
 	@Autowired
 	private GatewayAuthService authService; //We need the auth service to validate tokens and room IDs
@@ -48,7 +48,6 @@ public class ClearQueueHandler extends AbstractHandler {
 						.author(MessageBuilder.SYSTEM_AUTHOR)
 						.colour(party.getRoomColour())
 						.content(String.format("Queue cleared by %s!", tokenResponse.getActingString()))
-						.modifiers(MessageBuilder.SYSTEM_MODIFIERS)
 						.avatar(MessageBuilder.SYSTEM_AVATAR)
 						.buildToChatMessage(); //Build a new chat message saying who cleared the queue
 				responder.sendChatMessage(party, clearMessage); //Send the chat message

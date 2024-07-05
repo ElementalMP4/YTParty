@@ -4,17 +4,17 @@ import org.json.JSONObject;
 
 public class SystemMessage {
 	
-	private String type; //Store message type
+	private String type;
 	
-	private JSONObject data; //Store message data
+	private JSONObject data;
 	
-	public SystemMessage(MessageBuilder builder) //Automatically fill in fields from MessageBuilder
+	public SystemMessage(MessageBuilder builder)
 	{
 	  this.type = builder.getSystemMessageType();
 	  this.data = builder.getSystemMessageData();
 	}
 
-	public String convertToJson() { //Create a type-data representation of this message
+	public String convertToJson() {
 		JSONObject data = new JSONObject()
 				.put("type", this.type)
 				.put("data", this.data);

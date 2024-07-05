@@ -27,7 +27,7 @@ public class NicknameUpdateHandler extends AbstractHandler {
 	@Override
 	public void execute(GatewayConnection session, JSONObject data) {
 		String nickname = data.getString("nickname").trim().replaceAll("<", "&lt;").replaceAll(">", "&gt;"); 
-		//Get the input nickname, make sure it isn't just spaces, and filter out XSS 
+		//Get the input nickname, make sure it isn't just spaces, and filter out XSS
 		String token = data.getString("token"); //Get the user's token
 		AuthResponse tokenResponse = authService.validateToken(token); //Validate the user token
 		

@@ -41,15 +41,5 @@ public class HttpRestController {
 		partyDoc.select("head > meta:nth-child(11)").attr("content", party.getOwnerName() + "'s room!");
 		return partyDoc.toString();
 	}
-	
-	@GetMapping(value = "/player", produces = "text/html")
-	public String playerRoute(@RequestParam(required = false) String roomID) {
-		if (roomID == null) return fileReader.getTextFileContents("html/html/noroom.html");
-		else {
-			Party party = partyService.getParty(roomID);
-			if (party == null) return fileReader.getTextFileContents("html/html/noroom.html");
-			else return editPartyMetaTag(party); 
-		}
-	}
 
 }

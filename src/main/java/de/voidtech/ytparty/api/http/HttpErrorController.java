@@ -35,7 +35,7 @@ public class HttpErrorController implements ErrorController {
         return PATH;
     }
     
-    private String formatErrorPage(int statusCode) { //Create the error page
+    private String formatErrorPage(int statusCode) {
     	String error = (statusCode == 0 ? "Unknown Error" : String.valueOf(statusCode));
     	String httpCat = "https://http.cat/" + statusCode;
     	return    "<html>"

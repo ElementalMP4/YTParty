@@ -113,7 +113,7 @@ function sendVideoEndedMessage() {
 function onYouTubeIframeAPIReady() {
     Globals.PLAYER = new YT.Player('player', {
         height: '100%',
-        width: '80%',
+        width: '100%',
         playerVars: { 'controls': Globals.CAN_CONTROL_PLAYER ? 1 : 0, 'disablekb': Globals.CAN_CONTROL_PLAYER ? 0 : 1 },
         videoId: Globals.CURRENT_VIDEO_ID,
         events: {
