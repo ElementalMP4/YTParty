@@ -4,7 +4,7 @@ const GatewayServerURL = (location.protocol == "https:" ? "wss://" : "ws://") + 
 let Gateway;
 
 //If they are logged in, take them to the home page
-if (window.localStorage.getItem("token") !== null) window.location.href = location.protocol + "//" + location.host + "/home.html";
+if (window.localStorage.getItem("token") !== null) window.location.href = location.protocol + "//" + location.host + "/html/home.html";
 //If not, connect to the gateway and continue with login procedures.
 else Gateway = new WebSocket(GatewayServerURL);
 
@@ -26,7 +26,7 @@ Gateway.onmessage = function(message) {
         let url = new URL(location.href);
         let redirect = url.searchParams.get("redirect"); //Get the redirect
         window.localStorage.setItem("token", response.response.token); //Store the token
-        window.location.href = location.protocol + "//" + location.host + (redirect == null ? "/home.html" : redirect); //Go to the redirect if there is one
+        window.location.href = location.protocol + "//" + location.host + (redirect == null ? "/html/home.html" : redirect); //Go to the redirect if there is one
     } else {
         grecaptcha.reset(); //If the request failed, reset the captcha and show a message
         showModalMessage("Error", response.response);

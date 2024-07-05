@@ -2,21 +2,21 @@
 
 <head>
     <title>YTParty - Watch YouTube with friends!</title>
-    <link rel="stylesheet" type="text/css" href="/primarystyle.css">
-    <link rel="stylesheet" type="text/css" href="/modal.css">
-    <link href="/favicon.png" rel="icon" type="image/png">
+    <link rel="stylesheet" type="text/css" href="/css/primarystyle.css">
+    <link rel="stylesheet" type="text/css" href="/css/modal.css">
+    <link href="/img/favicon.png" rel="icon" type="image/png">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Paytone+One&display=swap" rel="stylesheet">
 
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
-    <script src="//cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
 
     <meta property="og:site_name" content="Watch YouTube with friends!">
     <meta property="og:url" content="https://ytparty.voidtech.de/">
     <meta property="og:description" content="Sign up to YTParty!">
-    <meta property="og:image" content="https://ytparty.voidtech.de/favicon.png" />
+    <meta property="og:image" content="https://ytparty.voidtech.de/img/favicon.png" />
     <meta property="og:type" content="website">
     <meta name="theme-color" content="#FF0000">
 </head>
@@ -41,7 +41,7 @@
                 </div>
             </div>
         </div>
-        <img src="/avatar/beagle" id="avatar-preview" class="user-image"><br>
+        <img src="/img/avatars/beagle.png" id="avatar-preview" class="user-image"><br>
         <label for="avatar-options" class="">Choose an avatar:</label><br><br>
         <select name="avatar-options" id="avatar-selector">
             <option value="beagle" selected>Beagle</option>
@@ -68,8 +68,6 @@
             <p>Enter a username (you can choose a nickname later!):</p>
             <input type="text" name="username" placeholder="Username" />
             <br />
-            <p>You can choose to enter your email, or leave this blank. We only use it to recover your password.</p>
-            <input type="email" name="email" placeholder="Recovery Email (Optional)" />
             <br />
             <p>Please make sure your password has one capital letter, one number and is at least 8 characters long!</p>
             <input type="password" name="password" placeholder="Password" />
@@ -80,18 +78,18 @@
         </form>
 
         <p id="user-message"></p>
-        <p>By signing up, you agree to the YTParty <a href="/terms.html" target="_blank" rel="noreferrer noopener">terms and conditions</a></p>
+        <p>By signing up, you agree to the YTParty <a href="/html/terms.html" target="_blank" rel="noreferrer noopener">terms and conditions</a></p>
         <button class="button hover-animation" onclick="sendSignupData()" id="signup-button"><p class="button-text">Sign me up!</p></button>
 
     </div>
     <a href="/"><button class="back-button">⮜</button></a>
-    <img class="waves" src="/waves.svg">
+    <img class="waves" src="/img/waves.svg">
 </body>
 
-<script src="/signup.js"></script>
-<script src="/modal.js"></script>
+<script src="/js/signup.js"></script>
+<script src="/js/modal.js"></script>
 <script>
-    particlesJS.load('particles-js', "/particle-config.json", function() {
+    particlesJS.load('particles-js', "/particle-config", function() {
         console.log('Particles loaded');
     });
 </script>

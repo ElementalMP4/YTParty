@@ -18,7 +18,7 @@ Gateway.onclose = function() {
 Gateway.onmessage = function(message) {
     const response = JSON.parse(message.data);
     console.log(response);
-    if (response.success) browser.tabs.create({ url: "https://ytparty.voidtech.de/player.html?roomID=" + response.response.partyID });
+    if (response.success) browser.tabs.create({ url: "https://ytparty.voidtech.de/html/player.html?roomID=" + response.response.partyID });
     else showMessage("Error: " + response.response);
 }
 

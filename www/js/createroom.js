@@ -20,14 +20,14 @@ Gateway.onmessage = function(message) {
     console.log(serverMessage); //Log the message
     if (serverMessage.success) { //If the request was a success...
         //We can redirect the user to their room
-        window.location.href = location.protocol + "//" + location.host + "/player.html?roomID=" + serverMessage.response.partyID;
+        window.location.href = location.protocol + "//" + location.host + "/html/player.html?roomID=" + serverMessage.response.partyID;
     } else showModalMessage("Error", serverMessage.response); //Otherwise, show an error
 }
 
 //Get the user's token from storage. If it is not available, then lead them to the signin page and then redirect them back here.
 function getToken() {
     let token = window.localStorage.getItem("token");
-    if (token == null) window.location.href = location.protocol + "//" + location.host + "/login.html?redirect=" + location.pathname + location.search;
+    if (token == null) window.location.href = location.protocol + "//" + location.host + "/html/login.html?redirect=" + location.pathname + location.search;
     else return token;
 }
 

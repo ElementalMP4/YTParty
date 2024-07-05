@@ -13,7 +13,7 @@ Watch YouTube with friends!
 
 ### Creating a room without the Chrome extension
 
-Once signed in, head over to [the create room page](https://ytparty.voidtech.de/createroom.html) and follow the room creation steps
+Once signed in, head over to [the create room page](https://ytparty.voidtech.de/html/createroom.html) and follow the room creation steps
 
 ### Creating a room with the Chrome extension
 

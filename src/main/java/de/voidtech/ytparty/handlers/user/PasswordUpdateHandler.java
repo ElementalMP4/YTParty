@@ -12,7 +12,6 @@ import main.java.de.voidtech.ytparty.entities.persistent.User;
 import main.java.de.voidtech.ytparty.handlers.AbstractHandler;
 import main.java.de.voidtech.ytparty.service.GatewayAuthService;
 import main.java.de.voidtech.ytparty.service.GatewayResponseService;
-import main.java.de.voidtech.ytparty.service.MailService;
 import main.java.de.voidtech.ytparty.service.UserService;
 import main.java.de.voidtech.ytparty.service.UserTokenService;
 
@@ -20,56 +19,45 @@ import main.java.de.voidtech.ytparty.service.UserTokenService;
 public class PasswordUpdateHandler extends AbstractHandler {
 
 	@Autowired
-	private UserTokenService tokenService; //Used to reset a user's token after they change their password
+	private UserTokenService tokenService;
 	
 	@Autowired
-	private GatewayResponseService responder; //Used to reply to the user
+	private GatewayResponseService responder;
 	
 	@Autowired
-	private UserService userService; //Used to retrieve and modify user data
+	private UserService userService;
 	
 	@Autowired
-	private GatewayAuthService authService; //Used to authenticate the user's token
-	
-	@Autowired
-	private MailService mailService; //Used to send an email to the user notifying them that their password has been changed
-	
-	//Used to validate the password complexity (8+ characters, a number, a lowercase letter and an uppercase letter)
-	private Pattern passwordPattern = Pattern.compile("(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{8,}");
+	private GatewayAuthService authService;
+
+	private static final Pattern PASSWORD_PATTERN = Pattern.compile("(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{8,}");
 	
 	@Override
 	public void execute(GatewayConnection session, JSONObject data) {
-		String token =  data.getString("token"); //Get the user's token
-		String currentPassword = data.getString("original-password").trim(); //Get the original password
-		String newPassword = data.getString("new-password").trim(); //Get the new password
-		String newPasswordConfirm = data.getString("password-match").trim(); //Get the second entry of the new password
+		String token =  data.getString("token");
+		String currentPassword = data.getString("original-password").trim();
+		String newPassword = data.getString("new-password").trim();
+		String newPasswordConfirm = data.getString("password-match").trim();
 		
-		AuthResponse tokenResponse = authService.validateToken(token); //Validate the token
-		
-		//If the token is invalid, reject it with a message
+		AuthResponse tokenResponse = authService.validateToken(token);
+
 		if (!tokenResponse.isSuccessful()) responder.sendError(session, tokenResponse.getMessage(), this.getHandlerType());
 		else {
-			//Otherwise get the user from their username
 			String username = tokenResponse.getActingString();
 			User user = userService.getUser(username);
-			//Validate their current password
 			if (!user.checkPassword(currentPassword)) 
 				responder.sendError(session, "Your current password is not correct!", this.getHandlerType());
-			//Compare the new password entries
 			else if (!newPassword.equals(newPasswordConfirm))
 				responder.sendError(session, "The passwords you entered do not match!", this.getHandlerType());
-			//Validate the new password
-			else if (!passwordPattern.matcher(newPassword).matches())
+			else if (!PASSWORD_PATTERN.matcher(newPassword).matches())
 				responder.sendError(session, "That password is not valid! Make sure it contains a capital letter and"
 						+ " a number and is at least 8 characters!", this.getHandlerType());
 			else {
-				//Change the password and send a success message
 				user.setPassword(newPassword);
 				userService.saveUser(user);
 				tokenService.removeToken(username);
 				String newToken = tokenService.getToken(username);
 				responder.sendSuccess(session, new JSONObject().put("token", newToken), this.getHandlerType());
-				mailService.sendPasswordResetMessage(user.getEmail());
 			}
 		}
 	}

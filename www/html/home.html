@@ -2,20 +2,20 @@
 
 <head>
     <title>YTParty - Watch YouTube with friends!</title>
-    <link rel="stylesheet" type="text/css" href="/primarystyle.css">
-    <link href="/favicon.png" rel="icon" type="image/png">
+    <link rel="stylesheet" type="text/css" href="/css/primarystyle.css">
+    <link href="/img/favicon.png" rel="icon" type="image/png">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Paytone+One&display=swap" rel="stylesheet">
 
-    <script src="//cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
 
     <meta property="og:site_name" content="Watch YouTube with friends!">
     <meta property="og:url" content="https://ytparty.voidtech.de/">
     <meta property="og:description" content="Create a room, change your settings and more!">
-    <meta property="og:image" content="https://ytparty.voidtech.de/favicon.png" />
+    <meta property="og:image" content="https://ytparty.voidtech.de/img/favicon.png" />
     <meta property="og:type" content="website">
     <meta name="theme-color" content="#FF0000">
 </head>
@@ -26,19 +26,19 @@
     <h3 class="centre-align header header-sub">Watch YouTube with friends!</h3>
     <div class="menu centre-align">
         <h3 class="centre-align header header-sub" id="welcome-banner">Good to see you!</h3>
-        <a href="/createroom.html" class="link">
+        <a href="/html/createroom.html" class="link">
             <button class="button hover-animation">
                 <i class="bi bi-plus-circle"></i>
                 <p class="button-text">Create a room</p>
             </button>
         </a>
-        <a href="/about.html" class="link" target="_blank" rel="noreferrer noopener">
+        <a href="/html/about.html" class="link" target="_blank" rel="noreferrer noopener">
             <button class="button hover-animation">
                 <i class="bi bi-question-circle"></i>
                 <p class="button-text">How to use YTParty</p>
             </button>
         </a>
-        <a href="/accountsettings.html" class="link">
+        <a href="/html/accountsettings.html" class="link">
             <button class="button hover-animation">
                 <i class="bi bi-gear"></i>
                 <p class="button-text">Change your settings</p>
@@ -49,12 +49,12 @@
             <p class="button-text">Log out</p>
         </button>
     </div>
-    <img class="waves" src="/waves.svg">
+    <img class="waves" src="/img/waves.svg">
 </body>
 
-<script src="/home.js"></script>
+<script src="/js/home.js"></script>
 <script>
-    particlesJS.load('particles-js', "/particle-config.json", function() {
+    particlesJS.load('particles-js', "/particle-config", function() {
         console.log('Particles loaded');
     });
 </script>

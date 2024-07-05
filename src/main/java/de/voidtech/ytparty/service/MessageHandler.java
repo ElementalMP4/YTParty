@@ -41,7 +41,6 @@ public class MessageHandler {
 				responder.sendError(session, "Invalid message type", RESPONSE_SOURCE);
 			} else {
 				AbstractHandler compatibleHandler = compatibleHandlers.get(0);
-				LOGGER.log(Level.INFO, "Received Gateway Message: " + messageObject.getString("type"));
 				if (compatibleHandler.requiresRateLimit()) {
 					if (session.connectionRateLimited()) {
 						responder.sendError(session, "You are being rate limited!", RESPONSE_SOURCE);

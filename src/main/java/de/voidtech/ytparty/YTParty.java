@@ -39,23 +39,4 @@ public class YTParty {
 	public ConfigService getConfigService() {
 		return configService;
 	}
-	
-	@Bean
-	public JavaMailSenderImpl getMailSender() {
-	    JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
-	    ConfigService config = new ConfigService();
-	    mailSender.setHost(config.getMailHost());
-	    mailSender.setPort(config.getMailPort());
-	    mailSender.setUsername(config.getMailUser());
-	    mailSender.setPassword(config.getMailPassword());
-	    
-	    Properties props = mailSender.getJavaMailProperties();
-	    props.put("mail.transport.protocol", "smtp");
-	    props.put("mail.smtp.auth", "true");
-	    props.put("mail.smtp.starttls.enable", "true");
-	    props.put("mail.smtp.ssl.enable", "true");
-	    props.put("mail.debug", "false");
-	    
-	    return mailSender;
-	}
 }

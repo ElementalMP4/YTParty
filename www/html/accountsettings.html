@@ -2,20 +2,20 @@
 
 <head>
     <title>YTParty - Watch YouTube with friends!</title>
-    <link rel="stylesheet" type="text/css" href="/primarystyle.css">
-    <link rel="stylesheet" type="text/css" href="/modal.css">
-    <link href="/favicon.png" rel="icon" type="image/png">
+    <link rel="stylesheet" type="text/css" href="/css/primarystyle.css">
+    <link rel="stylesheet" type="text/css" href="/css/modal.css">
+    <link href="/img/favicon.png" rel="icon" type="image/png">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Paytone+One&display=swap" rel="stylesheet">
 
-    <script src="//cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
 
     <meta property="og:site_name" content="Watch YouTube with friends!">
     <meta property="og:url" content="https://ytparty.voidtech.de/">
     <meta property="og:description" content="Change your account settings!">
-    <meta property="og:image" content="https://ytparty.voidtech.de/favicon.png" />
+    <meta property="og:image" content="https://ytparty.voidtech.de/img/favicon.png" />
     <meta property="og:type" content="website">
     <meta name="theme-color" content="#FF0000">
 </head>
@@ -44,7 +44,7 @@
 
         <!--Change Avatar-->
 
-        <img src="/favicon.png" id="avatar-preview" class="user-image">
+        <img src="/img/favicon.png" id="avatar-preview" class="user-image">
         <br>
         <label for="avatar-options" class="">Choose an avatar:</label><br><br>
         <select name="avatar-options" id="avatar-selector">
@@ -120,13 +120,12 @@
         </button>
         <p id="delete-message"></p>
     </div>
-    <a href="/home.html"><button class="back-button">⮜</button></a>
 </body>
 
-<script src="/settings.js"></script>
-<script src="/modal.js"></script>
+<script src="/js/settings.js"></script>
+<script src="/js/modal.js"></script>
 <script>
-    particlesJS.load('particles-js', "/particle-config.json", function() {
+    particlesJS.load('particles-js', "/particle-config", function() {
         console.log('Particles loaded');
     });
 </script>

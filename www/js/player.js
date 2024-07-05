@@ -55,7 +55,7 @@ function addChatMessage(data) {
 
     let newMessage = `<div class="chat-message">`;
     if (Globals.LAST_MESSAGE_AUTHOR !== author) {
-        newMessage += `<img class="user-image" src="${modifiers.includes("system") ? avatar : ("/avatar/" + avatar)}">`;
+        newMessage += `<img class="user-image" src="${modifiers.includes("system") ? avatar : ("/img/avatars/" + avatar + ".png")}">`;
         newMessage += `<p class="msg-nickname" style="color:${colour}">${author}</p><br>`;
     }
     newMessage += `<p ${modifiers}>${content}</p></div>`;
@@ -81,7 +81,7 @@ function speakMessage(message) {
 }
 
 function displayLocalMessage(message) {
-    addChatMessage({ "author": "System", "colour": Globals.ROOM_COLOUR, "content": message, "modifiers": "system", "avatar": "/favicon.png" });
+    addChatMessage({ "author": "System", "colour": Globals.ROOM_COLOUR, "content": message, "modifiers": "system", "avatar": "/img/favicon.png" });
 }
 
 function sendPlayingMessage() {
@@ -263,7 +263,7 @@ function handleGatewayMessage(packet) {
 
 function getToken() {
     let token = window.localStorage.getItem("token");
-    if (token == null) window.location.href = location.protocol + "//" + location.host + "/login.html?redirect=" + location.pathname + location.search;
+    if (token == null) window.location.href = location.protocol + "//" + location.host + "/html/login.html?redirect=" + location.pathname + location.search;
     else return token;
 }
 
@@ -497,7 +497,7 @@ Gateway.onopen = function() {
     const selfURL = new URL(location.href);
     Globals.TOKEN = getToken();
 
-    if (!selfURL.searchParams.get("roomID")) window.location.href = location.protocol + "//" + location.host + "/home.html";
+    if (!selfURL.searchParams.get("roomID")) window.location.href = location.protocol + "//" + location.host + "/html/home.html";
     else {
         Globals.ROOM_ID = selfURL.searchParams.get("roomID");
         embedPlayer();

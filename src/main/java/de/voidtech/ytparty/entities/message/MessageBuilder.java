@@ -21,7 +21,7 @@ public class MessageBuilder {
 	//Chat Message Constants
 	public static final String SYSTEM_AUTHOR = "System";
 	public static final String SYSTEM_MODIFIERS = "system";
-	public static final String SYSTEM_AVATAR = "/favicon.png";
+	public static final String SYSTEM_AVATAR = "/img/favicon.png";
 	
 	//System Message constants
 	public static final JSONObject EMPTY_JSON = new JSONObject();

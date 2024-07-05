@@ -32,7 +32,7 @@ Gateway.onmessage = function(message) {
 function getToken() {
     let token = window.localStorage.getItem("token");
     //Redirect them to the login if they are not logged in
-    if (token == null) window.location.href = location.protocol + "//" + location.host + "/login.html?redirect=" + location.pathname + location.search;
+    if (token == null) window.location.href = location.protocol + "//" + location.host + "/html/login.html?redirect=" + location.pathname + location.search;
     else return token;
 }
 
