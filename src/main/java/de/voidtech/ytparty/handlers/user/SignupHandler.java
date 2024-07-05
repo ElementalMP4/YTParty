@@ -39,7 +39,7 @@ public class SignupHandler extends AbstractHandler {
 		String avatar = data.getString("avatar");
 		String captchaToken = data.getString("captcha-token");
 
-		if (username.equals(""))
+		if (username.isEmpty())
 			responder.sendError(session, "That username is not valid!", this.getHandlerType());
 		else if (username.length() > 32)
 			responder.sendError(session, "That username is too long! It must be less than 32 characters.", this.getHandlerType());
@@ -50,7 +50,7 @@ public class SignupHandler extends AbstractHandler {
 					+ "(One capital letter, One number, 8 Characters long)", this.getHandlerType());
 		else if (userService.usernameInUse(username))
 			responder.sendError(session, "That username is already in use!", this.getHandlerType());
-		else if (avatar.equals(""))
+		else if (avatar.isEmpty())
 			responder.sendError(session, "You must choose an avatar!", this.getHandlerType());
 		else if (!captchaService.validateCaptcha(captchaToken))
 			responder.sendError(session, "You need to complete the captcha!", this.getHandlerType());

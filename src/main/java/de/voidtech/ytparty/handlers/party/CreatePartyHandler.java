@@ -52,7 +52,7 @@ public class CreatePartyHandler extends AbstractHandler{
 			partyService.saveParty(party); //Save party
 			//Reply with room ID
 			responder.sendSuccess(session, new JSONObject().put("partyID", party.getPartyID()), this.getHandlerType()); 
-			LOGGER.log(Level.INFO, "Party created by " + ownerUsername);
+			LOGGER.log(Level.INFO, "Party created by " + ownerUsername + " ID: " + party.getPartyID());
 		}
 	}
 

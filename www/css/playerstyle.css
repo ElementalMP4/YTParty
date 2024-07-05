@@ -1,20 +1,12 @@
 @keyframes slide-up {
-    0% {
+    from {
+        transform: translateY(100%);
         opacity: 0;
-        transform: translatey(30px);
     }
-    100% {
-        opacity: 1;
-        transform: translatey(0);
-    }
-}
 
-@keyframes loading {
-    0% {
-        transform: rotate(0deg);
-    }
-    100% {
-        transform: rotate(360deg);
+    to {
+        transform: translateY(0);
+        opacity: 1;
     }
 }
 
@@ -22,235 +14,175 @@
     0% {
         opacity: .2;
     }
+
     20% {
         opacity: 1;
     }
+
     100% {
         opacity: .2;
     }
 }
 
-button {
-    color: white;
-    background-color: #960303;
-    padding: 5px;
-    border: none;
-    border-radius: 5px;
-    display: inline-block;
-    margin: auto;
-    width: 20%;
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
 }
 
-button:hover {
-    background-color: #d80000;
+* {
+    font-family: Arial, Helvetica, sans-serif
 }
 
-h2.queue-title {
-    margin-bottom: 0px;
+body{
+    margin: 0;
+    font-family: Arial, sans-serif;
+    overflow: hidden;
+    background-color: #1a1a1a;
 }
 
-input[type=text],
-select {
-    color: white;
+div.player-modal-content {
+    background-color: #1a1a1a;
+}
+
+iframe {
+    margin: 0px;
+}
+
+div.container {
+    display: flex;
+    height: 100vh;
+}
+
+div.main {
+    flex: 85%;
+}
+
+div.sidebar {
+    flex: 15%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 10px;
+    padding-bottom: 0px;
+}
+
+div.message-container {
+    display: flex;
+    flex-direction: column-reverse;
+    flex-grow: 1;
+    overflow-y: auto;
+}
+
+div.message {
     background-color: #292929;
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 10px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+    animation: slide-up 0.5s forwards;
+}
+
+div.typing-area {
+    display: flex;
+    flex-direction: column;
+}
+
+div.typing-area input[type=text] {
+    background-color: #292929;
+    border-radius: 5px 5px 0 0;
+    padding: 10px;
     border: none;
     border-bottom: 2px solid grey;
     outline: none;
-    width: 100%;
-    float: left;
+    color: #f0f0f0;
 }
 
-input[type=text],
-select:focus {
-    border-bottom: 2px solid #8f2727
+div.typing-area input[type=text]:focus {
+    border-bottom: 2px solid red
 }
 
-body {
-    background-color: black;
-    overflow: hidden;
-    scrollbar-width: none;
-}
-
-.div-float-left {
-    float: left;
-    padding: 3px;
-}
-
-.div-input-container {
-    width: 19%;
-}
-
-div {
-    padding: 0px;
-}
-
-.chat {
-    height: 93%;
-    overflow-y: scroll;
-    overflow-x: hidden;
-    overflow: auto;
-    display: flex;
-    flex-direction: column-reverse;
-    width: 19%;
-    background-color: #1a1a1a;
-    overflow-wrap: break-word;
-    white-space: pre-wrap;
-    position: relative;
-}
-
-.chat-message {
-    background-color: #212121;
-    border-radius: 5px;
-    animation: slide-up 0.2s ease;
-    padding: 3px;
-}
-
-.chat-message:hover {
-    background-color: #292929;
-}
-
-p,
-label {
+p, h2, label {
     color: white;
-    font-family: Helvetica;
-    font-size: 14px;
-    display: inline;
 }
 
-label {
-    line-height: 1.5;
-}
-
-p.msg-nickname {
-    font-size: 16px;
-    font-family: 'Paytone One', sans-serif;
-    vertical-align: middle;
-    overflow-wrap: break-word;
-    display: inline;
-}
-
-img.user-image {
-    border-radius: 50%;
-    height: 30px;
-    width: 30px;
-    vertical-align: middle;
-    padding-right: 5px;
-    display: inline;
-}
-
-.player {
-    padding: 0px;
-}
-
- ::-webkit-scrollbar {
-    width: 5px;
-}
-
- ::-webkit-scrollbar-thumb {
-    background: #ab1400;
-    border-radius: 10px;
-}
-
- ::-webkit-scrollbar-thumb:hover {
-    background: red;
-}
-
-button.action-complete {
-    background-color: green;
-}
-
-p.typing-message {
-    padding: 0%;
-    color: grey;
+p.typing {
     font-style: italic;
+    color: #ccc;
+    margin: 5px;
 }
 
-p.system {
-    color: grey;
-    font-style: italic;
-}
-
-p.italic {
-    font-style: italic;
-}
-
-p.bold {
-    font-weight: bold;
-}
-
-p.underline {
-    text-decoration: underline;
-}
-
-p.strikethrough {
-    text-decoration: line-through;
-}
-
-p.cursive {
-    font-family: 'Lobster Two', cursive;
-    font-size: 20nopx;
-}
-
-p.big {
-    font-size: 35px;
-}
-
-.typing span {
+p.typing span {
     animation-name: blink;
     animation-duration: 1.4s;
     animation-iteration-count: infinite;
     animation-fill-mode: both;
 }
 
-.typing span:nth-child(2) {
+p.typing span:nth-child(2) {
     animation-delay: .2s;
 }
 
-.typing span:nth-child(3) {
+p.typing span:nth-child(3) {
     animation-delay: .4s;
 }
 
-.loading-screen {
-    display: flex;
-    align-items: center;
+div.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
     width: 100%;
     height: 100%;
-    z-index: 2;
-    background-color: #1a1a1a;
-    transition-duration: 0.4s;
-    position: absolute;
-    left: 0;
-    top: 0;
+    background-color: rgba(10, 10, 10, 0.95);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    transition: opacity 0.3s ease;
 }
 
-.loaded {
+div.loading-overlay.hidden {
     opacity: 0;
+    pointer-events: none;
 }
 
-.hide-screen {
-    transition-delay: 0.5s;
-    display: none;
-}
-
-.loading-ring {
-    display: inline-block;
-    width: 80px;
-    height: 80px;
-    margin: auto;
-}
-
-.loading-ring:after {
-    content: " ";
-    display: block;
-    width: 64px;
-    height: 64px;
-    margin: 8px;
+div.spinner {
+    border: 12px solid #f3f3f3;
+    border-top: 12px solid #3498db;
     border-radius: 50%;
-    border: 6px solid #fff;
-    border-color: #fff transparent #fff transparent;
-    animation: loading 1.2s linear infinite;
+    width: 60px;
+    height: 60px;
+    animation: spin 2s linear infinite;
 }
 
-.queue-list {
-    overflow-y: scroll;
+
+
+.message-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+.avatar {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.username {
+    font-size: 1.2em;
+    margin: 0;
+}
+
+p.message-content, p.message-content * {
+    margin: 5px 0 5px 0;
+}
+
+.player-modal-input {
+    width: 75%;
 }

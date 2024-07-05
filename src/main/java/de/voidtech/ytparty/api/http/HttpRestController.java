@@ -26,7 +26,7 @@ public class HttpRestController {
 
 	@GetMapping("/")
 	public RedirectView redirectToIndex(RedirectAttributes attributes) {
-		return new RedirectView("/html/html/index.html");
+		return new RedirectView("/html/index.html");
 	}
 
 	@GetMapping(value = "/particle-config", produces = "text/json")
