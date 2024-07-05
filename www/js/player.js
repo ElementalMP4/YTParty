@@ -19,6 +19,14 @@ let Globals = {
 
 const messageContainer = document.getElementById('messageContainer');
 const messageInput = document.getElementById('messageInput');
+const typingMessage = document.getElementById("typing-message");
+const queueItems = document.getElementById("queue-items");
+const queueTitle = document.getElementById("queue-title");
+const chatInput = document.getElementById("chat-input");
+const loadingScreen = document.getElementById("loading-screen");
+const playerModal = document.getElementById("player-modal");
+const currentVideoInput = document.getElementById("current-video-input");
+const queueInput = document.getElementById("queue-input");
 
 function sendGatewayMessage(message) {
     Gateway.send(JSON.stringify(message));
@@ -30,11 +38,11 @@ function data(params) {
 }
 
 function showTypingMessage() {
-    document.getElementById("typing-message").style.display = "block";
+    typingMessage.style.display = "block";
 }
 
 function hideTypingMessage() {
-    document.getElementById("typing-message").style.display = "none";
+    typingMessage.style.display = "none";
 }
 
 function updateTyping(data) {
@@ -173,8 +181,8 @@ function convertVideoList(videos) {
 
 function refreshModalQueueData(videos) {
     let message = convertVideoList(videos);
-    document.getElementById("queue-items").innerHTML = message + "<br><br>";
-    document.getElementById("queue-title").innerHTML = "Queued Items (" + videos.length + ")";
+    queueItems.innerHTML = message + "<br><br>";
+    queueTitle.innerHTML = "Queued Items (" + videos.length + ")";
 }
 
 function initialiseParty(options) {
@@ -184,7 +192,6 @@ function initialiseParty(options) {
 
     document.getElementsByTagName("title")[0].text = options.owner + "'s room!";
 
-    let chatInput = document.getElementById("chat-input");
     chatInput.addEventListener("focus", function () {
         this.style.borderBottom = "2px solid " + Globals.ROOM_COLOUR;
     });
@@ -198,10 +205,9 @@ function initialiseParty(options) {
 }
 
 function hideLoadingScreen() {
-    let screen = document.getElementById("loading-screen");
-    screen.classList.add("loaded");
+    loadingScreen.classList.add("loaded");
     setTimeout(() => {
-        screen.style.display = "none";
+        loadingScreen.style.display = "none";
     }, 500);
 }
 
@@ -264,11 +270,11 @@ function sendTypingStart() {
     }
 }
 
-document.getElementById("chat-input").addEventListener("keyup", function (event) {
+chatInput.addEventListener("keyup", function (event) {
     if (event.key == "Enter") {
         sendTypingStop();
         event.preventDefault();
-        let message = document.getElementById("chat-input").value.trim();
+        let message = chatInput.value.trim();
         if (message == "") return;
         if (message.length > 2000) {
             displayLocalMessage("Your message is too long! Messages cannot be longer than 2000 characters.");
@@ -287,9 +293,9 @@ document.getElementById("chat-input").addEventListener("keyup", function (event)
             }
         });
 
-        document.getElementById("chat-input").value = "";
+        chatInput.value = "";
     } else {
-        let message = document.getElementById("chat-input").value.trim();
+        let message = chatInput.value.trim();
         if (message == "") sendTypingStop();
         else sendTypingStart();
     }
@@ -301,32 +307,34 @@ function refreshQueue() {
     sendGatewayMessage({ "type": "party-getqueue", "data": data() });
 }
 
+function showModalMenu() {
+    playerModal.style.display = "block";
+}
+
 window.addEventListener("keydown", function (event) {
     if (event.code == "KeyM" && event.ctrlKey) { //Ctrl + M
         refreshQueue();
-        let copyButton = document.getElementById("copy-button");
-        if (copyButton.classList.contains("action-complete")) copyButton.classList.remove("action-complete");
         showModalMenu();
     }
 });
 
 //Change current video
-document.getElementById("current-video-input").addEventListener("keyup", function (event) {
+currentVideoInput.addEventListener("keyup", function (event) {
     if (event.key == "Enter") {
         event.preventDefault();
-        let videoURL = document.getElementById("current-video-input").value.trim();
-        document.getElementById("current-video-input").value = "";
+        let videoURL = currentVideoInput.value.trim();
+        currentVideoInput.value = "";
         if (videoURL == "") return;
         setVideo(videoURL);
     }
 });
 
 //Add to queue
-document.getElementById("queue-input").addEventListener("keyup", function (event) {
+queueInput.addEventListener("keyup", function (event) {
     if (event.key == "Enter") {
         event.preventDefault();
-        let videoURL = document.getElementById("queue-input").value.trim();
-        document.getElementById("queue-input").value = "";
+        let videoURL = queueInput.value.trim();
+        queueInput.value = "";
         if (videoURL == "") return;
         let videoURLClass = new URL(videoURL);
         let videoID = videoURLClass.searchParams.get("v");
@@ -358,13 +366,11 @@ function clearQueue() {
 
 //Do this when the copy button is pressed
 function copyRoomURL() {
-    if (document.getElementById("copy-button").classList.contains("action-complete")) return;
     navigator.clipboard.writeText(location.href).then(function () {
         console.log('Copied room URL');
     }, function (err) {
         console.error('Could not copy room URL: ', err);
     });
-    document.getElementById("copy-button").classList.add("action-complete");
 }
 
 //Handle a gateway connection
