@@ -30,6 +30,18 @@
         <h1 class="unselectable">YTParty</h1>
     </div>
 
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="close" id="close">&times;</span>
+                <h2 id="modal-title"></h2>
+            </div>
+            <div class="modal-body">
+                <p id="modal-message"></p>
+            </div>
+        </div>
+    </div>
+
     <ul>
         <li>
             <!--Home-->
@@ -107,6 +119,7 @@
 </body>
 
 <script src="/js/login.js"></script>
+<script src="/js/modal.js"></script>
 <script>
     particlesJS.load('particles-js', "/particle-config.json", function () {
         console.log('Particles loaded');
