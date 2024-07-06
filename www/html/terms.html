@@ -1,63 +1,145 @@
 <html>
 
+
 <head>
     <title>YTParty - Watch YouTube with friends!</title>
-    <link rel="stylesheet" type="text/css" href="/css/primarystyle.css">
-    <link href="/img/favicon.png" rel="icon" type="image/png">
+    <link rel="stylesheet" type="text/css" href="/css/style.css">
+    <link href="/img/logo.svg" rel="icon" type="image/svg">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Paytone+One&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;1,400&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
 
     <meta property="og:site_name" content="Watch YouTube with friends!">
     <meta property="og:url" content="https://ytparty.voidtech.de/">
-    <meta property="og:description" content="View our Terms and Conditions!">
-    <meta property="og:image" content="https://ytparty.voidtech.de/img/favicon.png" />
+    <meta property="og:description" content="Terms & Conditions">
+    <meta property="og:image" content="https://ytparty.voidtech.de/img/logo.svg" />
     <meta property="og:type" content="website">
     <meta name="theme-color" content="#FF0000">
 </head>
 
 <body>
-    <div id="particles-js" class="particles"></div>
-    <h1 class="centre-align header header-main">YTParty</h1>
-    <h3 class="centre-align header header-sub">Watch YouTube with friends!</h3>
-    <div class="menu">
-        <p>When using this service, you acknowledge that you have read and agree to the following terms:</p>
-        <h3 class="centre-align header header-sub">What we expect from you</h3>
-        <p>You are responsible for your conduct while using our service. You must comply with the following requirements when using the service or face account termination and service access restriction:</p>
-
-        <ul>
-            <li>
-                You may not misuse our service by interfering with its normal operation, or attempting to access it using a method other than through the client that we provide.
-            </li>
-            <li>
-                You may not probe, scan, or test the vulnerability of any voidtech system or network. All connections are monitored and any violations may result in account termination and service access restriction.
-            </li>
-            <li>
-                You may not use any manual or automated system or software to extract or scrape data from the interfaces provided.
-            </li>
-        </ul>
-
-        <h3 class="centre-align header header-sub">What data do we collect?</h3>
-        <p>We collect and store your username and nickname and messages you send. We do not store or process cookies, IP addresses or any other information used to uniquely identify a device. We do not store or process any personal data including names,
-            dates of birth, location data or any other personal information.</p>
-        <p>We understand that privacy is important. As a result, adding a recovery email address to your account is entirely optional. If you choose not to add an email address to your account however, you may not be able to recover your account in the event
-            of a password loss.</p>
-        <h3 class="centre-align header header-sub">How long do we keep it for?</h3>
-        <p>We store usernames and nicknames until a user deletes their account. We store message history of a room until the room is disbanded (when all members have left).</p>
-        <h3 class="centre-align header header-sub">What do we do with data?</h3>
-        <p>Usernames are used to identify user accounts. We generate an authentication token which is associated with a user account once the user has logged in. Authentication tokens are reset when a user changes their password. We do not transmit any user
-            information outside of the YTParty API. All data that we process remains private and unseen by humans. Sensitive data such as passwords are stored as a hash and not plaintext.</p>
-        <h3 class="centre-align header header-sub">How do we store data?</h3>
-        <p>All user data is stored in our database. Passwords are hashed instead of being stored in plain text. Data is only accessible via the YTParty API using an authorisation token. Tokens for one user cannot be used for another. Some data that users
-            input cannot be retrieved via the API for security purposes, however this data can be erased or modified by deleting an account or modifying the account settings. Your data is secured by multiple encrypted levels.</p>
+    <div id="particles-js" class="particles underneath"></div>
+    <div class="title-container">
+        <img class="logo unselectable" src="/img/logo.svg">
+        <h1 class="unselectable">YTParty</h1>
     </div>
+
+    <ul>
+        <li>
+            <!--Home-->
+            <a href="/html/index.html">
+                <button class="small-button">
+                    <span class="material-symbols-outlined">
+                        home
+                    </span>
+                    <p>Homepage</p>
+                </button>
+            </a>
+        </li>
+        <li>
+            <!--Login-->
+            <a href="/html/login.html">
+                <button class="small-button">
+                    <span class="material-symbols-outlined">
+                        login
+                    </span>
+                    <p>Login</p>
+                </button>
+            </a>
+        </li>
+        <li>
+            <!--Sign up-->
+            <a href="/html/signup.html">
+                <button class="small-button">
+                    <span class="material-symbols-outlined">
+                        person_add
+                    </span>
+                    <p>Sign up</p>
+                </button>
+            </a>
+        </li>
+        <!--About-->
+        <li>
+            <a href="/html/about.html">
+                <button class="small-button">
+                    <span class="material-symbols-outlined">
+                        help
+                    </span>
+                    <p>What is YTParty?</p>
+                </button>
+            </a>
+        </li>
+        <li>
+            <!--Github-->
+            <a href="https://github.com/ElementalMP4/YouTubeParty">
+                <button class="small-button">
+                    <img src="https://github.githubassets.com/favicons/favicon-dark.png">
+                    <p>GitHub Repository</p>
+                </button>
+            </a>
+        </li>
+    </ul>
+
+    <h2 class="section-header">When using this service, you acknowledge that you have read and agree to the
+        following terms:</h2>
+    <h2 class="section-header">What we expect from you</h2>
+    <p>You are responsible for your conduct while using our service. You must comply with the following
+        requirements
+        when using the service or face account termination and service access restriction.
+    </p>
+
+    <p>
+        You may not misuse our service by interfering with its normal operation, or attempting to access it
+        using a method other than through the client that we provide.
+    </p>
+
+    <p>
+        You may not probe, scan, or test the vulnerability of any voidtech system or network. All
+        connections are monitored and any violations may result in account termination and service access
+        restriction.
+    </p>
+
+    <p>
+        You may not use any manual or automated system or software to extract or scrape data from the
+        interfaces provided.
+    </p>
+
+
+    <h2 class="section-header">What data do we collect?</h2>
+    <p>We collect and store your username and nickname and messages you send. We do not store or process
+        cookies, IP
+        addresses or any other information used to uniquely identify a device. We do not store or process any
+        personal data including names,
+        dates of birth, location data or any other personal information.</p>
+    <p>We understand that privacy is important. Therefore, we don't ask for your contact or personal information. If you
+        need to recover your account, we use TOTP (Time-based one time passwords) to confirm your identity. Make sure to
+        add us to your authenticator app in your account settings!</p>
+    <h2 class="section-header">How long do we keep it for?</h2>
+    <p>We store usernames and nicknames until a user deletes their account. We store message history of a room
+        until the room is disbanded (when all members have left). Messages are only stored so the message history can be
+        recovered when new members join.</p>
+    <h2 class="section-header">What do we do with data?</h2>
+    <p>Usernames are used to identify user accounts. We generate an authentication token which is associated
+        with a user account once the user has logged in. Authentication tokens are reset when a user changes their
+        password. We do not transmit any user
+        information outside of the YTParty API.
+        Passwords are NEVER stored in a plain text format.</p>
+    <h2 class="section-header">How do we store data?</h2>
+    <p>All user data is stored in a PostgreSQL database. Passwords are hashed instead of being stored in plain text.
+        Data is only accessible via the YTParty API using an authorisation token. Tokens for one user cannot be used for
+        another. Some data that users input cannot be retrieved via the API for security purposes, however this data can
+        be erased or modified by deleting an account or modifying the account settings.
+    </p>
 </body>
 
 <script>
-    particlesJS.load('particles-js', "/particle-config", function() {
+    particlesJS.load('particles-js', "/particle-config.json", function () {
         console.log('Particles loaded');
     });
 </script>

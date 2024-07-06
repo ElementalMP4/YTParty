@@ -2,55 +2,121 @@
 
 <head>
     <title>YTParty - Watch YouTube with friends!</title>
-    <link rel="stylesheet" type="text/css" href="/css/primarystyle.css">
-    <link href="/img/favicon.png" rel="icon" type="image/png">
+    <link rel="stylesheet" type="text/css" href="/css/style.css">
+    <link href="/img/logo.svg" rel="icon" type="image/svg">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Paytone+One&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;1,400&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
 
     <meta property="og:site_name" content="Watch YouTube with friends!">
     <meta property="og:url" content="https://ytparty.voidtech.de/">
     <meta property="og:description" content="How to use YTParty!">
-    <meta property="og:image" content="https://ytparty.voidtech.de/img/favicon.png" />
+    <meta property="og:image" content="https://ytparty.voidtech.de/img/logo.svg" />
     <meta property="og:type" content="website">
     <meta name="theme-color" content="#FF0000">
 </head>
 
 <body>
-    <div id="particles-js" class="particles"></div>
-    <h1 class="centre-align header header-main">YTParty</h1>
-    <h3 class="centre-align header header-sub">Watch YouTube with friends!</h3>
-    <div class="menu centre-align">
-
-        <h3 class="centre-align header header-sub">How YTParty works!</h3>
-        <p>When you join a room, you will see the video currently playing, as well as a chat window at the side.</p>
-        <p>You may use the chat to talk about the video, and you may use some commands to add effects to your message! (use /help to see the commands)</p>
-        <p>You can open the Player Menu using ctrl+m where you can copy the room URL, change the current video and queue videos to play automatically one after another!</p>
-        <p>When someone in a room starts a video, the video will automatically play, pause and skip to any time across all the connected users!</p>
-
-        <h3 class="centre-align header header-sub">How to create a room!</h3>
-        <p>To create a room, you will need a YouTube video URL.</p>
-        <p>1) Navigate to <a href="https://youtube.com">YouTube</a> and find a video you want to watch</p>
-        <p>2) Log into your account, or create one, and click the 'Create Room' button from the home menu</p>
-        <p>3) Enter the URL of the video you picked out. You may also want to change the room's colour theme and the player controls for other members.</p>
-        <p>4) Open the player menu with ctrl+m and press the 'Copy Room URL' button. Optionally, you can copy the URL from the URL bar.</p>
-        <p>5) Share the URL you just copied to allow other people to join your room!</p>
-
-        <h3 class="centre-align header header-sub">How to join a room!</h3>
-        <p>To join a room, you will need a room URL. Once you have the room URL, simply follow the link and you will automatically be signed in if you are not already!</p>
-        <p>1) Click the room URL that you will have been shared by another user</p>
-        <p>2) If prompted, sign into your account, or create an account and then click the link again</p>
-        <p>3) You should automatically be redirected to the room</p>
-        <br />
-        <p>Ready to join? go to the <a href="/html/signup.html">signup page</a> to create an account, or <a href="/html/login.html">log into your account here!</a></p>
+    <div id="particles-js" class="particles underneath"></div>
+    <div class="title-container">
+        <img class="logo unselectable" src="/img/logo.svg">
+        <h1 class="unselectable">YTParty</h1>
     </div>
+
+    <ul>
+        <li>
+            <!--Home-->
+            <a href="/html/index.html">
+                <button class="small-button">
+                    <span class="material-symbols-outlined">
+                        home
+                    </span>
+                    <p>Homepage</p>
+                </button>
+            </a>
+        </li>
+        <li>
+            <!--Login-->
+            <a href="/html/login.html">
+                <button class="small-button">
+                    <span class="material-symbols-outlined">
+                        login
+                    </span>
+                    <p>Login</p>
+                </button>
+            </a>
+        </li>
+        <li>
+            <!--Sign up-->
+            <a href="/html/signup.html">
+                <button class="small-button">
+                    <span class="material-symbols-outlined">
+                        person_add
+                    </span>
+                    <p>Sign up</p>
+                </button>
+            </a>
+        </li>
+        <li>
+            <!--T's & C's-->
+            <a href="/html/terms.html">
+                <button class="small-button">
+                    <span class="material-symbols-outlined">
+                        lock
+                    </span>
+                    <p>Terms, Conditions & Privacy</p>
+                </button>
+            </a>
+        </li>
+        <li>
+            <!--Github-->
+            <a href="https://github.com/ElementalMP4/YouTubeParty">
+                <button class="small-button">
+                    <img src="https://github.githubassets.com/favicons/favicon-dark.png">
+                    <p>GitHub Repository</p>
+                </button>
+            </a>
+        </li>
+    </ul>
+
+    <h2 class="section-header">How YTParty works!</h2>
+    <p>When you join a room, you will see the video currently playing, as well as a chat window at the side.</p>
+    <p>You may use the chat to talk about the video, and you may use some commands to add effects to your message! (use
+        /help to see the commands)</p>
+    <p>You can open the Player Menu using ctrl+m where you can copy the room URL, change the current video and queue
+        videos to play automatically one after another!</p>
+    <p>When someone in a room starts a video, the video will automatically play, pause and skip to any time across all
+        the connected users!</p>
+
+    <h2 class="section-header">How to create a room!</h2>
+    <p>To create a room, you will need a YouTube video URL.</p>
+    <p>1) Navigate to <a href="https://youtube.com">YouTube</a> and find a video you want to watch</p>
+    <p>2) Log into your account, or create one, and click the 'Create Room' button from the home menu</p>
+    <p>3) Enter the URL of the video you picked out. You may also want to change the room's colour theme and the player
+        controls for other members.</p>
+    <p>4) Open the player menu with ctrl+m and press the 'Copy Room URL' button. Optionally, you can copy the URL from
+        the URL bar.</p>
+    <p>5) Share the URL you just copied to allow other people to join your room!</p>
+
+    <h2 class="section-header">How to join a room!</h2>
+    <p>To join a room, you will need a room URL. Once you have the room URL, simply follow the link and you will
+        automatically be signed in if you are not already!</p>
+    <p>1) Click the room URL that you will have been shared by another user</p>
+    <p>2) If prompted, sign into your account, or create an account and then click the link again</p>
+    <p>3) You should automatically be redirected to the room</p>
+    <br />
+    <p>Ready to join? go to the <a href="/html/signup.html">signup page</a> to create an account, or <a
+            href="/html/login.html">log into your account here!</a></p>
 </body>
 
 <script>
-    particlesJS.load('particles-js', "/particle-config", function() {
+    particlesJS.load('particles-js', "/particle-config.json", function () {
         console.log('Particles loaded');
     });
 </script>

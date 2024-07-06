@@ -68,47 +68,9 @@ public class ConfigService {
 		String port = config.getProperty("http.port");
 		return port != null ? port : "6969";
 	}
-		
-	public boolean textCacheEnabled() {
-		String cacheEnabled = config.getProperty("cache.TextIsEnabled");
-		return cacheEnabled != null ? Boolean.parseBoolean(cacheEnabled) : true;	
-	}
-	
-	public boolean binaryCacheEnabled() {
-		String cacheEnabled = config.getProperty("cache.BinaryIsEnabled");
-		return cacheEnabled != null ? Boolean.parseBoolean(cacheEnabled) : true;	
-	}
 	
 	public String getCaptchaToken() {
 		return config.getProperty("captcha.Token");
 	}
 
-	public String getMailUser() {
-		return config.getProperty("mail.User");
-	}
-
-	public String getMailPassword() {
-		return config.getProperty("mail.Password");
-	}
-
-	public String getMailHost() {
-		return config.getProperty("mail.Host");
-	}
-
-	public int getMailPort() {
-		return Integer.parseInt(config.getProperty("mail.Port"));
-	}
-
-	public String getMailAddress() {
-		return config.getProperty("mail.Address");
-	}
-	
-	public String getParticleMode() {
-		String mode = config.getProperty("particles.Mode");
-		return (mode == null ? "regular" : mode);
-	}
-
-	public String getLogWebhookURL() {
-		return config.getProperty("logging.Webhook");
-	}
 }

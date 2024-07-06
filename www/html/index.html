@@ -2,59 +2,84 @@
 
 <head>
     <title>YTParty - Watch YouTube with friends!</title>
-    <link rel="stylesheet" type="text/css" href="/css/primarystyle.css">
-    <link href="/img/favicon.png" rel="icon" type="image/png">
+    <link rel="stylesheet" type="text/css" href="/css/style.css">
+    <link href="/img/logo.svg" rel="icon" type="image/svg">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Paytone+One&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;1,400&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
 
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
 
     <meta property="og:site_name" content="YTParty">
     <meta property="og:url" content="https://ytparty.voidtech.de/">
     <meta property="og:description" content="Watch YouTube with friends!">
-    <meta property="og:image" content="https://ytparty.voidtech.de/img/favicon.png" />
+    <meta property="og:image" content="https://ytparty.voidtech.de/img/logo.svg" />
     <meta property="og:type" content="website">
     <meta name="theme-color" content="#FF0000">
 </head>
 
 <body>
     <div id="particles-js" class="particles"></div>
-    <h1 class="centre-align header header-main">YTParty</h1>
-    <h3 class="centre-align header header-sub">Watch YouTube with friends!</h3>
-    <div class="menu centre-align">
-        <a class="link" href="/html/login.html">
-            <button class="button hover-animation">
-                <i class="bi bi-box-arrow-right"></i>
-                <p class="button-text">Login</p>
+    <div class="title-container">
+        <img class="logo unselectable" src="/img/logo.svg">
+        <h1 class="unselectable">YTParty</h1>
+    </div>
+
+    <h2 class="unselectable">Watch YouTube with friends!</h2>
+
+    <div class="button-panel">
+        <!--Login-->
+        <a href="/html/login.html">
+            <button class="big-button">
+                <span class="material-symbols-outlined">
+                    login
+                </span>
+                <p>Login</p>
             </button>
         </a>
-        <a class="link" href="/html/signup.html">
-            <button class="button hover-animation">
-                <i class="bi bi-person-plus"></i>
-                <p class="button-text">Sign up</p>
+        <!--Sign up-->
+        <a href="/html/signup.html">
+            <button class="big-button">
+                <span class="material-symbols-outlined">
+                    person_add
+                </span>
+                <p>Sign up</p>
             </button>
         </a>
-        <a class="link" href="/html/about.html" target="_blank" rel="noreferrer noopener">
-            <button class="button hover-animation">
-                <i class="bi bi-question-circle"></i>
-                <p class="button-text">What is YTParty?</p>
+        <!--About-->
+        <a href="/html/about.html">
+            <button class="big-button">
+                <span class="material-symbols-outlined">
+                    help
+                </span>
+                <p>What is YTParty?</p>
             </button>
         </a>
-        <a class="link" href="/html/terms.html" target="_blank" rel="noreferrer noopener">
-            <button class="button hover-animation">
-                <i class="bi bi-shield-check"></i>
-                <p class="button-text">Terms & Conditions</p>
+        <!--T's & C's-->
+        <a href="/html/terms.html">
+            <button class="big-button">
+                <span class="material-symbols-outlined">
+                    lock
+                </span>
+                <p>Terms, Conditions & Privacy</p>
+            </button>
+        </a>
+        <!--Github-->
+        <a href="https://github.com/ElementalMP4/YouTubeParty">
+            <button class="big-button">
+                <img src="https://github.githubassets.com/favicons/favicon-dark.png">
+                <p>GitHub Repository</p>
             </button>
         </a>
     </div>
-    <img class="waves" src="/img/waves.svg">
 </body>
 
 <script>
-    particlesJS.load('particles-js', "/particle-config", function() {
+    particlesJS.load('particles-js', "/particle-config.json", function () {
         console.log('Particles loaded');
     });
 </script>

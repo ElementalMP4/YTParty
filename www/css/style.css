@@ -1,0 +1,146 @@
+body {
+    background-image: linear-gradient(to top right, #EE3245, #E96772);
+}
+
+h1,
+h2,
+p {
+    font-family: "Montserrat", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
+    color: #e8eaed;
+}
+
+h1 {
+    font-size: 150px;
+    margin: 20px;
+}
+
+h2 {
+    margin-left: 15px;
+    margin-bottom: 10px;
+}
+
+.logo {
+    height: 200px;
+}
+
+.title-container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.title-container img {
+    margin-right: 10px;
+}
+
+.particles {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+}
+
+.underneath {
+    z-index: -1;
+}
+
+button {
+    position: relative;
+    padding: 10px 20px;
+    font-size: 16px;
+    color: #e8eaed;
+    background-color: transparent;
+    border: 3px solid #e8eaed;
+    border-radius: 5px;
+    cursor: pointer;
+    overflow: hidden;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+button.big-button {
+    width: 30%;
+    display: flex;
+    align-items: center;
+}
+
+button.small-button {
+    display: flex;
+    align-items: center;
+    margin-right: 10px;
+}
+
+button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 0;
+    background-color: rgba(255, 255, 255, 0.3);
+    transition: width 0.2s ease-in-out;
+    z-index: 1;
+}
+
+button:hover::before {
+    width: 100%;
+}
+
+button span {
+    position: relative;
+    z-index: 2;
+}
+
+.button-panel {
+    margin-left: 15px;
+    margin-top: 40px;
+}
+
+button p {
+    margin-left: 10px;
+}
+
+a {
+    text-decoration: none;
+}
+
+.unselectable {
+    user-select: none;
+}
+
+.section-header {
+    margin-left: 0px;
+    margin-top: 40px;
+}
+
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+li {
+    float: left;
+}
+
+input {
+    display: block;
+    padding: 20px 30px;
+    background-color: transparent;
+    border: 3px solid #e8eaed;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    outline: none;
+    width: 50%;
+    color: #e8eaed;
+}
+
+::placeholder {
+    color: #e8eaed;
+}
