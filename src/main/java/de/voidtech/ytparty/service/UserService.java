@@ -5,7 +5,7 @@ import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import main.java.de.voidtech.ytparty.entities.persistent.User;
+import main.java.de.voidtech.ytparty.persistence.User;
 
 @Service
 public class UserService {

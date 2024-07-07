@@ -13,8 +13,8 @@ import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 
-import main.java.de.voidtech.ytparty.entities.ephemeral.GatewayConnection;
-import main.java.de.voidtech.ytparty.entities.ephemeral.Party;
+import main.java.de.voidtech.ytparty.entities.GatewayConnection;
+import main.java.de.voidtech.ytparty.entities.Party;
 
 @Service
 public class PartyService {

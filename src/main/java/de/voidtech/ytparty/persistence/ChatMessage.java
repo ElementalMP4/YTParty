@@ -1,4 +1,4 @@
-package main.java.de.voidtech.ytparty.entities.persistent;
+package main.java.de.voidtech.ytparty.persistence;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -11,7 +11,7 @@ import javax.persistence.Table;
 import org.hibernate.annotations.Type;
 import org.json.JSONObject;
 
-import main.java.de.voidtech.ytparty.entities.message.MessageBuilder;
+import main.java.de.voidtech.ytparty.entities.MessageBuilder;
 
 @Entity(name = "Messages")
 @Table(name = "Messages", indexes = @Index(columnList = "partyID", name = "index_message"))
@@ -20,7 +20,7 @@ public class ChatMessage {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
-	
+
 	@Column
 	private String partyID; 
 	
@@ -41,10 +41,49 @@ public class ChatMessage {
 	@Deprecated
 	ChatMessage() {
 	}
+
+	public String getPartyID() {
+		return partyID;
+	}
+
+	public void setPartyID(String partyID) {
+		this.partyID = partyID;
+	}
+
+	public String getAuthor() {
+		return author;
+	}
+
+	public void setAuthor(String author) {
+		this.author = author;
+	}
+
+	public String getColour() {
+		return colour;
+	}
+
+	public void setColour(String colour) {
+		this.colour = colour;
+	}
+
+	public String getContent() {
+		return content;
+	}
+
+	public void setContent(String content) {
+		this.content = content;
+	}
+
+	public String getAvatar() {
+		return avatar;
+	}
+
+	public void setAvatar(String avatar) {
+		this.avatar = avatar;
+	}
 	
 	public ChatMessage(MessageBuilder builder)
 	{
-	  //Take all the necessary fields from the builder
 	  this.partyID = builder.getChatMessagePartyID();
 	  this.author = builder.getChatMessageAuthor();
 	  this.colour = builder.getChatMessageColour();
@@ -52,13 +91,13 @@ public class ChatMessage {
 	  this.avatar = builder.getChatMessageAvatar();
 	}
 
-	public String convertToJson() { //Create a JSON representation of this entity
-		JSONObject data = new JSONObject().put("type", "party-chatmessage") //Set the gateway message type
-				.put("data", new JSONObject() //Set the gateway message data
+	public String convertToJson() {
+		JSONObject data = new JSONObject().put("type", "party-chatmessage")
+				.put("data", new JSONObject()
 						.put("author", this.author)
 						.put("colour", this.colour)
 						.put("content", this.content)
 						.put("avatar", this.avatar));
-		return data.toString(); //Convert it to a String before sending
+		return data.toString();
 	}
 }

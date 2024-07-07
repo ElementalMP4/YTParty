@@ -7,7 +7,7 @@ import java.util.TimerTask;
 import org.springframework.stereotype.Service;
 import org.springframework.web.socket.WebSocketSession;
 
-import main.java.de.voidtech.ytparty.entities.ephemeral.GatewayConnection;
+import main.java.de.voidtech.ytparty.entities.GatewayConnection;
 
 @Service
 public class SessionService {

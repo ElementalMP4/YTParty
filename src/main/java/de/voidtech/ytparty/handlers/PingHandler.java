@@ -4,7 +4,7 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import main.java.de.voidtech.ytparty.annotations.Handler;
-import main.java.de.voidtech.ytparty.entities.ephemeral.GatewayConnection;
+import main.java.de.voidtech.ytparty.entities.GatewayConnection;
 import main.java.de.voidtech.ytparty.service.GatewayResponseService;
 
 @Handler

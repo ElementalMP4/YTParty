@@ -11,11 +11,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.socket.TextMessage;
 
-import main.java.de.voidtech.ytparty.entities.ephemeral.GatewayConnection;
-import main.java.de.voidtech.ytparty.entities.ephemeral.Party;
-import main.java.de.voidtech.ytparty.entities.message.MessageBuilder;
-import main.java.de.voidtech.ytparty.entities.message.SystemMessage;
-import main.java.de.voidtech.ytparty.entities.persistent.ChatMessage;
+import main.java.de.voidtech.ytparty.entities.GatewayConnection;
+import main.java.de.voidtech.ytparty.entities.Party;
+import main.java.de.voidtech.ytparty.entities.MessageBuilder;
+import main.java.de.voidtech.ytparty.entities.SystemMessage;
+import main.java.de.voidtech.ytparty.persistence.ChatMessage;
 
 @Service
 public class GatewayResponseService {

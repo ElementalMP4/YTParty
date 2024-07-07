@@ -1,4 +1,4 @@
-package main.java.de.voidtech.ytparty.entities.persistent;
+package main.java.de.voidtech.ytparty.persistence;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

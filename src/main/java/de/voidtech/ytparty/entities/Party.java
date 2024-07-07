@@ -1,4 +1,4 @@
-package main.java.de.voidtech.ytparty.entities.ephemeral;
+package main.java.de.voidtech.ytparty.entities;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -11,9 +11,7 @@ import org.json.JSONObject;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 
-import main.java.de.voidtech.ytparty.entities.message.MessageBuilder;
-import main.java.de.voidtech.ytparty.entities.message.SystemMessage;
-import main.java.de.voidtech.ytparty.entities.persistent.ChatMessage;
+import main.java.de.voidtech.ytparty.persistence.ChatMessage;
 
 public class Party {
 	private String partyID;

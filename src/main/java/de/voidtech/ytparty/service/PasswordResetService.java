@@ -7,7 +7,7 @@ import java.util.TimerTask;
 
 import org.springframework.stereotype.Service;
 
-import main.java.de.voidtech.ytparty.entities.ephemeral.PasswordResetCase;
+import main.java.de.voidtech.ytparty.entities.PasswordResetCase;
 
 @Service
 public class PasswordResetService {

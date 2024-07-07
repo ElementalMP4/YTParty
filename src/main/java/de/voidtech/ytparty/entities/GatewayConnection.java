@@ -1,4 +1,4 @@
-package main.java.de.voidtech.ytparty.entities.ephemeral;
+package main.java.de.voidtech.ytparty.entities;
 
 import java.time.Instant;
 

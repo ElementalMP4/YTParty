@@ -1,4 +1,4 @@
-package main.java.de.voidtech.ytparty.entities.message;
+package main.java.de.voidtech.ytparty.entities;
 
 import org.json.JSONObject;
 

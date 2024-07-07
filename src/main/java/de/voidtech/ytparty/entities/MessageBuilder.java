@@ -1,8 +1,8 @@
-package main.java.de.voidtech.ytparty.entities.message;
+package main.java.de.voidtech.ytparty.entities;
 
 import org.json.JSONObject;
 
-import main.java.de.voidtech.ytparty.entities.persistent.ChatMessage;
+import main.java.de.voidtech.ytparty.persistence.ChatMessage;
 
 public class MessageBuilder {
 	
