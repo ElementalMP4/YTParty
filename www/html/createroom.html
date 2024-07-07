@@ -3,33 +3,37 @@
 <head>
     <title>YTParty - Watch YouTube with friends!</title>
     <link rel="stylesheet" type="text/css" href="/css/style.css">
-    <link rel="stylesheet" type="text/css" href="/css/modal.css">
-    <link href="/img/favicon.png" rel="icon" type="image/png">
+    <link href="/img/logo.svg" rel="icon" type="image/svg">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Paytone+One&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;1,400&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 
     <meta property="og:site_name" content="Watch YouTube with friends!">
     <meta property="og:url" content="https://ytparty.voidtech.de/">
-    <meta property="og:description" content="Create a room!">
+    <meta property="og:description" content="YTParty User Home">
     <meta property="og:image" content="https://ytparty.voidtech.de/img/logo.svg" />
     <meta property="og:type" content="website">
     <meta name="theme-color" content="#FF0000">
 </head>
 
 <body>
-    <div id="particles-js" class="particles"></div>
-    <h1 class="centre-align header header-main">YTParty</h1>
-    <h3 class="centre-align header header-sub">Watch YouTube with friends!</h3>
+    <div id="particles-js" class="particles underneath"></div>
+    <div class="title-container">
+        <img class="logo unselectable" src="/img/logo.svg">
+        <h1 class="unselectable">YTParty</h1>
+    </div>
 
-    <button style="display:none" id="open-modal"></button>
     <div id="modal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <span id="close" class="close">&times;</span>
+                <span class="close" id="close">&times;</span>
                 <h2 id="modal-title"></h2>
             </div>
             <div class="modal-body">
@@ -38,8 +42,52 @@
         </div>
     </div>
 
-    <div class="menu centre-align">
-        <h3 class="centre-align header header-sub">Create a room!</h3>
+    <ul>
+        <li>
+            <!--Home-->
+            <a href="/html/home.html">
+                <button class="small-button">
+                    <span class="material-symbols-outlined">
+                        home
+                    </span>
+                    <p>User Home</p>
+                </button>
+            </a>
+        </li>
+        <li>
+            <!--About-->
+            <a href="/html/about.html">
+                <button class="small-button">
+                    <span class="material-symbols-outlined">
+                        help
+                    </span>
+                    <p>What is YTParty?</p>
+                </button>
+            </a>
+        </li>
+        <li>
+            <!--T's & C's-->
+            <a href="/html/terms.html">
+                <button class="small-button">
+                    <span class="material-symbols-outlined">
+                        lock
+                    </span>
+                    <p>Terms, Conditions & Privacy</p>
+                </button>
+            </a>
+        </li>
+        <li>
+            <!--Github-->
+            <a href="https://github.com/ElementalMP4/YouTubeParty">
+                <button class="small-button">
+                    <img src="https://github.githubassets.com/favicons/favicon-dark.png">
+                    <p>GitHub Repository</p>
+                </button>
+            </a>
+        </li>
+    </ul>
+
+    <div class="button-panel">
         <p>Enter your video URL here:</p>
         <input type="text" placeholder="www.youtube.com/watch?v=XXXXXXXXXXX" id="video-entry">
         <p id="video-message"></p>
@@ -49,21 +97,36 @@
             <span class="slider"></span>
         </label>
         <p>Choose a custom room colour!</p>
-        <input type="color" value="#FF0000" id="room-colour-picker">
+        <input type="color" id="room-colour-picker">
         <p />
         <p></p>
-        <button class="button hover-animation" onclick="createRoom()"><p class="button-text">Create!</p></button>
+        <button class="button hover-animation" onclick="createRoom()">
+            <p class="button-text">Create!</p>
+        </button>
     </div>
-    <a href="/html/home.html"><button class="back-button">⮜</button></a>
-    <img class="waves" src="/img/waves.svg">
 </body>
 
 <script src="/js/createroom.js"></script>
 <script src="/js/modal.js"></script>
 <script>
-    particlesJS.load('particles-js', "/particle-config", function() {
+    particlesJS.load('particles-js', "/particle-config.json", function () {
         console.log('Particles loaded');
     });
+
+    function rgbToHex(r, g, b) {
+        const hexR = r.toString(16).padStart(2, '0');
+        const hexG = g.toString(16).padStart(2, '0');
+        const hexB = b.toString(16).padStart(2, '0');
+        return `#${hexR}${hexG}${hexB}`.toUpperCase();
+    }
+
+    function random(min, max) {
+        return Math.round(Math.random() * (max - min) + min);
+    }
+
+    let colour = rgbToHex(random(0, 255), random(0, 255), random(0, 255));
+    console.log(colour);
+    document.getElementById("room-colour-picker").value = colour;
 </script>
 
 </html>

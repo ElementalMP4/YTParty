@@ -3,33 +3,37 @@
 <head>
     <title>YTParty - Watch YouTube with friends!</title>
     <link rel="stylesheet" type="text/css" href="/css/style.css">
-    <link rel="stylesheet" type="text/css" href="/css/modal.css">
-    <link href="/img/favicon.png" rel="icon" type="image/png">
+    <link href="/img/logo.svg" rel="icon" type="image/svg">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Paytone+One&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;1,400&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 
     <meta property="og:site_name" content="Watch YouTube with friends!">
     <meta property="og:url" content="https://ytparty.voidtech.de/">
-    <meta property="og:description" content="Change your account settings!">
+    <meta property="og:description" content="YTParty User Home">
     <meta property="og:image" content="https://ytparty.voidtech.de/img/logo.svg" />
     <meta property="og:type" content="website">
     <meta name="theme-color" content="#FF0000">
 </head>
 
 <body>
-    <div id="particles-js" class="particles"></div>
-    <h1 class="centre-align header header-main">YTParty</h1>
-    <h3 class="centre-align header header-sub">Watch YouTube with friends!</h3>
+    <div id="particles-js" class="particles underneath"></div>
+    <div class="title-container">
+        <img class="logo unselectable" src="/img/logo.svg">
+        <h1 class="unselectable">YTParty</h1>
+    </div>
 
-    <button style="display:none" id="open-modal"></button>
     <div id="modal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <span id="close" class="close">&times;</span>
+                <span class="close" id="close">&times;</span>
                 <h2 id="modal-title"></h2>
             </div>
             <div class="modal-body">
@@ -38,15 +42,12 @@
         </div>
     </div>
 
-    <div class="menu centre-align">
-        <h3 class="centre-align header header-sub">Change your settings!</h3>
-        <br>
-
+    <div class="button-panel">
         <!--Change Avatar-->
-
+        <label for="avatar-options">
+            <h2 class="section-header">Choose an avatar:</h2>
+        </label>
         <img src="/img/favicon.png" id="avatar-preview" class="user-image">
-        <br>
-        <label for="avatar-options" class="">Choose an avatar:</label><br><br>
         <select name="avatar-options" id="avatar-selector">
             <option value="beagle">Beagle</option>
             <option value="bernese">Bernese</option>
@@ -67,65 +68,71 @@
             <option value="toad">Toad</option>
             <option value="tuxedo">Tuxedo</option>
         </select>
-        <br>
-        <button class="button hover-animation" onclick="updateAvatar()">
-            <p class="button-text">Change my avatar!</p>
+        <button class="big-button" onclick="updateAvatar()">
+            <span class="material-symbols-outlined">
+                check_circle
+            </span>
+            <p >Change my avatar!</p>
         </button>
-        <br>
-        <hr><br>
+        <hr>
 
         <!--Change Name Colour-->
 
-        <p>Choose a custom name colour!</p>
+        <h2 class="section-header">Choose a custom name colour!</h2>
         <input type="color" value="#ff0000" id="name-colour-picker">
         <p />
-        <button class="button hover-animation" onclick="updateColour()">
-            <p class="button-text">Change my colour!</p>
+        <button class="big-button" onclick="updateColour()">
+            <span class="material-symbols-outlined">
+                check_circle
+            </span>
+            <p >Change my colour!</p>
         </button>
-        <p id="colour-message"></p>
-        <br>
-        <hr><br>
+        <hr>
 
         <!--Change Nickname-->
 
-        <p>Choose a nickname!</p>
+        <h2 class="section-header">Choose a nickname!</h2>
         <input type="text" placeholder="nickname" id="nickname-entry">
-        <br>
-        <button class="button hover-animation" onclick="updateNickname()">
-            <p class="button-text">Change my nickname!</p>
+        <button class="big-button" onclick="updateNickname()">
+            <span class="material-symbols-outlined">
+                check_circle
+            </span>
+            <p >Change my nickname!</p>
         </button>
-        <p id="nickname-message"></p>
-        <br>
-        <hr><br>
+        <hr>
 
         <!--Change Password-->
 
-        <p>Change your password!</p>
-        <input type="password" placeholder="Enter your current password" autocomplete="off" id="original-password-entry"><br />
-        <input type="password" placeholder="Enter a new password" autocomplete="off" id="new-password-entry"><br />
-        <input type="password" placeholder="Re-type new password" autocomplete="off" id="password-match-entry"><br>
-        <button class="button hover-animation" onclick="updatePassword()">
-            <p class="button-text">Change my password!</p>
+        <h2 class="section-header">Change your password!</h2>
+        <input type="password" placeholder="Enter your current password" autocomplete="off"
+            id="original-password-entry">
+        <input type="password" placeholder="Enter a new password" autocomplete="off" id="new-password-entry">
+        <input type="password" placeholder="Re-type new password" autocomplete="off" id="password-match-entry">
+        <button class="big-button" onclick="updatePassword()">
+            <span class="material-symbols-outlined">
+                check_circle
+            </span>
+            <p >Change my password!</p>
         </button>
-        <p id="password-message"></p>
-        <br>
-        <hr><br>
+        <hr>
 
         <!--Delete Account-->
 
-        <p class="danger-text">Delete your account</p>
-        <input type="password" placeholder="Enter your password" autocomplete="off" id="delete-password-entry"><br />
-        <button class="button hover-animation" onclick="deleteAccount()">
-            <p class="button-text">Delete my account</p>
+        <h2 class="section-header">Delete your account</h2>
+        <input type="password" placeholder="Enter your password" autocomplete="off" id="delete-password-entry">
+        <button class="big-button" onclick="deleteAccount()">
+            <span class="material-symbols-outlined">
+                delete
+            </span>
+            <p >Delete my account</p>
         </button>
-        <p id="delete-message"></p>
     </div>
 </body>
 
 <script src="/js/settings.js"></script>
 <script src="/js/modal.js"></script>
 <script>
-    particlesJS.load('particles-js', "/particle-config", function() {
+    particlesJS.load('particles-js', "/particle-config.json", function () {
         console.log('Particles loaded');
     });
 </script>
