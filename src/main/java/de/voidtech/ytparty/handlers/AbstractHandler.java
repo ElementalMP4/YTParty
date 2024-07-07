@@ -1,8 +1,7 @@
 package main.java.de.voidtech.ytparty.handlers;
 
-import org.json.JSONObject;
-
 import main.java.de.voidtech.ytparty.entities.GatewayConnection;
+import org.json.JSONObject;
 
 public abstract class AbstractHandler { //Label the class as abstract
 	public abstract void execute(GatewayConnection session, JSONObject data); //This method is the entry point where we can run the handler.

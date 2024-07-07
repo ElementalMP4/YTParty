@@ -1,17 +1,16 @@
 package main.java.de.voidtech.ytparty.handlers.user;
 
-import org.json.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
-
 import main.java.de.voidtech.ytparty.annotations.Handler;
 import main.java.de.voidtech.ytparty.entities.AuthResponse;
 import main.java.de.voidtech.ytparty.entities.GatewayConnection;
-import main.java.de.voidtech.ytparty.persistence.User;
 import main.java.de.voidtech.ytparty.handlers.AbstractHandler;
+import main.java.de.voidtech.ytparty.persistence.User;
 import main.java.de.voidtech.ytparty.service.GatewayAuthService;
 import main.java.de.voidtech.ytparty.service.GatewayResponseService;
 import main.java.de.voidtech.ytparty.service.UserService;
 import main.java.de.voidtech.ytparty.service.UserTokenService;
+import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @Handler
 public class DeleteAccountHandler extends AbstractHandler {

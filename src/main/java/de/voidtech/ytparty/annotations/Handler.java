@@ -1,11 +1,11 @@
 package main.java.de.voidtech.ytparty.annotations;
 
+import org.springframework.stereotype.Component;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-
-import org.springframework.stereotype.Component;
 
 @Component //Tells spring that our new annotation will be a Component stereotype.
 @Target({ElementType.TYPE}) //This allows the annotation to be used by types (Classes!)

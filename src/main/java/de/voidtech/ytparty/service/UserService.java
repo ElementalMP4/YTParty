@@ -1,49 +1,29 @@
 package main.java.de.voidtech.ytparty.service;
 
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
+import main.java.de.voidtech.ytparty.persistence.User;
+import main.java.de.voidtech.ytparty.persistence.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import main.java.de.voidtech.ytparty.persistence.User;
-
 @Service
 public class UserService {
-	
+
 	@Autowired
-	private SessionFactory sessionFactory;
+	private UserRepository userRepository;
 		
-	public synchronized boolean usernameInUse(String username) {
+	public boolean usernameInUse(String username) {
 		return getUser(username) != null;
 	}
 	
-	public synchronized User getUser(String username) {
-		try(Session session = sessionFactory.openSession())
-		{
-
-			User user = (User) session.createQuery("FROM Users WHERE username =:username")
-                    .setParameter("username", username)
-                    .uniqueResult();
-			return user;
-		}
+	public User getUser(String username) {
+		return userRepository.getUser(username);
 	}
 	
-	public synchronized void saveUser(User user) {
-		try(Session session = sessionFactory.openSession())
-		{
-			session.getTransaction().begin();
-			session.saveOrUpdate(user);
-			session.getTransaction().commit();
-		}
+	public void saveUser(User user) {
+		userRepository.save(user);
 	}
 	
-	public synchronized void removeUser(String username) {
-		try(Session session = sessionFactory.openSession())	{
-			session.getTransaction().begin();
-			session.createQuery("DELETE FROM Users WHERE username = :username")
-				.setParameter("username", username)
-				.executeUpdate();
-			session.getTransaction().commit(); //Commit the changes
-		}
+	public void removeUser(String username) {
+		userRepository.deleteUser(username);
 	}
 }

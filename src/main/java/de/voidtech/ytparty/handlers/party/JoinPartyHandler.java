@@ -1,24 +1,18 @@
 package main.java.de.voidtech.ytparty.handlers.party;
 
-import java.util.List;
-
-import org.json.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
-
 import main.java.de.voidtech.ytparty.annotations.Handler;
 import main.java.de.voidtech.ytparty.entities.AuthResponse;
 import main.java.de.voidtech.ytparty.entities.GatewayConnection;
-import main.java.de.voidtech.ytparty.entities.Party;
 import main.java.de.voidtech.ytparty.entities.MessageBuilder;
+import main.java.de.voidtech.ytparty.entities.Party;
+import main.java.de.voidtech.ytparty.handlers.AbstractHandler;
 import main.java.de.voidtech.ytparty.persistence.ChatMessage;
 import main.java.de.voidtech.ytparty.persistence.User;
-import main.java.de.voidtech.ytparty.handlers.AbstractHandler;
-import main.java.de.voidtech.ytparty.service.ChatMessageService;
-import main.java.de.voidtech.ytparty.service.GatewayAuthService;
-import main.java.de.voidtech.ytparty.service.GatewayResponseService;
-import main.java.de.voidtech.ytparty.service.PartyService;
-import main.java.de.voidtech.ytparty.service.SessionService;
-import main.java.de.voidtech.ytparty.service.UserService;
+import main.java.de.voidtech.ytparty.service.*;
+import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.List;
 
 @Handler
 public class JoinPartyHandler extends AbstractHandler {
@@ -34,9 +28,6 @@ public class JoinPartyHandler extends AbstractHandler {
 	
 	@Autowired
 	private UserService userService;
-	
-	@Autowired
-	private ChatMessageService messageService;
 	
 	@Autowired
 	private SessionService sessionService;
@@ -84,7 +75,7 @@ public class JoinPartyHandler extends AbstractHandler {
 	}
 
 	private void deliverMessageHistory(GatewayConnection session, String roomID) {
-		List<ChatMessage> messageHistory = messageService.getMessageHistory(roomID);
+		List<ChatMessage> messageHistory = partyService.getMessageHistory(roomID);
 		responder.sendChatHistory(session, messageHistory);
 	}
 

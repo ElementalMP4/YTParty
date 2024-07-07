@@ -1,28 +1,28 @@
 package main.java.de.voidtech.ytparty.service;
 
-import java.io.IOException;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
+import main.java.de.voidtech.ytparty.entities.GatewayConnection;
+import main.java.de.voidtech.ytparty.entities.MessageBuilder;
+import main.java.de.voidtech.ytparty.entities.Party;
+import main.java.de.voidtech.ytparty.entities.SystemMessage;
+import main.java.de.voidtech.ytparty.persistence.ChatMessage;
+import main.java.de.voidtech.ytparty.persistence.ChatMessageRepository;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.socket.TextMessage;
 
-import main.java.de.voidtech.ytparty.entities.GatewayConnection;
-import main.java.de.voidtech.ytparty.entities.Party;
-import main.java.de.voidtech.ytparty.entities.MessageBuilder;
-import main.java.de.voidtech.ytparty.entities.SystemMessage;
-import main.java.de.voidtech.ytparty.persistence.ChatMessage;
+import java.io.IOException;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @Service
 public class GatewayResponseService {
-	
+
 	@Autowired
-	private ChatMessageService messageService;
-	
+	private ChatMessageRepository chatMessageRepository;
+
 	private static final Logger LOGGER = Logger.getLogger(GatewayResponseService.class.getName());
 
 	public void sendError(GatewayConnection session, String error, String origin) {
@@ -51,7 +51,7 @@ public class GatewayResponseService {
 	
 	public void sendChatMessage(Party party, ChatMessage message) {
 		party.broadcastMessage(message);
-		messageService.saveMessage(message);
+		chatMessageRepository.save(message);
 	}
 	
 	public void sendSystemMessage(Party party, SystemMessage systemMessage) {

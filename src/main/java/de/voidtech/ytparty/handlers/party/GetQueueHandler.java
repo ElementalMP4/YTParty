@@ -1,11 +1,5 @@
 package main.java.de.voidtech.ytparty.handlers.party;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.json.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
-
 import main.java.de.voidtech.ytparty.annotations.Handler;
 import main.java.de.voidtech.ytparty.entities.AuthResponse;
 import main.java.de.voidtech.ytparty.entities.GatewayConnection;
@@ -14,6 +8,11 @@ import main.java.de.voidtech.ytparty.handlers.AbstractHandler;
 import main.java.de.voidtech.ytparty.service.GatewayAuthService;
 import main.java.de.voidtech.ytparty.service.GatewayResponseService;
 import main.java.de.voidtech.ytparty.service.PartyService;
+import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Handler
 public class GetQueueHandler extends AbstractHandler {

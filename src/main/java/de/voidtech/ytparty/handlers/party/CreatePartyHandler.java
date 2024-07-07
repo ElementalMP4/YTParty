@@ -1,11 +1,5 @@
 package main.java.de.voidtech.ytparty.handlers.party;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import org.json.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
-
 import main.java.de.voidtech.ytparty.annotations.Handler;
 import main.java.de.voidtech.ytparty.entities.AuthResponse;
 import main.java.de.voidtech.ytparty.entities.GatewayConnection;
@@ -15,6 +9,11 @@ import main.java.de.voidtech.ytparty.service.GatewayAuthService;
 import main.java.de.voidtech.ytparty.service.GatewayResponseService;
 import main.java.de.voidtech.ytparty.service.PartyService;
 import main.java.de.voidtech.ytparty.service.UserTokenService;
+import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @Handler
 public class CreatePartyHandler extends AbstractHandler{

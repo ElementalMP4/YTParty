@@ -1,13 +1,12 @@
 package main.java.de.voidtech.ytparty.service;
 
+import main.java.de.voidtech.ytparty.entities.PasswordResetCase;
+import org.springframework.stereotype.Service;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
-
-import org.springframework.stereotype.Service;
-
-import main.java.de.voidtech.ytparty.entities.PasswordResetCase;
 
 @Service
 public class PasswordResetService {

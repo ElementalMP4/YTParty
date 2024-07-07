@@ -1,11 +1,10 @@
 package main.java.de.voidtech.ytparty.handlers;
 
-import org.json.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
-
 import main.java.de.voidtech.ytparty.annotations.Handler;
 import main.java.de.voidtech.ytparty.entities.GatewayConnection;
 import main.java.de.voidtech.ytparty.service.GatewayResponseService;
+import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @Handler
 public class PingHandler extends AbstractHandler {

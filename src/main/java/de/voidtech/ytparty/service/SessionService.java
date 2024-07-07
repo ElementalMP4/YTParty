@@ -1,13 +1,12 @@
 package main.java.de.voidtech.ytparty.service;
 
-import java.util.HashMap;
-import java.util.Timer;
-import java.util.TimerTask;
-
+import main.java.de.voidtech.ytparty.entities.GatewayConnection;
 import org.springframework.stereotype.Service;
 import org.springframework.web.socket.WebSocketSession;
 
-import main.java.de.voidtech.ytparty.entities.GatewayConnection;
+import java.util.HashMap;
+import java.util.Timer;
+import java.util.TimerTask;
 
 @Service
 public class SessionService {

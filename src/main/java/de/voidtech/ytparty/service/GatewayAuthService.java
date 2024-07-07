@@ -1,9 +1,8 @@
 package main.java.de.voidtech.ytparty.service;
 
+import main.java.de.voidtech.ytparty.entities.AuthResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import main.java.de.voidtech.ytparty.entities.AuthResponse;
 
 @Service
 public class GatewayAuthService {

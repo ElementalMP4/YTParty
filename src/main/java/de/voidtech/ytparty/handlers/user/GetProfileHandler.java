@@ -1,16 +1,15 @@
 package main.java.de.voidtech.ytparty.handlers.user;
 
-import org.json.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
-
 import main.java.de.voidtech.ytparty.annotations.Handler;
 import main.java.de.voidtech.ytparty.entities.AuthResponse;
 import main.java.de.voidtech.ytparty.entities.GatewayConnection;
-import main.java.de.voidtech.ytparty.persistence.User;
 import main.java.de.voidtech.ytparty.handlers.AbstractHandler;
+import main.java.de.voidtech.ytparty.persistence.User;
 import main.java.de.voidtech.ytparty.service.GatewayAuthService;
 import main.java.de.voidtech.ytparty.service.GatewayResponseService;
 import main.java.de.voidtech.ytparty.service.UserService;
+import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @Handler
 public class GetProfileHandler extends AbstractHandler {
@@ -19,30 +18,28 @@ public class GetProfileHandler extends AbstractHandler {
 	private UserService userService;
 	
 	@Autowired
-	private GatewayResponseService responder; //We need the responder to reply to the user
+	private GatewayResponseService responder;
 	
 	@Autowired
-	private GatewayAuthService authService; //We need the auth service to authenticate the user's token
+	private GatewayAuthService authService;
 	
 	@Override
 	public void execute(GatewayConnection session, JSONObject data) {
-		String token = data.getString("token"); //Get the token
+		String token = data.getString("token");
 		
-		AuthResponse tokenResponse = authService.validateToken(token); //Validate the token
-		
-		//If the token is invalid, reject it with a message.
+		AuthResponse tokenResponse = authService.validateToken(token);
+
 		if (!tokenResponse.isSuccessful()) responder.sendError(session, tokenResponse.getMessage(), this.getHandlerType());
 		else {
-			//Otherwise, we can send the user their data:
-			String username = tokenResponse.getActingString(); //Get the username of the user
-			User user = userService.getUser(username); //Get the user's data from the DB
+			String username = tokenResponse.getActingString();
+			User user = userService.getUser(username);
 			JSONObject userData = new JSONObject()
-					.put("nickname", user.getNickname()) //Nickname
-					.put("colour", user.getHexColour()) //Nickname colour
-					.put("effectiveName", user.getEffectiveName()) //Display name : if there is no nickname, show username
-					.put("avatar", user.getProfilePicture()) //Avatar choice
-					.put("username", user.getUsername()); //Username
-			responder.sendSuccess(session, userData, this.getHandlerType()); //Send this data in a success message to the user
+					.put("nickname", user.getNickname())
+					.put("colour", user.getHexColour())
+					.put("effectiveName", user.getEffectiveName())
+					.put("avatar", user.getProfilePicture())
+					.put("username", user.getUsername());
+			responder.sendSuccess(session, userData, this.getHandlerType());
 		}
 	}
 

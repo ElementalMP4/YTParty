@@ -1,8 +1,8 @@
 package main.java.de.voidtech.ytparty.entities;
 
-import java.time.Instant;
-
 import org.springframework.web.socket.WebSocketSession;
+
+import java.time.Instant;
 
 public class GatewayConnection {
 	

@@ -1,21 +1,13 @@
 package main.java.de.voidtech.ytparty.persistence;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Index;
-import javax.persistence.Table;
-
+import main.java.de.voidtech.ytparty.entities.MessageBuilder;
 import org.hibernate.annotations.Type;
 import org.json.JSONObject;
 
-import main.java.de.voidtech.ytparty.entities.MessageBuilder;
+import javax.persistence.*;
 
 @Entity(name = "Messages")
 @Table(name = "Messages", indexes = @Index(columnList = "partyID", name = "index_message"))
-
 public class ChatMessage {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

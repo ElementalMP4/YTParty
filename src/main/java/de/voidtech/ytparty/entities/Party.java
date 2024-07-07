@@ -1,17 +1,16 @@
 package main.java.de.voidtech.ytparty.entities;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
+import main.java.de.voidtech.ytparty.persistence.ChatMessage;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 
-import main.java.de.voidtech.ytparty.persistence.ChatMessage;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Party {
 	private String partyID;

@@ -1,14 +1,13 @@
 package main.java.de.voidtech.ytparty.api.http;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import javax.servlet.RequestDispatcher;
-import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.servlet.RequestDispatcher;
+import javax.servlet.http.HttpServletRequest;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @RestController
 public class HttpErrorController implements ErrorController {

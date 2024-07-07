@@ -1,17 +1,16 @@
 package main.java.de.voidtech.ytparty.service;
 
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.stream.Collectors;
-
+import main.java.de.voidtech.ytparty.entities.GatewayConnection;
+import main.java.de.voidtech.ytparty.handlers.AbstractHandler;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import main.java.de.voidtech.ytparty.entities.GatewayConnection;
-import main.java.de.voidtech.ytparty.handlers.AbstractHandler;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 @Service
 public class MessageHandler {
