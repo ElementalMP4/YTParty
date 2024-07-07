@@ -127,7 +127,8 @@ li {
    float: left;
 }
 
-input, select {
+input,
+select {
    display: block;
    padding: 20px 30px;
    background-color: rgba(255, 255, 255, 0.3);

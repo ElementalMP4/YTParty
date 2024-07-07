@@ -24,18 +24,18 @@ Gateway.onmessage = function(message) {
 }
 
 function sendSignupData() {
-    let formData = new FormData(document.getElementById("signup-form"));
     let avatar = document.getElementById("avatar-selector").value;
-    let values = [];
-    formData.forEach(item => values.push(item));
+    let username = document.getElementById("username").value;
+    let password = document.getElementById("password").value;
+    let passwordConfirm = document.getElementById("password-confirm").value;
     let finalData = {
             "type": "user-signup",
             "data": {
-                "username": values[0],
-                "password": values[1],
+                "username": username,
+                "password": password,
                 "avatar": avatar,
-                "password-confirm": values[2],
-                "captcha-token": values[3]
+                "password-confirm": passwordConfirm,
+                "captcha-token": grecaptcha.getResponse()
             }
         }
     Gateway.send(JSON.stringify(finalData));
