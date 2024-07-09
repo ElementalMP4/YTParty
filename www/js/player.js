@@ -55,7 +55,7 @@ function updateTyping(data) {
 };
 
 function getAvatarUrl(avatar) {
-    if (avatar == "system") return "/img/favicon.png";
+    if (avatar == "system") return "/img/logo.svg";
     else return `/img/avatars/${avatar}.png`;
 }
 

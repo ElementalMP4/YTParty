@@ -42,10 +42,7 @@ public class CaptchaAuthService {
 	        }
 	        JSONObject responseJson = new JSONObject(responseString.toString());
 	        inStream.close();
-	        
-	        LOGGER.log(Level.INFO, "Submitted reCaptcha, returned " + (responseJson.getBoolean("success") ? "success" : "failure"));
 	        return responseJson.getBoolean("success");
-
 	    } catch (Exception e) {
 	        LOGGER.log(Level.SEVERE, "An error occurred during ServiceExecution: " + e.getMessage());
 	    }
