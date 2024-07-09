@@ -60,8 +60,8 @@ As well as a PostgreSQL server. Ensure that the database used in the connection 
 
 ## Pull Requests and Contributions
 
-It is unlikely that I will accept PR's. This is due to my own concerns for security. If you have a suggestion or a problem, please [create a GitHub issue instead.](https://github.com/Elementalmp4/YouTubeParty/issues/new)
+It is unlikely that I will accept PR's. This is due to my own concerns for security. If you have a suggestion or a problem, please [create a GitHub issue instead.](https://github.com/Elementalmp4/YTParty/issues/new)
 
 ## Technical Support
 
-If you have any issues please [create a GitHub issue](https://github.com/Elementalmp4/YouTubeParty/issues/new) and I will respond to it when I can.
+If you have any issues please [create a GitHub issue](https://github.com/Elementalmp4/YouTubeParty/issues/new)
