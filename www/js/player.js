@@ -15,26 +15,38 @@ let Globals = {
     TYPING_COUNT: 0,
     TYPING: false,
     PLAYER_READY: false,
-    TTS_ENABLED: false,
-    TTS_VOICE: "",
-    TTS_VOICE_LIST: {}
 }
 
+const messageContainer = document.getElementById('messageContainer');
+const messageInput = document.getElementById('messageInput');
+const typingMessage = document.getElementById("typing-message");
+const queueItems = document.getElementById("queue-items");
+const queueTitle = document.getElementById("queue-title");
+const chatInput = document.getElementById("chat-input");
+const loadingScreen = document.getElementById("loading-screen");
+const playerModal = document.getElementById("player-modal");
+const currentVideoInput = document.getElementById("current-video-input");
+const queueInput = document.getElementById("queue-input");
+
 function sendGatewayMessage(message) {
-    Gateway.send(JSON.stringify(message));
+    if (Gateway.readyState == WebSocket.OPEN) {
+        Gateway.send(JSON.stringify(message));
+    } else {
+        console.log("Unable to send gateway message - gateway connection closed", message);
+    }
 }
 
 function data(params) {
     const defaultParams = { token: Globals.TOKEN, roomID: Globals.ROOM_ID };
-    return {...defaultParams, ...params };
+    return { ...defaultParams, ...params };
 }
 
 function showTypingMessage() {
-    document.getElementById("typing-message").style.display = "block";
+    typingMessage.style.display = "block";
 }
 
 function hideTypingMessage() {
-    document.getElementById("typing-message").style.display = "none";
+    typingMessage.style.display = "none";
 }
 
 function updateTyping(data) {
@@ -46,51 +58,67 @@ function updateTyping(data) {
     else hideTypingMessage();
 };
 
+function getAvatarUrl(avatar) {
+    if (avatar == "system") return "/img/logo.svg";
+    else return `/img/avatars/${avatar}.png`;
+}
+
 function addChatMessage(data) {
     const author = data.author;
     const colour = data.colour;
     const content = data.content;
-    const modifiers = data.modifiers !== "" ? `class="${data.modifiers}"` : "";
     const avatar = data.avatar;
 
-    let newMessage = `<div class="chat-message">`;
+    const newMessage = document.createElement('div');
+    newMessage.className = 'message';
+
     if (Globals.LAST_MESSAGE_AUTHOR !== author) {
-        newMessage += `<img class="user-image" src="${modifiers.includes("system") ? avatar : ("/avatar/" + avatar)}">`;
-        newMessage += `<p class="msg-nickname" style="color:${colour}">${author}</p><br>`;
+        Globals.LAST_MESSAGE_AUTHOR = author;
+        const avatarElement = document.createElement('img');
+        avatarElement.className = 'avatar';
+        avatarElement.src = getAvatarUrl(avatar);
+
+        const username = document.createElement('h4');
+        username.className = 'username';
+        username.textContent = author;
+        username.style.color = colour;
+        username.style.fontFamily = "Paytone One";
+
+        const messageHeader = document.createElement('div');
+        messageHeader.className = 'message-header';
+        messageHeader.appendChild(avatarElement);
+        messageHeader.appendChild(username);
+
+        newMessage.appendChild(messageHeader);
     }
-    newMessage += `<p ${modifiers}>${content}</p></div>`;
-    if (Globals.LAST_MESSAGE_AUTHOR !== author) newMessage += "<br>";
 
-    Globals.LAST_MESSAGE_AUTHOR = author;
+    const messageContent = document.createElement('p');
+    messageContent.innerHTML = DOMPurify.sanitize(marked.parse(content));
+    messageContent.className = "message-content"
 
-    let chatHistory = document.getElementById("chat-history");
-    chatHistory.insertAdjacentHTML('afterbegin', newMessage);
-    chatHistory.scrollTop = chatHistory.scrollHeight;
-}
+    newMessage.appendChild(messageContent);
 
-function getVoiceByName() {
-    return Globals.TTS_VOICE_LIST.filter(voice => voice.name == Globals.TTS_VOICE)[0];
-}
-
-function speakMessage(message) {
-    if (!Globals.TTS_ENABLED) return;
-    let tts = new SpeechSynthesisUtterance();
-    tts.text = message;
-    tts.voice = getVoiceByName();
-    window.speechSynthesis.speak(tts);
+    messageContainer.insertBefore(newMessage, messageContainer.firstChild);
+    messageContainer.scrollTop = messageContainer.scrollHeight;
 }
 
 function displayLocalMessage(message) {
-    addChatMessage({ "author": "System", "colour": Globals.ROOM_COLOUR, "content": message, "modifiers": "system", "avatar": "/favicon.png" });
+    addChatMessage({ "author": "System", "colour": Globals.ROOM_COLOUR, "content": message, "avatar": "system" });
 }
 
 function sendPlayingMessage() {
+    if (!Globals.CAN_CONTROL_PLAYER) {
+        return;
+    }
     const time = Globals.PLAYER.getCurrentTime();
     sendGatewayMessage({ "type": "party-playvideo", "data": data({ "timestamp": time }) });
     displayLocalMessage("Video playing at " + new Date(time * 1000).toISOString().substr(11, 8));
 }
 
 function sendPausedMessage() {
+    if (!Globals.CAN_CONTROL_PLAYER) {
+        return;
+    }
     sendGatewayMessage({ "type": "party-pausevideo", "data": data() });
     displayLocalMessage("Video paused");
 }
@@ -103,7 +131,7 @@ function sendVideoEndedMessage() {
 function onYouTubeIframeAPIReady() {
     Globals.PLAYER = new YT.Player('player', {
         height: '100%',
-        width: '80%',
+        width: '100%',
         playerVars: { 'controls': Globals.CAN_CONTROL_PLAYER ? 1 : 0, 'disablekb': Globals.CAN_CONTROL_PLAYER ? 0 : 1 },
         videoId: Globals.CURRENT_VIDEO_ID,
         events: {
@@ -161,81 +189,56 @@ function convertVideoList(videos) {
     }
 }
 
-function handleChatMessage(data) {
-    if (data.modifiers.includes("tts")) speakMessage(data.content);
-    addChatMessage(data);
-}
-
 function refreshModalQueueData(videos) {
     let message = convertVideoList(videos);
-    document.getElementById("queue-items").innerHTML = message + "<br><br>";
-    document.getElementById("queue-title").innerHTML = "Queued Items (" + videos.length + ")";
+    queueItems.innerHTML = message + "<br><br>";
+    queueTitle.innerHTML = "Queued Items (" + videos.length + ")";
 }
 
-function initialiseParty(options) {
-    loadVideo(options.video);
-    Globals.CAN_CONTROL_PLAYER = options.canControl;
-    Globals.ROOM_COLOUR = options.theme;
+function initialiseParty(packet) {
+    if (!packet.success) {
+        Globals.ROOM_COLOUR = "#FFFFFF";
+        displayLocalMessage("Invalid Room ID! Either this party has ended, or you've got an invalid Room URL!");
+        hideLoadingScreen();
+        Gateway.close();
+    } else {
+        let options = packet.response;
+        loadVideo(options.video);
+        Globals.CAN_CONTROL_PLAYER = options.canControl;
+        Globals.ROOM_COLOUR = options.theme;
 
-    document.getElementsByTagName("title")[0].text = options.owner + "'s room!";
+        document.getElementsByTagName("title")[0].text = options.owner + "'s room!";
 
-    let chatInput = document.getElementById("chat-input");
-    chatInput.addEventListener("focus", function() {
-        this.style.borderBottom = "2px solid " + Globals.ROOM_COLOUR;
-    });
+        chatInput.addEventListener("focus", function () {
+            this.style.borderBottom = "2px solid " + Globals.ROOM_COLOUR;
+        });
 
 
-    chatInput.addEventListener("blur", function() {
-        this.style.borderBottom = "2px solid grey";
-    });
+        chatInput.addEventListener("blur", function () {
+            this.style.borderBottom = "2px solid grey";
+        });
 
-    displayLocalMessage("Use /help to see some chat commands! Use ctrl + m to open the player menu!");
+        displayLocalMessage("Use ctrl + m to open the player menu!");
+    }
 }
 
 function hideLoadingScreen() {
-    Globals.TTS_ENABLED = true;
-    let screen = document.getElementById("loading-screen");
-    screen.classList.add("loaded");
+    loadingScreen.classList.add("loaded");
     setTimeout(() => {
-        screen.style.display = "none";
+        loadingScreen.style.display = "none";
     }, 500);
-}
-
-function getVoices() {
-    return new Promise(
-        function(resolve, reject) {
-            let interval;
-            interval = setInterval(() => {
-                if (window.speechSynthesis.getVoices().length !== 0) {
-                    resolve(window.speechSynthesis.getVoices());
-                    clearInterval(interval);
-                }
-            }, 10);
-        }
-    )
-}
-
-function populateVoiceList() {
-    console.log("Populating TTS voice selector list");
-    getVoices().then(voices => {
-        voices.forEach((voice, id) => {
-            document.getElementById("voice-selector").insertAdjacentHTML('afterbegin', `<option value="${voice.name}">${voice.name}</option>`);
-        });
-        Globals.TTS_VOICE_LIST = voices;
-    });
 }
 
 function handleGatewayMessage(packet) {
     switch (packet.type) {
         case "party-partyready":
             hideLoadingScreen();
-            populateVoiceList();
             break;
         case "party-chatmessage":
-            handleChatMessage(packet.data);
+            addChatMessage(packet.data);
             break;
         case "party-joinparty":
-            initialiseParty(packet.response);
+            initialiseParty(packet);
             break;
         case "user-getprofile":
             Globals.USER_PROPERTIES = packet.response;
@@ -250,20 +253,19 @@ function handleGatewayMessage(packet) {
             loadVideo(packet.data.video);
             break;
         case "party-typingupdate":
+            if (!packet.success) return;
             updateTyping(packet.data);
             break;
         case "party-getqueue":
+            if (!packet.success) return;
             refreshModalQueueData(packet.response.videos);
-            break;
-        case "system-ping":
-            displayLocalMessage("API response time: " + (new Date().getTime() - packet.response.start) + "ms");
             break;
     }
 }
 
 function getToken() {
     let token = window.localStorage.getItem("token");
-    if (token == null) window.location.href = location.protocol + "//" + location.host + "/login.html?redirect=" + location.pathname + location.search;
+    if (token == null) window.location.href = location.protocol + "//" + location.host + "/html/login.html?redirect=" + location.pathname + location.search;
     else return token;
 }
 
@@ -272,46 +274,6 @@ function embedPlayer() {
     tag.src = "https://www.youtube.com/iframe_api";
     let firstScriptTag = document.getElementsByTagName('script')[0];
     firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-}
-
-function handleHelpCommand() {
-    displayLocalMessage(`Chat Command Help:<br>
-/help - shows this message<br>
-/i [message] - changes your message to italics<br>
-/u [message] - changes your message to underline<br>
-/b [message] - makes your message bold<br>
-/s [message] - changes your message to strikethrough<br>
-/c [message] - changes your message to cursive<br>
-/cc [message] - cHaNgEs YoUr TeXt LiKe ThIs<br>
-/big [message] - makes your message big<br>
-/r - reloads your session<br>
-/tts - send a text-to-speech message<br>
-/ping - get the API response time`);
-}
-
-function toCrazyCase(body) {
-    let toUpper = Math.round(Math.random()) == 1 ? true : false;
-    let messageLetters = body.split("");
-    let final = "";
-
-    for (let i = 0; i < messageLetters.length; i++) {
-        if (messageLetters[i].replace(/[A-Za-z]+/g, " ") !== "") {
-            if (toUpper) final += messageLetters[i].toLowerCase();
-            else final += messageLetters[i].toUpperCase();
-            toUpper = !toUpper;
-        } else final += messageLetters[i];
-    }
-    return final;
-}
-
-function handlePingCommand() {
-    let requestData = {
-        "type": "system-ping",
-        "data": {
-            "start": new Date().getTime()
-        }
-    }
-    sendGatewayMessage(requestData);
 }
 
 function sendTypingStop() {
@@ -328,87 +290,32 @@ function sendTypingStart() {
     }
 }
 
-document.getElementById("chat-input").addEventListener("keyup", function(event) {
+chatInput.addEventListener("keyup", function (event) {
     if (event.key == "Enter") {
         sendTypingStop();
         event.preventDefault();
-        let message = document.getElementById("chat-input").value.trim();
+        let message = chatInput.value.trim();
         if (message == "") return;
         if (message.length > 2000) {
             displayLocalMessage("Your message is too long! Messages cannot be longer than 2000 characters.");
             return;
         }
 
-        let sendChatMessage = true;
-        let modifiers = "";
-
-        if (message.startsWith("/")) {
-            const args = message.slice(1).split(/ +/);
-            const command = args.shift().toLowerCase()
-
-            switch (command) {
-                case "help":
-                    handleHelpCommand();
-                    sendChatMessage = false;
-                    break;
-                case "cc":
-                    message = toCrazyCase(args.join(" "));
-                    break;
-                case "i":
-                    modifiers = "italic";
-                    message = args.join(" ");
-                    break;
-                case "u":
-                    modifiers = "underline";
-                    message = args.join(" ");
-                    break;
-                case "b":
-                    modifiers = "bold";
-                    message = args.join(" ");
-                    break;
-                case "s":
-                    modifiers = "strikethrough";
-                    message = args.join(" ");
-                    break;
-                case "c":
-                    modifiers = "cursive";
-                    message = args.join(" ");
-                    break;
-                case "big":
-                    modifiers = "big";
-                    message = args.join(" ");
-                    break;
-                case "r":
-                    sendChatMessage = false;
-                    location.reload();
-                    break;
-                case "tts":
-                    modifiers = "tts";
-                    message = args.join(" ");
-                    break;
-                case "ping":
-                    handlePingCommand();
-                    sendChatMessage = false;
-                    break;
+        sendGatewayMessage({
+            "type": "party-chatmessage",
+            "data": {
+                "token": Globals.TOKEN,
+                "roomID": Globals.ROOM_ID,
+                "content": message,
+                "colour": Globals.USER_PROPERTIES.colour,
+                "author": Globals.USER_PROPERTIES.effectiveName,
+                "avatar": Globals.USER_PROPERTIES.avatar
             }
-        }
-        if (sendChatMessage) {
-            sendGatewayMessage({
-                "type": "party-chatmessage",
-                "data": {
-                    "token": Globals.TOKEN,
-                    "roomID": Globals.ROOM_ID,
-                    "content": message,
-                    "colour": Globals.USER_PROPERTIES.colour,
-                    "author": Globals.USER_PROPERTIES.effectiveName,
-                    "avatar": Globals.USER_PROPERTIES.avatar,
-                    "modifiers": modifiers
-                }
-            });
-        }
-        document.getElementById("chat-input").value = "";
+        });
+
+        chatInput.value = "";
     } else {
-        let message = document.getElementById("chat-input").value.trim();
+        let message = chatInput.value.trim();
         if (message == "") sendTypingStop();
         else sendTypingStart();
     }
@@ -420,36 +327,34 @@ function refreshQueue() {
     sendGatewayMessage({ "type": "party-getqueue", "data": data() });
 }
 
-document.getElementById("voice-selector").onchange = function() {
-    Globals.TTS_VOICE = document.getElementById("voice-selector").value;
-};
+function showModalMenu() {
+    playerModal.style.display = "block";
+}
 
-window.addEventListener("keydown", function(event) {
+window.addEventListener("keydown", function (event) {
     if (event.code == "KeyM" && event.ctrlKey) { //Ctrl + M
         refreshQueue();
-        let copyButton = document.getElementById("copy-button");
-        if (copyButton.classList.contains("action-complete")) copyButton.classList.remove("action-complete");
         showModalMenu();
     }
 });
 
 //Change current video
-document.getElementById("current-video-input").addEventListener("keyup", function(event) {
+currentVideoInput.addEventListener("keyup", function (event) {
     if (event.key == "Enter") {
         event.preventDefault();
-        let videoURL = document.getElementById("current-video-input").value.trim();
-        document.getElementById("current-video-input").value = "";
+        let videoURL = currentVideoInput.value.trim();
+        currentVideoInput.value = "";
         if (videoURL == "") return;
         setVideo(videoURL);
     }
 });
 
 //Add to queue
-document.getElementById("queue-input").addEventListener("keyup", function(event) {
+queueInput.addEventListener("keyup", function (event) {
     if (event.key == "Enter") {
         event.preventDefault();
-        let videoURL = document.getElementById("queue-input").value.trim();
-        document.getElementById("queue-input").value = "";
+        let videoURL = queueInput.value.trim();
+        queueInput.value = "";
         if (videoURL == "") return;
         let videoURLClass = new URL(videoURL);
         let videoID = videoURLClass.searchParams.get("v");
@@ -481,23 +386,21 @@ function clearQueue() {
 
 //Do this when the copy button is pressed
 function copyRoomURL() {
-    if (document.getElementById("copy-button").classList.contains("action-complete")) return;
-    navigator.clipboard.writeText(location.href).then(function() {
+    navigator.clipboard.writeText(location.href).then(function () {
         console.log('Copied room URL');
-    }, function(err) {
+    }, function (err) {
         console.error('Could not copy room URL: ', err);
     });
-    document.getElementById("copy-button").classList.add("action-complete");
 }
 
 //Handle a gateway connection
-Gateway.onopen = function() {
+Gateway.onopen = function () {
     console.log("Connected To Gateway");
     hideTypingMessage();
     const selfURL = new URL(location.href);
     Globals.TOKEN = getToken();
 
-    if (!selfURL.searchParams.get("roomID")) window.location.href = location.protocol + "//" + location.host + "/home.html";
+    if (!selfURL.searchParams.get("roomID")) window.location.href = location.protocol + "//" + location.host + "/html/home.html";
     else {
         Globals.ROOM_ID = selfURL.searchParams.get("roomID");
         embedPlayer();
@@ -507,17 +410,14 @@ Gateway.onopen = function() {
 }
 
 //Handle gateway closure
-Gateway.onclose = function(event) {
+Gateway.onclose = function (event) {
     console.log(`Gateway Disconnected\n\nCode: ${event.code}\nReason: ${event.reason}\nClean?: ${event.wasClean}`);
-    displayLocalMessage("You lost connection to the server! Use /r to reconnect");
+    displayLocalMessage("You lost connection to the server!");
 }
 
 //Handle gateway messages
-Gateway.onmessage = function(message) {
+Gateway.onmessage = function (message) {
     const packet = JSON.parse(message.data);
     console.log(packet);
-    if (packet.hasOwnProperty("success")) {
-        if (!packet.success) displayLocalMessage(packet.response);
-        else handleGatewayMessage(packet);
-    } else handleGatewayMessage(packet);
+    handleGatewayMessage(packet);
 }

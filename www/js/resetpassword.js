@@ -22,7 +22,7 @@ Gateway.onmessage = function(message) { //Handle messages
 }
 
 function sendResetData() {
-    let formData = new FormData(document.getElementById("reset-form")); //Get the reset form data 
+    let formData = new FormData(document.getElementById("reset-form")); //Get the reset form data
     let values = [];
 
     let url = new URL(location.href);

@@ -2,59 +2,86 @@
 
 <head>
     <title>YTParty - Watch YouTube with friends!</title>
-    <link rel="stylesheet" type="text/css" href="/primarystyle.css">
-    <link href="/favicon.png" rel="icon" type="image/png">
+    <link rel="stylesheet" type="text/css" href="/css/style.css">
+    <link href="/img/logo.svg" rel="icon" type="image/svg">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Paytone+One&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;1,400&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 
-    <script src="//cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 
     <meta property="og:site_name" content="Watch YouTube with friends!">
     <meta property="og:url" content="https://ytparty.voidtech.de/">
-    <meta property="og:description" content="Create a room, change your settings and more!">
-    <meta property="og:image" content="https://ytparty.voidtech.de/favicon.png" />
+    <meta property="og:description" content="YTParty User Home">
+    <meta property="og:image" content="https://ytparty.voidtech.de/img/logo.svg" />
     <meta property="og:type" content="website">
     <meta name="theme-color" content="#FF0000">
 </head>
 
 <body>
     <div id="particles-js" class="particles"></div>
-    <h1 class="centre-align header header-main">YTParty</h1>
-    <h3 class="centre-align header header-sub">Watch YouTube with friends!</h3>
-    <div class="menu centre-align">
-        <h3 class="centre-align header header-sub" id="welcome-banner">Good to see you!</h3>
-        <a href="/createroom.html" class="link">
-            <button class="button hover-animation">
-                <i class="bi bi-plus-circle"></i>
-                <p class="button-text">Create a room</p>
+    <div class="title-container">
+        <img class="logo unselectable" src="/img/logo.svg">
+        <h1 class="unselectable">YTParty</h1>
+    </div>
+
+    <h2 id="welcome-banner">Good to see you!</h2>
+    <div class="button-panel">
+        <!--Create Room-->
+        <a href="/html/createroom.html">
+            <button class="big-button">
+                <span class="material-symbols-outlined">
+                    add_circle
+                </span>
+                <p>Create a room</p>
             </button>
         </a>
-        <a href="/about.html" class="link" target="_blank" rel="noreferrer noopener">
-            <button class="button hover-animation">
-                <i class="bi bi-question-circle"></i>
-                <p class="button-text">How to use YTParty</p>
+        <!--Settings-->
+        <a href="/html/accountsettings.html">
+            <button class="big-button">
+                <span class="material-symbols-outlined">
+                    settings
+                </span>
+                <p>Settings</p>
             </button>
         </a>
-        <a href="/accountsettings.html" class="link">
-            <button class="button hover-animation">
-                <i class="bi bi-gear"></i>
-                <p class="button-text">Change your settings</p>
+        <!--About-->
+        <a href="/html/about.html">
+            <button class="big-button">
+                <span class="material-symbols-outlined">
+                    help
+                </span>
+                <p>How to use YTParty</p>
             </button>
         </a>
-        <button class="button hover-animation" onclick="logout()">
-            <i class="bi bi-box-arrow-left"></i>
-            <p class="button-text">Log out</p>
+        <!--T's & C's-->
+        <a href="/html/terms.html">
+            <button class="big-button">
+                <span class="material-symbols-outlined">
+                    lock
+                </span>
+                <p>Terms, Conditions & Privacy</p>
+            </button>
+        </a>
+        <!--Logout-->
+        <button class="big-button" onclick=logout()>
+            <span class="material-symbols-outlined">
+                logout
+            </span>
+            <p>Logout</p>
         </button>
     </div>
-    <img class="waves" src="/waves.svg">
+
 </body>
 
-<script src="/home.js"></script>
+<script src="/js/home.js"></script>
 <script>
-    particlesJS.load('particles-js', "/particle-config.json", function() {
+    particlesJS.load('particles-js', "/particle-config.json", function () {
         console.log('Particles loaded');
     });
 </script>

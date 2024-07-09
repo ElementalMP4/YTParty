@@ -1,18 +1,18 @@
 package main.java.de.voidtech.ytparty.service;
 
-import java.util.HashMap;
-import java.util.Timer;
-import java.util.TimerTask;
-
+import main.java.de.voidtech.ytparty.entities.GatewayConnection;
 import org.springframework.stereotype.Service;
 import org.springframework.web.socket.WebSocketSession;
 
-import main.java.de.voidtech.ytparty.entities.ephemeral.GatewayConnection;
+import java.util.HashMap;
+import java.util.Objects;
+import java.util.Timer;
+import java.util.TimerTask;
 
 @Service
 public class SessionService {
 
-	private HashMap<String, GatewayConnection> sessions = new HashMap<String, GatewayConnection>();
+	private final HashMap<String, GatewayConnection> sessions = new HashMap<>();
 	private static final int REQUEST_INCREMENT_TIMER_DELAY = 5000;
 	
 	public SessionService() {		
@@ -34,13 +34,12 @@ public class SessionService {
 	}
 	
 	public String getSessionRoomIDifExists(String username) {
-		String roomID = sessions.values().stream()
+        return sessions.values().stream()
 				.filter(session -> username.equals(session.getName()))
 				.map(GatewayConnection::getRoomID)
-				.filter(id -> id != null)
+				.filter(Objects::nonNull)
 				.findFirst()
 				.orElse(null);
-		return roomID;
 	}
 	
 	public GatewayConnection getSession(WebSocketSession session) {

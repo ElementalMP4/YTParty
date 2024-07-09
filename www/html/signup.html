@@ -2,47 +2,106 @@
 
 <head>
     <title>YTParty - Watch YouTube with friends!</title>
-    <link rel="stylesheet" type="text/css" href="/primarystyle.css">
-    <link rel="stylesheet" type="text/css" href="/modal.css">
-    <link href="/favicon.png" rel="icon" type="image/png">
+    <link rel="stylesheet" type="text/css" href="/css/style.css">
+    <link href="/img/logo.svg" rel="icon" type="image/svg">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Paytone+One&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;1,400&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
-    <script src="//cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
 
     <meta property="og:site_name" content="Watch YouTube with friends!">
     <meta property="og:url" content="https://ytparty.voidtech.de/">
-    <meta property="og:description" content="Sign up to YTParty!">
-    <meta property="og:image" content="https://ytparty.voidtech.de/favicon.png" />
+    <meta property="og:description" content="Create an account!">
+    <meta property="og:image" content="https://ytparty.voidtech.de/img/logo.svg" />
     <meta property="og:type" content="website">
     <meta name="theme-color" content="#FF0000">
 </head>
 
 <body>
-    <div id="particles-js" class="particles"></div>
-    <h1 class="centre-align header header-main">YTParty</h1>
-    <h3 class="centre-align header header-sub">Watch YouTube with friends!</h3>
-    <div class="menu centre-align">
-        <h3 class="centre-align header header-sub">Sign up!</h3><br>
-        <iframe name="redirect-cancel" id="redirect-cancel" style="display: none;"></iframe>
-
-        <button style="display:none" id="open-modal"></button>
-        <div id="modal" class="modal">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <span id="close" class="close">&times;</span>
-                    <h2 id="modal-title"></h2>
-                </div>
-                <div class="modal-body">
-                    <p id="modal-message"></p>
-                </div>
+    <div id="particles-js" class="particles underneath"></div>
+    <div class="title-container">
+        <img class="logo unselectable" src="/img/logo.svg">
+        <h1 class="unselectable">YTParty</h1>
+    </div>
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="close" id="close">&times;</span>
+                <h2 id="modal-title"></h2>
+            </div>
+            <div class="modal-body">
+                <p id="modal-message"></p>
             </div>
         </div>
-        <img src="/avatar/beagle" id="avatar-preview" class="user-image"><br>
-        <label for="avatar-options" class="">Choose an avatar:</label><br><br>
+    </div>
+
+    <ul>
+        <li>
+            <!--Home-->
+            <a href="/html/index.html">
+                <button class="small-button">
+                    <span class="material-symbols-outlined">
+                        home
+                    </span>
+                    <p>Homepage</p>
+                </button>
+            </a>
+        </li>
+        <li>
+            <!--Login-->
+            <a href="/html/login.html">
+                <button class="small-button">
+                    <span class="material-symbols-outlined">
+                        login
+                    </span>
+                    <p>Login</p>
+                </button>
+            </a>
+        </li>
+        <!--About-->
+        <li>
+            <a href="/html/about.html">
+                <button class="small-button">
+                    <span class="material-symbols-outlined">
+                        help
+                    </span>
+                    <p>What is YTParty?</p>
+                </button>
+            </a>
+        </li>
+        <li>
+            <!--T's & C's-->
+            <a href="/html/terms.html">
+                <button class="small-button">
+                    <span class="material-symbols-outlined">
+                        lock
+                    </span>
+                    <p>Terms, Conditions & Privacy</p>
+                </button>
+            </a>
+        </li>
+        <li>
+            <!--Github-->
+            <a href="https://github.com/ElementalMP4/YouTubeParty">
+                <button class="small-button">
+                    <img src="https://github.githubassets.com/favicons/favicon-dark.png">
+                    <p>GitHub Repository</p>
+                </button>
+            </a>
+        </li>
+    </ul>
+
+    <div class="button-panel">
+        <label for="avatar-options" class="">
+            <h2 class="section-header">Choose an avatar:</h2>
+        </label>
+        <img src="/img/avatars/beagle.png" id="avatar-preview" class="user-image">
         <select name="avatar-options" id="avatar-selector">
             <option value="beagle" selected>Beagle</option>
             <option value="bernese">Bernese</option>
@@ -63,35 +122,31 @@
             <option value="toad">Toad</option>
             <option value="tuxedo">Tuxedo</option>
         </select>
-        <br>
-        <form action="/" method="POST" target="redirect-cancel" id="signup-form" enctype="application/x-www-form-urlencoded">
-            <p>Enter a username (you can choose a nickname later!):</p>
-            <input type="text" name="username" placeholder="Username" />
-            <br />
-            <p>You can choose to enter your email, or leave this blank. We only use it to recover your password.</p>
-            <input type="email" name="email" placeholder="Recovery Email (Optional)" />
-            <br />
-            <p>Please make sure your password has one capital letter, one number and is at least 8 characters long!</p>
-            <input type="password" name="password" placeholder="Password" />
-            <br />
-            <input type="password" name="password-confirm" placeholder="Repeat Password" />
-            <br />
-            <div class="g-recaptcha" data-sitekey="6LfmY8IcAAAAAJdu7ge1I2mjxdGGNjH5uA1nUQHM"></div>
-        </form>
 
-        <p id="user-message"></p>
-        <p>By signing up, you agree to the YTParty <a href="/terms.html" target="_blank" rel="noreferrer noopener">terms and conditions</a></p>
-        <button class="button hover-animation" onclick="sendSignupData()" id="signup-button"><p class="button-text">Sign me up!</p></button>
+        <h2 class="section-header">Enter a username:</h2>
+        <input type="text" id="username" placeholder="Username" />
+
+        <h2 class="section-header">Please make sure your password has one capital letter, one number and is at least 8 characters long!</h2>
+        <input type="password" id="password" placeholder="Password" />
+        <input type="password" id="password-confirm" placeholder="Repeat Password" />
+        <div class="g-recaptcha" data-sitekey="6LfmY8IcAAAAAJdu7ge1I2mjxdGGNjH5uA1nUQHM"></div>
+
+        <h2 class="section-header">By signing up, you agree to the YTParty <a href="/html/terms.html" target="_blank"
+                rel="noreferrer noopener">terms and conditions</a></h2>
+        <button class="small-button" onclick="sendSignupData()" id="signup-button">
+            <span class="material-symbols-outlined">
+                person_add
+            </span>
+            <p>Sign me up!</p>
+        </button>
 
     </div>
-    <a href="/"><button class="back-button">⮜</button></a>
-    <img class="waves" src="/waves.svg">
 </body>
 
-<script src="/signup.js"></script>
-<script src="/modal.js"></script>
+<script src="/js/signup.js"></script>
+<script src="/js/modal.js"></script>
 <script>
-    particlesJS.load('particles-js', "/particle-config.json", function() {
+    particlesJS.load('particles-js', "/particle-config.json", function () {
         console.log('Particles loaded');
     });
 </script>

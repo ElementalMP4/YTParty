@@ -1,0 +1,188 @@
+@keyframes slide-up {
+    from {
+        transform: translateY(100%);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes blink {
+    0% {
+        opacity: .2;
+    }
+
+    20% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: .2;
+    }
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+* {
+    font-family: Arial, Helvetica, sans-serif
+}
+
+body{
+    margin: 0;
+    font-family: Arial, sans-serif;
+    overflow: hidden;
+    background-color: #1a1a1a;
+}
+
+div.player-modal-content {
+    background-color: #1a1a1a;
+}
+
+iframe {
+    margin: 0px;
+}
+
+div.container {
+    display: flex;
+    height: 100vh;
+}
+
+div.main {
+    flex: 85%;
+}
+
+div.sidebar {
+    flex: 15%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 10px;
+    padding-bottom: 0px;
+}
+
+div.message-container {
+    display: flex;
+    flex-direction: column-reverse;
+    flex-grow: 1;
+    overflow-y: auto;
+}
+
+div.message {
+    background-color: #292929;
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 10px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+    animation: slide-up 0.5s forwards;
+}
+
+div.typing-area {
+    display: flex;
+    flex-direction: column;
+}
+
+div.typing-area input[type=text] {
+    background-color: #292929;
+    border-radius: 5px 5px 0 0;
+    padding: 10px;
+    border: none;
+    border-bottom: 2px solid grey;
+    outline: none;
+    color: #f0f0f0;
+}
+
+div.typing-area input[type=text]:focus {
+    border-bottom: 2px solid red
+}
+
+p, h2, label {
+    color: white;
+}
+
+p.typing {
+    font-style: italic;
+    color: #ccc;
+    margin: 5px;
+}
+
+p.typing span {
+    animation-name: blink;
+    animation-duration: 1.4s;
+    animation-iteration-count: infinite;
+    animation-fill-mode: both;
+}
+
+p.typing span:nth-child(2) {
+    animation-delay: .2s;
+}
+
+p.typing span:nth-child(3) {
+    animation-delay: .4s;
+}
+
+div.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(10, 10, 10, 0.95);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    transition: opacity 0.3s ease;
+}
+
+div.loading-overlay.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+div.spinner {
+    border: 12px solid #f3f3f3;
+    border-top: 12px solid #3498db;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    animation: spin 2s linear infinite;
+}
+
+
+
+.message-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+.avatar {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.username {
+    font-size: 1.2em;
+    margin: 0;
+}
+
+p.message-content, p.message-content * {
+    margin: 5px 0 5px 0;
+}
+
+.player-modal-input {
+    width: 75%;
+}

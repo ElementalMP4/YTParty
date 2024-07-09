@@ -1,29 +1,26 @@
-package main.java.de.voidtech.ytparty.entities.message;
+package main.java.de.voidtech.ytparty.entities;
 
+import main.java.de.voidtech.ytparty.persistence.ChatMessage;
 import org.json.JSONObject;
-
-import main.java.de.voidtech.ytparty.entities.persistent.ChatMessage;
 
 public class MessageBuilder {
 	
-	//Chat Message Fields
+
 	private String partyID; 
 	private String author;
 	private String colour;
 	private String content;
-	private String messageModifiers;
 	private String avatar;
 	
-	//System Message Fields
+
 	private String type;
 	private JSONObject data;
 	
-	//Chat Message Constants
+
 	public static final String SYSTEM_AUTHOR = "System";
-	public static final String SYSTEM_MODIFIERS = "system";
-	public static final String SYSTEM_AVATAR = "/favicon.png";
+	public static final String SYSTEM_AVATAR = "system";
 	
-	//System Message constants
+
 	public static final JSONObject EMPTY_JSON = new JSONObject();
 	
 	public String getChatMessagePartyID() {
@@ -40,10 +37,6 @@ public class MessageBuilder {
 	
 	public String getChatMessageContent() {
 		return this.content;
-	}
-	
-	public String getChatMessageMessageModifiers() {
-		return this.messageModifiers;
 	}
 	
 	public String getChatMessageAvatar() {
@@ -67,11 +60,6 @@ public class MessageBuilder {
 	
 	public MessageBuilder content(String content) {
 		this.content = content;
-		return this;
-	}
-	
-	public MessageBuilder modifiers(String modifiers) {
-		this.messageModifiers = modifiers;
 		return this;
 	}
 	

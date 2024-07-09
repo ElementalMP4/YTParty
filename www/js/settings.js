@@ -1,50 +1,48 @@
-"use strict"; //Strict mode promotes good code practices
+"use strict";
 
-//Connect to the gateway
 const GatewayServerURL = (location.protocol == "https:" ? "wss://" : "ws://") + location.host + "/gateway";
 let Gateway = new WebSocket(GatewayServerURL);
 
-//Log opened connections
-Gateway.onopen = function() {
+Gateway.onopen = function () {
     console.log("Connected To Gateway");
 }
 
-//Log closed conenctions
-Gateway.onclose = function() {
+Gateway.onclose = function () {
     console.log("Connection Lost");
 }
 
-//Update the avatar preview image
 function setAvatarUrl(avatar) {
-    document.getElementById("avatar-preview").src = "/avatar/" + avatar;
+    document.getElementById("avatar-preview").src = "/img/avatars/" + avatar + ".png";
 }
 
-//Handle a colour change response. Show an appropriate message depending on the success of the request
 function handleColourChange(response) {
     if (response.success) showModalMessage("Success!", "Colour changed!");
     else showModalMessage("Error", response.response);
 }
 
-//Handle a nickname change response. Show an appropriate message depending on the success of the request
 function handleNicknameChange(response) {
     if (response.success) showModalMessage("Success!", "Nickname changed!");
     else showModalMessage("Error", response.response);
 }
 
-//Load the user's data
+function generateOtpUrl(userProfile) {
+    return `otpauth://totp/YTParty:${userProfile.username}?period=30&digits=6&secret=${userProfile.otp}&algorithm=SHA512`;
+}
+
 function handleProfileResponse(response) {
     if (response.success) {
         let userProfile = response.response;
+        let qrcode = new QRCode("otp-qr-code");
         document.getElementById("name-colour-picker").value = userProfile.colour;
         document.getElementById("nickname-entry").value = userProfile.effectiveName;
         document.getElementById("avatar-selector").value = userProfile.avatar;
+        qrcode.makeCode(generateOtpUrl(userProfile));
         setAvatarUrl(userProfile.avatar);
-    } else { //If the profile request failed prompt the user to log in
-        window.location.href = location.protocol + "//" + location.host + "/login.html";
+    } else {
+        window.location.href = location.protocol + "//" + location.host + "/html/login.html";
     }
 }
 
-//Handle a password change response. Show an appropriate message depending on the success of the request
 function handlePasswordChange(response) {
     if (response.success) {
         showModalMessage("Success!", "Password changed!");
@@ -52,7 +50,6 @@ function handlePasswordChange(response) {
     } else showModalMessage("Error", response.response);
 }
 
-//Handle an account response. Delete the user's stored token and send them to the homepage
 function handleAccountDeleteResponse(response) {
     if (response.success) {
         window.localStorage.removeItem("token");
@@ -60,16 +57,20 @@ function handleAccountDeleteResponse(response) {
     } else showModalMessage("Error", response.response);
 }
 
-//Handle an avatar change response. Show an appropriate message depending on the success of the request
 function handleAvatarChangeResponse(response) {
     if (response.success) showModalMessage("Success!", "Avatar changed!");
     else showModalMessage("Error", response.response);
 }
 
-//Handle gateway messages
-Gateway.onmessage = function(message) {
+function handleOtpTestResponse(response) {
+    let data = response.response;
+    if (data.match) showModalMessage("Success!", "OTP Code matches! You can now use OTP to recover your account!");
+    else showModalMessage("Error", "OTP codes didn't match. You supplied " + data.received + " and we were expecting " + data.generated);
+}
+
+Gateway.onmessage = function (message) {
     const response = JSON.parse(message.data);
-    console.log(response); //Log messages
+    console.log(response);
     switch (response.type) {
         case "user-changecolour":
             handleColourChange(response);
@@ -89,17 +90,18 @@ Gateway.onmessage = function(message) {
         case "user-changeavatar":
             handleAvatarChangeResponse(response);
             break;
+        case "user-testotp":
+            handleOtpTestResponse(response);
+            break;
     }
 }
 
-//Get the user's token. If there isn't one, send them to the login page and then redirect them back here
 function getToken() {
     let token = window.localStorage.getItem("token");
-    if (token == null) window.location.href = location.protocol + "//" + location.host + "/login.html?redirect=" + location.pathname + location.search;
+    if (token == null) window.location.href = location.protocol + "//" + location.host + "/html/login.html?redirect=" + location.pathname + location.search;
     else return token;
 }
 
-//Send a colour update payload
 function updateColour() {
     let hexColour = document.getElementById("name-colour-picker").value;
     let payload = {
@@ -112,7 +114,6 @@ function updateColour() {
     Gateway.send(JSON.stringify(payload));
 }
 
-//Send a nickname update payload
 function updateNickname() {
     let nickname = document.getElementById("nickname-entry").value;
     if (nickname == "") showModalMessage("Error", "That nickname is too short!");
@@ -128,7 +129,6 @@ function updateNickname() {
     }
 }
 
-//Send a password update payload
 function updatePassword() {
     let password = document.getElementById("new-password-entry").value;
     let passwordMatch = document.getElementById("password-match-entry").value;
@@ -145,9 +145,7 @@ function updatePassword() {
     Gateway.send(JSON.stringify(payload));
 }
 
-//Send a delete account payload
 function deleteAccount() {
-    //Double check with the user
     let deleteMessageAccepted = window.confirm("Are you sure you want to delete your account? This action cannot be undone!");
     let password = document.getElementById("delete-password-entry").value;
     if (deleteMessageAccepted) {
@@ -162,7 +160,6 @@ function deleteAccount() {
     }
 }
 
-//Send a profile request
 function getUserProfile() {
     let payload = {
         "type": "user-getprofile",
@@ -173,7 +170,6 @@ function getUserProfile() {
     Gateway.send(JSON.stringify(payload));
 }
 
-//Send an avatar update payload
 function updateAvatar() {
     let avatar = document.getElementById("avatar-selector").value;
     let payload = {
@@ -186,12 +182,22 @@ function updateAvatar() {
     Gateway.send(JSON.stringify(payload));
 }
 
-//Update the user's avatar preview
-document.getElementById("avatar-selector").onchange = function() {
+function testOtp() {
+    let otp = document.getElementById("otp-test-entry").value;
+    let payload = {
+        "type": "user-testotp",
+        "data": {
+            "token": getToken(),
+            "otp": otp
+        }
+    }
+    Gateway.send(JSON.stringify(payload));
+}
+
+document.getElementById("avatar-selector").onchange = function () {
     setAvatarUrl(document.getElementById("avatar-selector").value);
 }
 
-//When the gateway is connected, get the user profile
-Gateway.onopen = function() {
+Gateway.onopen = function () {
     getUserProfile();
 }

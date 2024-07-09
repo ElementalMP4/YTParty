@@ -1,4 +1,10 @@
-package main.java.de.voidtech.ytparty.entities.ephemeral;
+package main.java.de.voidtech.ytparty.entities;
+
+import main.java.de.voidtech.ytparty.persistence.ChatMessage;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.springframework.web.socket.TextMessage;
+import org.springframework.web.socket.WebSocketSession;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -6,50 +12,41 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.springframework.web.socket.TextMessage;
-import org.springframework.web.socket.WebSocketSession;
-
-import main.java.de.voidtech.ytparty.entities.message.MessageBuilder;
-import main.java.de.voidtech.ytparty.entities.message.SystemMessage;
-import main.java.de.voidtech.ytparty.entities.persistent.ChatMessage;
-
 public class Party {
-	private String partyID; //Contains the ID for this room
-	private String ownerName; //Contains the name of the room owner
-	private String currentVideoID; //Contains the ID of the current video
-	private String roomColour; //Contains the HEX code for the room theme
-	private List<GatewayConnection> sessions; //Contains all the people who have joined this room
-	private Queue<String> videoQueue; //Contains all the queued video IDs
-	//If this room has not yet been visited, this boolean will protect the room from being automatically deleted
+	private String partyID;
+	private String ownerName;
+	private String currentVideoID;
+	private String roomColour;
+	private List<GatewayConnection> sessions;
+	private Queue<String> videoQueue;
+
 	private boolean hasBeenVisited; 
-	private boolean ownerOnlyControlsEnabled; //This boolean controls whether other users can play/pause the video etc.
-	//We increment this value as people's players finish. When this value is equal to the number of members in the room, we can load the next video
+	private boolean ownerOnlyControlsEnabled;
+
 	private int finishedCount;
 	
-	//We use a logger for the gateway methods as we cannot autowire services into dynamic classes
+
 	private static final Logger LOGGER = Logger.getLogger(Party.class.getName());
 	
-	//The constructor takes all the values from the CreateRoom menu and makes a new room
+
 	public Party(String partyID, String ownerName, String roomColour, String videoID, boolean ownerOnlyControls) {
 		this.partyID = partyID;
 		this.roomColour = roomColour;
 		this.ownerName = ownerName;
 		this.currentVideoID = videoID;
-		this.sessions = new ArrayList<GatewayConnection>(); //Create a new sessions list
-		this.videoQueue = new Queue<String>(); //Create an empty queue
+		this.sessions = new ArrayList<GatewayConnection>();
+		this.videoQueue = new Queue<String>();
 		this.finishedCount = 0;
 		this.ownerOnlyControlsEnabled = ownerOnlyControls;
 	}
 	
-	//This method increments the finished count when someone finishes a video.
+
 	public void incrementFinishedCount() {
-		finishedCount = finishedCount + 1; //Increment the count
-		if (finishedCount >= sessions.size()) { //Check if the count is at the target value
+		finishedCount = finishedCount + 1;
+		if (finishedCount >= sessions.size()) {
 			finishedCount = 0; //Reset the count
 			String nextVideo = videoQueue.pop(); //Get the next video
-			if (nextVideo != null) setNextVideo(nextVideo); //If there is a next video, load it 
+			if (nextVideo != null) setNextVideo(nextVideo); //If there is a next video, load it
 		}
 	}
 
@@ -128,7 +125,6 @@ public class Party {
 			
 			ChatMessage leftMessage = new MessageBuilder() //Create a new message to say that this user has left
 					.author(MessageBuilder.SYSTEM_AUTHOR)
-					.modifiers(MessageBuilder.SYSTEM_MODIFIERS)
 					.colour(this.getRoomColour())
 					.content(session.getName() + " has left the party!")
 					.avatar(MessageBuilder.SYSTEM_AVATAR)
