@@ -29,7 +29,11 @@ const currentVideoInput = document.getElementById("current-video-input");
 const queueInput = document.getElementById("queue-input");
 
 function sendGatewayMessage(message) {
-    Gateway.send(JSON.stringify(message));
+    if (Gateway.readyState == WebSocket.OPEN) {
+        Gateway.send(JSON.stringify(message));
+    } else {
+        console.log("Unable to send gateway message - gateway connection closed", message);
+    }
 }
 
 function data(params) {
@@ -103,12 +107,18 @@ function displayLocalMessage(message) {
 }
 
 function sendPlayingMessage() {
+    if (!Globals.CAN_CONTROL_PLAYER) {
+        return;
+    }
     const time = Globals.PLAYER.getCurrentTime();
     sendGatewayMessage({ "type": "party-playvideo", "data": data({ "timestamp": time }) });
     displayLocalMessage("Video playing at " + new Date(time * 1000).toISOString().substr(11, 8));
 }
 
 function sendPausedMessage() {
+    if (!Globals.CAN_CONTROL_PLAYER) {
+        return;
+    }
     sendGatewayMessage({ "type": "party-pausevideo", "data": data() });
     displayLocalMessage("Video paused");
 }
@@ -185,23 +195,31 @@ function refreshModalQueueData(videos) {
     queueTitle.innerHTML = "Queued Items (" + videos.length + ")";
 }
 
-function initialiseParty(options) {
-    loadVideo(options.video);
-    Globals.CAN_CONTROL_PLAYER = options.canControl;
-    Globals.ROOM_COLOUR = options.theme;
+function initialiseParty(packet) {
+    if (!packet.success) {
+        Globals.ROOM_COLOUR = "#FFFFFF";
+        displayLocalMessage("Invalid Room ID! Either this party has ended, or you've got an invalid Room URL!");
+        hideLoadingScreen();
+        Gateway.close();
+    } else {
+        let options = packet.response;
+        loadVideo(options.video);
+        Globals.CAN_CONTROL_PLAYER = options.canControl;
+        Globals.ROOM_COLOUR = options.theme;
 
-    document.getElementsByTagName("title")[0].text = options.owner + "'s room!";
+        document.getElementsByTagName("title")[0].text = options.owner + "'s room!";
 
-    chatInput.addEventListener("focus", function () {
-        this.style.borderBottom = "2px solid " + Globals.ROOM_COLOUR;
-    });
+        chatInput.addEventListener("focus", function () {
+            this.style.borderBottom = "2px solid " + Globals.ROOM_COLOUR;
+        });
 
 
-    chatInput.addEventListener("blur", function () {
-        this.style.borderBottom = "2px solid grey";
-    });
+        chatInput.addEventListener("blur", function () {
+            this.style.borderBottom = "2px solid grey";
+        });
 
-    displayLocalMessage("Use /help to see some chat commands! Use ctrl + m to open the player menu!");
+        displayLocalMessage("Use ctrl + m to open the player menu!");
+    }
 }
 
 function hideLoadingScreen() {
@@ -220,7 +238,7 @@ function handleGatewayMessage(packet) {
             addChatMessage(packet.data);
             break;
         case "party-joinparty":
-            initialiseParty(packet.response);
+            initialiseParty(packet);
             break;
         case "user-getprofile":
             Globals.USER_PROPERTIES = packet.response;
@@ -235,9 +253,11 @@ function handleGatewayMessage(packet) {
             loadVideo(packet.data.video);
             break;
         case "party-typingupdate":
+            if (!packet.success) return;
             updateTyping(packet.data);
             break;
         case "party-getqueue":
+            if (!packet.success) return;
             refreshModalQueueData(packet.response.videos);
             break;
     }
@@ -392,15 +412,12 @@ Gateway.onopen = function () {
 //Handle gateway closure
 Gateway.onclose = function (event) {
     console.log(`Gateway Disconnected\n\nCode: ${event.code}\nReason: ${event.reason}\nClean?: ${event.wasClean}`);
-    displayLocalMessage("You lost connection to the server! Use /r to reconnect");
+    displayLocalMessage("You lost connection to the server!");
 }
 
 //Handle gateway messages
 Gateway.onmessage = function (message) {
     const packet = JSON.parse(message.data);
     console.log(packet);
-    if (packet.hasOwnProperty("success")) {
-        if (!packet.success) displayLocalMessage(packet.response);
-        else handleGatewayMessage(packet);
-    } else handleGatewayMessage(packet);
+    handleGatewayMessage(packet);
 }
