@@ -50,6 +50,7 @@ public class MessageHandler {
         } catch (JSONException e) {
             session.sendError("Invalid message - " + e.getMessage(), RESPONSE_SOURCE);
             LOGGER.log(Level.SEVERE, "Error during Service Execution: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 }
