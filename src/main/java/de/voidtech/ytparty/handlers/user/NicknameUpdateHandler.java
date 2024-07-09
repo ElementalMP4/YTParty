@@ -38,7 +38,7 @@ public class NicknameUpdateHandler extends AbstractHandler {
         User user = userService.getUser(username);
         user.setNickname(nickname);
         userService.saveUser(user);
-        session.sendSuccess(new JSONObject().put("message", "Nickname changed!"), this.getHandlerType());
+        session.sendSuccess("Nickname changed!", this.getHandlerType());
     }
 
     @Override

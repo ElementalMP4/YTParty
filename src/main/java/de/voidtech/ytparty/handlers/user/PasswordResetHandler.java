@@ -5,8 +5,8 @@ import main.java.de.voidtech.ytparty.entities.GatewayConnection;
 import main.java.de.voidtech.ytparty.handlers.AbstractHandler;
 import main.java.de.voidtech.ytparty.persistence.User;
 import main.java.de.voidtech.ytparty.service.CaptchaAuthService;
-import main.java.de.voidtech.ytparty.service.PasswordResetService;
 import main.java.de.voidtech.ytparty.service.UserService;
+import main.java.de.voidtech.ytparty.utils.TOTPUtils;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -23,25 +23,14 @@ public class PasswordResetHandler extends AbstractHandler {
     @Autowired
     private UserService userService;
 
-    @Autowired
-    private PasswordResetService passwordService;
-
     @Override
     public void execute(GatewayConnection session, JSONObject data) {
-        String resetToken = data.getString("reset-token");
+        String oneTimePassword = data.getString("otp").replaceAll("[^0-9]", "");
         String password = data.getString("password");
         String passwordRepeat = data.getString("password-confirm");
         String captchaToken = data.getString("captcha-token");
         String username = data.getString("username");
 
-        if (passwordService.getCaseFromResetToken(resetToken) == null) {
-            session.sendError("This reset token is not valid! It may be incorrect or it may have expired.", this.getHandlerType());
-            return;
-        }
-        if (!passwordService.getCaseFromResetToken(resetToken).getUser().equals(username)) {
-            session.sendError("This reset token is not valid! It may be incorrect or it may have expired.", this.getHandlerType());
-            return;
-        }
         if (!password.equals(passwordRepeat)) {
             session.sendError("The passwords you entered do not match!", this.getHandlerType());
             return;
@@ -51,16 +40,19 @@ public class PasswordResetHandler extends AbstractHandler {
                     + "(One capital letter, One number, 8 Characters long)", this.getHandlerType());
             return;
         }
+        User user = userService.getUser(username);
+        if (!TOTPUtils.generateCode(user.getOneTimePasswordCode()).equals(oneTimePassword)) {
+            session.sendError("OTP is incorrect", this.getHandlerType());
+            return;
+        }
         if (!captchaService.validateCaptcha(captchaToken)) {
             session.sendError("You need to complete the captcha!", this.getHandlerType());
             return;
         }
 
-        User user = userService.getUser(username);
         user.setPassword(password);
         userService.saveUser(user);
-        passwordService.closePasswordCase(passwordService.getCaseFromResetToken(resetToken));
-        session.sendSuccess(new JSONObject().put("message", "Password reset successfully!"), this.getHandlerType());
+        session.sendSuccess("Password reset successfully!", this.getHandlerType());
     }
 
     @Override

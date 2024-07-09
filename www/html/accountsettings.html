@@ -14,6 +14,7 @@
 
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <script src="https://cdn.jsdelivr.net/gh/davidshimjs/qrcodejs@gh-pages/qrcode.min.js"></script>
 
     <meta property="og:site_name" content="Watch YouTube with friends!">
     <meta property="og:url" content="https://ytparty.voidtech.de/">
@@ -117,7 +118,7 @@
             <span class="material-symbols-outlined">
                 check_circle
             </span>
-            <p >Change my avatar!</p>
+            <p>Change my avatar!</p>
         </button>
         <hr>
 
@@ -130,7 +131,7 @@
             <span class="material-symbols-outlined">
                 check_circle
             </span>
-            <p >Change my colour!</p>
+            <p>Change my colour!</p>
         </button>
         <hr>
 
@@ -142,7 +143,7 @@
             <span class="material-symbols-outlined">
                 check_circle
             </span>
-            <p >Change my nickname!</p>
+            <p>Change my nickname!</p>
         </button>
         <hr>
 
@@ -157,7 +158,22 @@
             <span class="material-symbols-outlined">
                 check_circle
             </span>
-            <p >Change my password!</p>
+            <p>Change my password!</p>
+        </button>
+        <hr>
+
+        <!--Password Recovery OTP-->
+
+        <h2 class="section-header">Register for account recovery!</h2>
+        <p>Add this time-based one time password to your authenticator app, and if you need to recover your account you
+            can use a 6 digit code to reset your password!</p>
+        <div id="otp-qr-code" class="qr-code-container"></div>
+        <input type="text" placeholder="Enter 6-digit code" autocomplete="off" id="otp-test-entry">
+        <button class="big-button" onclick="testOtp()">
+            <span class="material-symbols-outlined">
+                check_box
+            </span>
+            <p>Test one-time-password</p>
         </button>
         <hr>
 
@@ -169,7 +185,7 @@
             <span class="material-symbols-outlined">
                 delete
             </span>
-            <p >Delete my account</p>
+            <p>Delete my account</p>
         </button>
     </div>
 </body>

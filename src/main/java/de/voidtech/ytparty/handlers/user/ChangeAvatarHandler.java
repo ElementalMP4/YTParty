@@ -34,7 +34,7 @@ public class ChangeAvatarHandler extends AbstractHandler {
         User user = userService.getUser(username);
         user.setProfilePicture(avatar);
         userService.saveUser(user);
-        session.sendSuccess(new JSONObject().put("message", "Avatar changed!"), this.getHandlerType());
+        session.sendSuccess("Avatar changed!", this.getHandlerType());
     }
 
     @Override

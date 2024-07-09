@@ -116,6 +116,10 @@ a {
    margin-top: 40px;
 }
 
+.input-header {
+   margin-left: 0px;
+}
+
 ul {
    list-style-type: none;
    margin: 0;
@@ -268,4 +272,10 @@ img.user-image {
    border-radius: 50%;
    height: 150px;
    width: 150px;
+}
+
+.qr-code-container {
+   border: 15px solid white;
+   border-radius: 5px;
+   display: inline-block;
 }

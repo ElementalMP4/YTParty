@@ -3,17 +3,17 @@
 const GatewayServerURL = (location.protocol == "https:" ? "wss://" : "ws://") + location.host + "/gateway";
 let Gateway = new WebSocket(GatewayServerURL);
 
-Gateway.onopen = function() {
+Gateway.onopen = function () {
     console.log("Connected To Gateway");
 }
 
-Gateway.onclose = function() {
+Gateway.onclose = function () {
     console.log("Connection Lost");
 }
 
 function setAvatarUrl(avatar) {
     document.getElementById("avatar-preview").src = "/img/avatars/" + avatar + ".png";
-} 
+}
 
 function handleColourChange(response) {
     if (response.success) showModalMessage("Success!", "Colour changed!");
@@ -25,12 +25,18 @@ function handleNicknameChange(response) {
     else showModalMessage("Error", response.response);
 }
 
+function generateOtpUrl(userProfile) {
+    return `otpauth://totp/YTParty:${userProfile.username}?period=30&digits=6&secret=${userProfile.otp}&algorithm=SHA512`;
+}
+
 function handleProfileResponse(response) {
     if (response.success) {
         let userProfile = response.response;
+        let qrcode = new QRCode("otp-qr-code");
         document.getElementById("name-colour-picker").value = userProfile.colour;
         document.getElementById("nickname-entry").value = userProfile.effectiveName;
         document.getElementById("avatar-selector").value = userProfile.avatar;
+        qrcode.makeCode(generateOtpUrl(userProfile));
         setAvatarUrl(userProfile.avatar);
     } else {
         window.location.href = location.protocol + "//" + location.host + "/html/login.html";
@@ -56,9 +62,15 @@ function handleAvatarChangeResponse(response) {
     else showModalMessage("Error", response.response);
 }
 
-Gateway.onmessage = function(message) {
+function handleOtpTestResponse(response) {
+    let data = response.response;
+    if (data.match) showModalMessage("Success!", "OTP Code matches! You can now use OTP to recover your account!");
+    else showModalMessage("Error", "OTP codes didn't match. You supplied " + data.received + " and we were expecting " + data.generated);
+}
+
+Gateway.onmessage = function (message) {
     const response = JSON.parse(message.data);
-    console.log(response); 
+    console.log(response);
     switch (response.type) {
         case "user-changecolour":
             handleColourChange(response);
@@ -77,6 +89,9 @@ Gateway.onmessage = function(message) {
             break;
         case "user-changeavatar":
             handleAvatarChangeResponse(response);
+            break;
+        case "user-testotp":
+            handleOtpTestResponse(response);
             break;
     }
 }
@@ -167,10 +182,22 @@ function updateAvatar() {
     Gateway.send(JSON.stringify(payload));
 }
 
-document.getElementById("avatar-selector").onchange = function() {
+function testOtp() {
+    let otp = document.getElementById("otp-test-entry").value;
+    let payload = {
+        "type": "user-testotp",
+        "data": {
+            "token": getToken(),
+            "otp": otp
+        }
+    }
+    Gateway.send(JSON.stringify(payload));
+}
+
+document.getElementById("avatar-selector").onchange = function () {
     setAvatarUrl(document.getElementById("avatar-selector").value);
 }
 
-Gateway.onopen = function() {
+Gateway.onopen = function () {
     getUserProfile();
 }

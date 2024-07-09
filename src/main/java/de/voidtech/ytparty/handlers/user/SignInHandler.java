@@ -7,6 +7,7 @@ import main.java.de.voidtech.ytparty.persistence.User;
 import main.java.de.voidtech.ytparty.service.CaptchaAuthService;
 import main.java.de.voidtech.ytparty.service.UserService;
 import main.java.de.voidtech.ytparty.service.UserTokenService;
+import main.java.de.voidtech.ytparty.utils.TOTPUtils;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -42,6 +43,7 @@ public class SignInHandler extends AbstractHandler {
             session.sendError("Username or Password incorrect", this.getHandlerType());
             return;
         }
+
         session.sendSuccess(new JSONObject().put("token", tokenService.getToken(username)), this.getHandlerType());
     }
 

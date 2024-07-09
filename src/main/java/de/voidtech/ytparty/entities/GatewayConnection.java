@@ -19,7 +19,6 @@ public class GatewayConnection {
     private String name;
     private int requestAllowance;
     private boolean connectionBlocked;
-    private final String sessionID;
     private String roomID;
 
     private static final int MAX_REQUEST_ALLOWANCE = 20;
@@ -28,7 +27,6 @@ public class GatewayConnection {
         this.session = session;
         this.connectionBlocked = false;
         this.requestAllowance = MAX_REQUEST_ALLOWANCE;
-        this.sessionID = session.getId();
     }
 
     public String getRoomID() {
@@ -37,10 +35,6 @@ public class GatewayConnection {
 
     public void setRoomID(String roomID) {
         this.roomID = roomID;
-    }
-
-    public String getID() {
-        return this.sessionID;
     }
 
     public void setName(String name) {
@@ -82,6 +76,18 @@ public class GatewayConnection {
     }
 
     public void sendSuccess(JSONObject message, String origin) {
+        try {
+            getSession().sendMessage(new TextMessage(new JSONObject()
+                    .put("success", true)
+                    .put("response", message)
+                    .put("type", origin)
+                    .toString()));
+        } catch (JSONException | IOException e) {
+            LOGGER.log(Level.SEVERE, "Could not respond to websocket: " + e.getMessage());
+        }
+    }
+
+    public void sendSuccess(String message, String origin) {
         try {
             getSession().sendMessage(new TextMessage(new JSONObject()
                     .put("success", true)

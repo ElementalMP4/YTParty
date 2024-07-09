@@ -43,7 +43,7 @@ public class DeleteAccountHandler extends AbstractHandler {
 
         tokenService.removeToken(username);
         userService.removeUser(username);
-        session.sendSuccess(new JSONObject().put("message", "Account deleted!"), this.getHandlerType());
+        session.sendSuccess("Account deleted!", this.getHandlerType());
     }
 
     @Override

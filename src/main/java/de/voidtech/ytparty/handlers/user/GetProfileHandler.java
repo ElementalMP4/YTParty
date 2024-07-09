@@ -29,11 +29,16 @@ public class GetProfileHandler extends AbstractHandler {
 		else {
 			String username = tokenResponse.getActingString();
 			User user = userService.getUser(username);
+			if (user.getOneTimePasswordCode() == null) {
+				user.createOtpSecret();
+				userService.saveUser(user);
+			}
 			JSONObject userData = new JSONObject()
 					.put("nickname", user.getNickname())
 					.put("colour", user.getHexColour())
 					.put("effectiveName", user.getEffectiveName())
 					.put("avatar", user.getProfilePicture())
+					.put("otp", user.getOneTimePasswordCode())
 					.put("username", user.getUsername());
 			session.sendSuccess(userData, this.getHandlerType());
 		}

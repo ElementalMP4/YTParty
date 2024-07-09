@@ -7,11 +7,12 @@ import main.java.de.voidtech.ytparty.handlers.AbstractHandler;
 import main.java.de.voidtech.ytparty.persistence.User;
 import main.java.de.voidtech.ytparty.service.GatewayAuthService;
 import main.java.de.voidtech.ytparty.service.UserService;
+import main.java.de.voidtech.ytparty.utils.TOTPUtils;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @Handler
-public class ColourChangeHandler extends AbstractHandler {
+public class OneTimePasswordTestHandler extends AbstractHandler {
 
     @Autowired
     private UserService userService;
@@ -21,10 +22,10 @@ public class ColourChangeHandler extends AbstractHandler {
 
     @Override
     public void execute(GatewayConnection session, JSONObject data) {
-        String colour = data.getString("colour");
+        String oneTimePassword = data.getString("otp").replaceAll("[^0-9]", "");
         String token = data.getString("token");
-
         AuthResponse tokenResponse = authService.validateToken(token);
+
         if (!tokenResponse.isSuccessful()) {
             session.sendError(tokenResponse.getMessage(), this.getHandlerType());
             return;
@@ -32,19 +33,19 @@ public class ColourChangeHandler extends AbstractHandler {
 
         String username = tokenResponse.getActingString();
         User user = userService.getUser(username);
-        user.setHexColour(colour);
-        userService.saveUser(user);
-        session.sendSuccess("Colour changed!", this.getHandlerType());
-
+        String generated = TOTPUtils.generateCode(user.getOneTimePasswordCode());
+        boolean correct = generated.equals(oneTimePassword);
+        session.sendSuccess(new JSONObject().put("match", correct).put("received", oneTimePassword).put("generated", generated), this.getHandlerType());
     }
 
     @Override
     public String getHandlerType() {
-        return "user-changecolour";
+        return "user-testotp";
     }
 
     @Override
     public boolean requiresRateLimit() {
         return true;
     }
+
 }
