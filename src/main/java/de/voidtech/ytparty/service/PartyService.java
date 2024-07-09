@@ -2,6 +2,7 @@ package main.java.de.voidtech.ytparty.service;
 
 import main.java.de.voidtech.ytparty.entities.GatewayConnection;
 import main.java.de.voidtech.ytparty.entities.Party;
+import main.java.de.voidtech.ytparty.entities.SystemMessage;
 import main.java.de.voidtech.ytparty.persistence.ChatMessage;
 import main.java.de.voidtech.ytparty.persistence.ChatMessageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,5 +62,14 @@ public class PartyService {
 
     public List<ChatMessage> getMessageHistory(String roomID) {
         return chatMessageRepository.getMessageHistory(roomID);
+    }
+
+    public void sendChatMessage(Party party, ChatMessage message) {
+        party.broadcastMessage(message);
+        chatMessageRepository.save(message);
+    }
+
+    public void sendSystemMessage(Party party, SystemMessage systemMessage) {
+        party.broadcastMessage(systemMessage);
     }
 }

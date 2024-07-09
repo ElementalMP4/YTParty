@@ -5,7 +5,6 @@ import main.java.de.voidtech.ytparty.entities.GatewayConnection;
 import main.java.de.voidtech.ytparty.handlers.AbstractHandler;
 import main.java.de.voidtech.ytparty.persistence.User;
 import main.java.de.voidtech.ytparty.service.CaptchaAuthService;
-import main.java.de.voidtech.ytparty.service.GatewayResponseService;
 import main.java.de.voidtech.ytparty.service.PasswordResetService;
 import main.java.de.voidtech.ytparty.service.UserService;
 import org.json.JSONObject;
@@ -16,56 +15,62 @@ import java.util.regex.Pattern;
 @Handler
 public class PasswordResetHandler extends AbstractHandler {
 
-	private static final Pattern PASSWORD_PATTERN = Pattern.compile("(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{8,}");
-	
-	@Autowired
-	private GatewayResponseService responder;
-	
-	@Autowired
-	private CaptchaAuthService captchaService;
-	
-	@Autowired
-	private UserService userService;
+    private static final Pattern PASSWORD_PATTERN = Pattern.compile("(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{8,}");
 
-	@Autowired
-	private PasswordResetService passwordService;
-	
-	@Override
-	public void execute(GatewayConnection session, JSONObject data) {
-		String resetToken = data.getString("reset-token");
-		String password = data.getString("password");
-		String passwordRepeat = data.getString("password-confirm");
-		String captchaToken = data.getString("captcha-token");
-		String username = data.getString("username");
+    @Autowired
+    private CaptchaAuthService captchaService;
 
-		if (passwordService.getCaseFromResetToken(resetToken) == null)
-			responder.sendError(session, "This reset token is not valid! It may be incorrect or it may have expired.", this.getHandlerType());
-		else if (!passwordService.getCaseFromResetToken(resetToken).getUser().equals(username))
-			responder.sendError(session, "This reset token is not valid! It may be incorrect or it may have expired.", this.getHandlerType());
-		if (!password.equals(passwordRepeat))
-			responder.sendError(session, "The passwords you entered do not match!", this.getHandlerType());
-		else if (!PASSWORD_PATTERN.matcher(password).matches())
-			responder.sendError(session, "The password you entered does not meet the complexity requirements! "
-					+ "(One capital letter, One number, 8 Characters long)", this.getHandlerType());
-		else if (!captchaService.validateCaptcha(captchaToken))
-			responder.sendError(session, "You need to complete the captcha!", this.getHandlerType());
-		else {
-			User user = userService.getUser(username);
-			user.setPassword(password);
-			userService.saveUser(user);
-			passwordService.closePasswordCase(passwordService.getCaseFromResetToken(resetToken));
-			responder.sendSuccess(session, new JSONObject().put("message", "Password reset successfully!"), this.getHandlerType());
-		}
-	}
+    @Autowired
+    private UserService userService;
 
-	@Override
-	public String getHandlerType() {
-		return "user-resetpassword";
-	}
-	
-	@Override
-	public boolean requiresRateLimit() {
-		return true;
-	}
+    @Autowired
+    private PasswordResetService passwordService;
+
+    @Override
+    public void execute(GatewayConnection session, JSONObject data) {
+        String resetToken = data.getString("reset-token");
+        String password = data.getString("password");
+        String passwordRepeat = data.getString("password-confirm");
+        String captchaToken = data.getString("captcha-token");
+        String username = data.getString("username");
+
+        if (passwordService.getCaseFromResetToken(resetToken) == null) {
+            session.sendError("This reset token is not valid! It may be incorrect or it may have expired.", this.getHandlerType());
+            return;
+        }
+        if (!passwordService.getCaseFromResetToken(resetToken).getUser().equals(username)) {
+            session.sendError("This reset token is not valid! It may be incorrect or it may have expired.", this.getHandlerType());
+            return;
+        }
+        if (!password.equals(passwordRepeat)) {
+            session.sendError("The passwords you entered do not match!", this.getHandlerType());
+            return;
+        }
+        if (!PASSWORD_PATTERN.matcher(password).matches()) {
+            session.sendError("The password you entered does not meet the complexity requirements! "
+                    + "(One capital letter, One number, 8 Characters long)", this.getHandlerType());
+            return;
+        }
+        if (!captchaService.validateCaptcha(captchaToken)) {
+            session.sendError("You need to complete the captcha!", this.getHandlerType());
+            return;
+        }
+
+        User user = userService.getUser(username);
+        user.setPassword(password);
+        userService.saveUser(user);
+        passwordService.closePasswordCase(passwordService.getCaseFromResetToken(resetToken));
+        session.sendSuccess(new JSONObject().put("message", "Password reset successfully!"), this.getHandlerType());
+    }
+
+    @Override
+    public String getHandlerType() {
+        return "user-resetpassword";
+    }
+
+    @Override
+    public boolean requiresRateLimit() {
+        return true;
+    }
 
 }

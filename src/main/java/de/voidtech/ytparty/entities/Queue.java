@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Queue<T> {
-	private List<T> queue = new ArrayList<T>();
+	private final List<T> queue = new ArrayList<T>();
 	
 	public void push(T item) {
 		queue.add(item);

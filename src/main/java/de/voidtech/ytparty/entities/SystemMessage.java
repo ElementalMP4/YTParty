@@ -4,9 +4,9 @@ import org.json.JSONObject;
 
 public class SystemMessage {
 	
-	private String type;
+	private final String type;
 	
-	private JSONObject data;
+	private final JSONObject data;
 	
 	public SystemMessage(MessageBuilder builder)
 	{

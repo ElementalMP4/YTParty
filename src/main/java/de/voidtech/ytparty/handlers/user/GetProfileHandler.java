@@ -6,7 +6,6 @@ import main.java.de.voidtech.ytparty.entities.GatewayConnection;
 import main.java.de.voidtech.ytparty.handlers.AbstractHandler;
 import main.java.de.voidtech.ytparty.persistence.User;
 import main.java.de.voidtech.ytparty.service.GatewayAuthService;
-import main.java.de.voidtech.ytparty.service.GatewayResponseService;
 import main.java.de.voidtech.ytparty.service.UserService;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,9 +17,6 @@ public class GetProfileHandler extends AbstractHandler {
 	private UserService userService;
 	
 	@Autowired
-	private GatewayResponseService responder;
-	
-	@Autowired
 	private GatewayAuthService authService;
 	
 	@Override
@@ -29,7 +25,7 @@ public class GetProfileHandler extends AbstractHandler {
 		
 		AuthResponse tokenResponse = authService.validateToken(token);
 
-		if (!tokenResponse.isSuccessful()) responder.sendError(session, tokenResponse.getMessage(), this.getHandlerType());
+		if (!tokenResponse.isSuccessful()) session.sendError(tokenResponse.getMessage(), this.getHandlerType());
 		else {
 			String username = tokenResponse.getActingString();
 			User user = userService.getUser(username);
@@ -39,7 +35,7 @@ public class GetProfileHandler extends AbstractHandler {
 					.put("effectiveName", user.getEffectiveName())
 					.put("avatar", user.getProfilePicture())
 					.put("username", user.getUsername());
-			responder.sendSuccess(session, userData, this.getHandlerType());
+			session.sendSuccess(userData, this.getHandlerType());
 		}
 	}
 

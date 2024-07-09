@@ -1,75 +1,106 @@
 package main.java.de.voidtech.ytparty.entities;
 
+import main.java.de.voidtech.ytparty.persistence.ChatMessage;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 
-import java.time.Instant;
+import java.io.IOException;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class GatewayConnection {
-	
-	private WebSocketSession session; 
-	private String name;
-	private int requestAllowance;
-	private long lastInteraction;
-	private boolean connectionBlocked;
-	private String sessionID;
-	private String roomID;
 
-	private static final int EXPIRY_TIME_SECONDS = 900;
-	private static final int MAX_REQUEST_ALLOWANCE = 20;
+    private static final Logger LOGGER = Logger.getLogger(GatewayConnection.class.getName());
 
-	
-	public GatewayConnection(WebSocketSession session) {
-		this.session = session;
-		this.connectionBlocked = false;
-		this.requestAllowance = MAX_REQUEST_ALLOWANCE;
-		this.sessionID = session.getId();
-		updateLastInteraction();
-	}
-	
-	public String getRoomID() {
-		return this.roomID;
-	}
-	
-	public void setRoomID(String roomID) {
-		this.roomID = roomID;
-	}
-	
-	public String getID() {
-		return this.sessionID;
-	}
-	
-	public void setName(String name) {
-		this.name = name;
-	}
-	
-	public WebSocketSession getSession() {
-		return this.session;
-	}
-	
-	public String getName() {
-		return this.name;
-	}
+    private final WebSocketSession session;
+    private String name;
+    private int requestAllowance;
+    private boolean connectionBlocked;
+    private final String sessionID;
+    private String roomID;
 
-	private void updateLastInteraction() {
-		lastInteraction = Instant.now().getEpochSecond(); 
-	}
+    private static final int MAX_REQUEST_ALLOWANCE = 20;
 
-	public void incrementRequestAllowance() {
-		if (requestAllowance < MAX_REQUEST_ALLOWANCE) requestAllowance++;
-		if (requestAllowance == MAX_REQUEST_ALLOWANCE) connectionBlocked = false;
-	}
+    public GatewayConnection(WebSocketSession session) {
+        this.session = session;
+        this.connectionBlocked = false;
+        this.requestAllowance = MAX_REQUEST_ALLOWANCE;
+        this.sessionID = session.getId();
+    }
 
-	public boolean expired() {
-		return lastInteraction + EXPIRY_TIME_SECONDS < Instant.now().getEpochSecond();
-	}
+    public String getRoomID() {
+        return this.roomID;
+    }
 
-	public boolean connectionRateLimited() {
-		updateLastInteraction();
-		requestAllowance--;
-		if (requestAllowance <= 0) {
-			requestAllowance = 0;
-			connectionBlocked = true;
-		}
-		return (requestAllowance == 0) | connectionBlocked;
-	}
+    public void setRoomID(String roomID) {
+        this.roomID = roomID;
+    }
+
+    public String getID() {
+        return this.sessionID;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public WebSocketSession getSession() {
+        return this.session;
+    }
+
+    public String getName() {
+        return this.name;
+    }
+
+    public void incrementRequestAllowance() {
+        if (requestAllowance < MAX_REQUEST_ALLOWANCE) requestAllowance++;
+        if (requestAllowance == MAX_REQUEST_ALLOWANCE) connectionBlocked = false;
+    }
+
+    public boolean connectionRateLimited() {
+        requestAllowance--;
+        if (requestAllowance <= 0) {
+            requestAllowance = 0;
+            connectionBlocked = true;
+        }
+        return (requestAllowance == 0) | connectionBlocked;
+    }
+
+    public void sendError(String error, String origin) {
+        try {
+            getSession().sendMessage(new TextMessage(new JSONObject()
+                    .put("success", false)
+                    .put("response", error)
+                    .put("type", origin)
+                    .toString()));
+        } catch (JSONException | IOException e) {
+            LOGGER.log(Level.SEVERE, "Could not respond to websocket: " + e.getMessage());
+        }
+    }
+
+    public void sendSuccess(JSONObject message, String origin) {
+        try {
+            getSession().sendMessage(new TextMessage(new JSONObject()
+                    .put("success", true)
+                    .put("response", message)
+                    .put("type", origin)
+                    .toString()));
+        } catch (JSONException | IOException e) {
+            LOGGER.log(Level.SEVERE, "Could not respond to websocket: " + e.getMessage());
+        }
+    }
+
+    public void sendChatHistory(List<ChatMessage> history) {
+        try {
+            for (ChatMessage message : history) {
+                getSession().sendMessage(new TextMessage(message.convertToJson()));
+            }
+        } catch (IOException e) {
+            LOGGER.log(Level.SEVERE, "Error during Service Execution: " + e.getMessage());
+        }
+        sendSuccess(MessageBuilder.EMPTY_JSON, "party-partyready");
+    }
 }
