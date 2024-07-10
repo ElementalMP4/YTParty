@@ -2,3 +2,4 @@ config.properties
 target
 .idea
 dependency-reduced-pom.xml
+*.sh
