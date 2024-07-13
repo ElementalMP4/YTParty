@@ -38,7 +38,6 @@ public class GetProfileHandler extends AbstractHandler {
 					.put("colour", user.getHexColour())
 					.put("effectiveName", user.getEffectiveName())
 					.put("avatar", user.getProfilePicture())
-					.put("otp", user.getOneTimePasswordCode())
 					.put("username", user.getUsername());
 			session.sendSuccess(userData, this.getHandlerType());
 		}

@@ -4,10 +4,14 @@ import com.bastiaanjansen.otp.SecretGenerator;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 
 import javax.persistence.*;
+import java.util.regex.Pattern;
 
 @Entity(name = "Users")
 @Table(name = "Users")
 public class User {
+
+    public static final Pattern PASSWORD_PATTERN = Pattern.compile("(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{8,}");
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;

@@ -8,8 +8,6 @@ public class CustomPhysicalNamingStrategy extends PhysicalNamingStrategyStandard
 
     private static final long serialVersionUID = 1L;
 
-    public static final CustomPhysicalNamingStrategy INSTANCE = new CustomPhysicalNamingStrategy();
-
     @Override
     public Identifier toPhysicalTableName(Identifier name, JdbcEnvironment context) {
         return new Identifier(name.getText().toLowerCase(), name.isQuoted());

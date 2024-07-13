@@ -10,12 +10,8 @@ import main.java.de.voidtech.ytparty.service.UserTokenService;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.regex.Pattern;
-
 @Handler
 public class SignupHandler extends AbstractHandler {
-
-    private static final Pattern PASSWORD_PATTERN = Pattern.compile("(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{8,}");
 
     @Autowired
     private UserTokenService tokenService;
@@ -46,7 +42,7 @@ public class SignupHandler extends AbstractHandler {
             session.sendError("The passwords you entered do not match!", this.getHandlerType());
             return;
         }
-        if (!PASSWORD_PATTERN.matcher(password).matches()) {
+        if (!User.PASSWORD_PATTERN.matcher(password).matches()) {
             session.sendError("The password you entered does not meet the complexity requirements! "
                     + "(One capital letter, One number, 8 Characters long)", this.getHandlerType());
             return;

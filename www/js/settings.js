@@ -25,18 +25,16 @@ function handleNicknameChange(response) {
     else showModalMessage("Error", response.response);
 }
 
-function generateOtpUrl(userProfile) {
-    return `otpauth://totp/YTParty:${userProfile.username}?period=30&digits=6&secret=${userProfile.otp}&algorithm=SHA512`;
+function generateOtpUrl(otp, username) {
+    return `otpauth://totp/YTParty:${username}?period=30&digits=6&secret=${otp}&algorithm=SHA512`;
 }
 
 function handleProfileResponse(response) {
     if (response.success) {
         let userProfile = response.response;
-        let qrcode = new QRCode("otp-qr-code");
         document.getElementById("name-colour-picker").value = userProfile.colour;
         document.getElementById("nickname-entry").value = userProfile.effectiveName;
         document.getElementById("avatar-selector").value = userProfile.avatar;
-        qrcode.makeCode(generateOtpUrl(userProfile));
         setAvatarUrl(userProfile.avatar);
     } else {
         window.location.href = location.protocol + "//" + location.host + "/html/login.html";
@@ -68,6 +66,17 @@ function handleOtpTestResponse(response) {
     else showModalMessage("Error", "OTP codes didn't match. You supplied " + data.received + " and we were expecting " + data.generated);
 }
 
+function handleOtpRetrieval(response) {
+    if (response.success) {
+        let otp = response.response.otp;
+        let username = response.response.username;
+        let qrcode = new QRCode("otp-qr-code");
+        qrcode.makeCode(generateOtpUrl(otp, username));
+        document.getElementById("otp-password-panel").style.display = "none";
+        document.getElementById("otp-test-panel").style.display = "block";
+    } else showModalMessage("Error", response.response);
+}
+
 Gateway.onmessage = function (message) {
     const response = JSON.parse(message.data);
     console.log(response);
@@ -92,6 +101,9 @@ Gateway.onmessage = function (message) {
             break;
         case "user-testotp":
             handleOtpTestResponse(response);
+            break;
+        case "user-getotp":
+            handleOtpRetrieval(response);
             break;
     }
 }
@@ -189,6 +201,18 @@ function testOtp() {
         "data": {
             "token": getToken(),
             "otp": otp
+        }
+    }
+    Gateway.send(JSON.stringify(payload));
+}
+
+function getOtpCredentials() {
+    let password = document.getElementById("otp-password-entry").value;
+    let payload = {
+        "type": "user-getotp",
+        "data": {
+            "token": getToken(),
+            "password": password
         }
     }
     Gateway.send(JSON.stringify(payload));

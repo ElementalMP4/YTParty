@@ -167,14 +167,29 @@
         <h2 class="section-header">Register for account recovery!</h2>
         <p>Add this time-based one time password to your authenticator app, and if you need to recover your account you
             can use a 6 digit code to reset your password!</p>
-        <div id="otp-qr-code" class="qr-code-container"></div>
-        <input type="text" placeholder="Enter 6-digit code" autocomplete="off" id="otp-test-entry">
-        <button class="big-button" onclick="testOtp()">
-            <span class="material-symbols-outlined">
-                check_box
-            </span>
-            <p>Test one-time-password</p>
-        </button>
+            
+
+        <div id="otp-password-panel">
+            <input type="password" placeholder="Enter your password to access your OTP credentials" autocomplete="off" id="otp-password-entry">
+            <button class="big-button" onclick="getOtpCredentials()">
+                <span class="material-symbols-outlined">
+                    check_circle
+                </span>
+                <p>Get OTP Credentials</p>
+            </button>
+        </div>
+
+        <div id="otp-test-panel" style="display:none">
+            <div id="otp-qr-code" class="qr-code-container"></div>
+            <input type="text" placeholder="Enter 6-digit code" autocomplete="off" id="otp-test-entry">
+            <button class="big-button" onclick="testOtp()">
+                <span class="material-symbols-outlined">
+                    check_box
+                </span>
+                <p>Test one-time-password</p>
+            </button>
+        </div>
+
         <hr>
 
         <!--Delete Account-->
